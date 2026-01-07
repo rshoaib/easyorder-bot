@@ -1,0 +1,55 @@
+[
+  {
+    "id": "ORD-642289",
+    "date": "2026-01-07T18:47:22.289Z",
+    "customer": {
+      "name": "John",
+      "phone": "+97450665947",
+      "address": "Doha"
+    },
+    "items": [
+      {
+        "id": "4",
+        "name": "Dark Roast Coffee Beans",
+        "price": 15.5,
+        "category": "Beverages",
+        "image": "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=800",
+        "description": "Rich and bold dark roast beans, 1lb bag.",
+        "quantity": 1
+      },
+      {
+        "id": "1",
+        "name": "Artisan Sourdough Bread",
+        "price": 4.5,
+        "category": "Bakery",
+        "image": "https://images.unsplash.com/photo-1585476644321-b9762ead8174?auto=format&fit=crop&q=80&w=800",
+        "description": "Freshly baked sourdough with a crispy crust and soft airy crumb.",
+        "quantity": 3
+      }
+    ],
+    "total": 29,
+    "status": "Pending"
+  },
+  {
+    "id": "ORD-700009",
+    "date": "2026-01-07T18:48:20.009Z",
+    "customer": {
+      "name": "John",
+      "phone": "+97450665947",
+      "address": "Doha"
+    },
+    "items": [
+      {
+        "id": "4",
+        "name": "Dark Roast Coffee Beans",
+        "price": 15.5,
+        "category": "Beverages",
+        "image": "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600",
+        "description": "Rich and bold dark roast beans.",
+        "quantity": 2
+      }
+    ],
+    "total": 31,
+    "status": "Pending"
+  }
+]

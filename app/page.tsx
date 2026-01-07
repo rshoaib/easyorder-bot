@@ -1,66 +1,97 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from "react";
+import { products } from "@/data/products";
+import { useCart } from "@/context/CartContext";
+import { Plus, ShoppingBag, Search } from "lucide-react";
+import Link from "next/link";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 export default function Home() {
+  const [category, setCategory] = useState("All");
+  const { addItem, itemCount } = useCart();
+
+  const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
+  const filteredProducts = category === "All" 
+    ? products 
+    : products.filter((p) => p.category === category);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="container"> 
+      {/* Header */}
+      <header className="header-wrapper flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-extrabold mb-1">EasyOrder.</h1>
+          <p className="text-gray-500 font-medium">Good evening</p>
+        </div>
+        <div className="cart-btn-wrapper">
+          <Link href="/cart">
+            <button className="cart-btn">
+              <ShoppingBag size={22} />
+              {itemCount > 0 && (
+                <span className="cart-badge">
+                  {itemCount}
+                </span>
+              )}
+            </button>
+          </Link>
+        </div>
+      </header>
+      
+      {/* Search */}
+      <div className="search-bar">
+        <Search size={20} className="mr-3 text-gray-500"/>
+        <input 
+            type="text" 
+            placeholder="Search products..." 
+            className="search-input" 
         />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </div>
+
+      {/* Categories */}
+      <div className="category-scroll">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setCategory(cat)}
+            className={`category-pill ${category === cat ? "active" : ""}`}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Product Grid */}
+      <div className="product-grid">
+        {filteredProducts.map((product) => (
+          <div key={product.id} className="product-card">
+            <div className="product-image-container">
+              <ImageWithFallback
+                src={product.image}
+                alt={product.name}
+                className="product-image"
+              />
+              <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    addItem(product);
+                }}
+                className="fab-add"
+              >
+                <Plus size={18} strokeWidth={2.5} />
+              </button>
+            </div>
+            
+            <div>
+                 <h3 className="font-bold text-sm mb-1">{product.name}</h3>
+                 <p className="text-xs text-gray-500 uppercase tracking-wide">{product.category}</p>
+                 <div className="mt-2 text-lg font-bold">
+                    ${product.price.toFixed(2)}
+                 </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
   );
 }
