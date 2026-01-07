@@ -17,10 +17,10 @@ export default function ImageWithFallback({
   className,
   ...props 
 }: ImageWithFallbackProps) {
-  const [imgSrc, setImgSrc] = useState<string | undefined>(src);
+  const [imgSrc, setImgSrc] = useState<string | undefined>(src as string | undefined);
 
   useEffect(() => {
-    setImgSrc(src);
+    setImgSrc(src as string | undefined);
   }, [src]);
 
   return (
