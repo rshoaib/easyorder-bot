@@ -228,6 +228,20 @@ export class SupabaseTenantRepository implements TenantRepository {
             password: data.password
         };
     }
+
+    async updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void> {
+        const updateData: any = { status };
+        if (stripeCustomerId) {
+            updateData.stripe_customer_id = stripeCustomerId;
+        }
+
+        const { error } = await supabase
+            .from('tenants')
+            .update(updateData)
+            .eq('id', id);
+
+        if (error) throw new Error(error.message);
+    }
 }
 
 import { AnalyticsRepository, AnalyticsSummary } from './types';

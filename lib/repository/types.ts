@@ -93,6 +93,7 @@ export interface TenantRepository {
     getTenantBySlug(slug: string): Promise<Tenant | null>;
     getAllTenants(): Promise<Tenant[]>;
     createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant>;
+    updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void>;
 }
 
 
