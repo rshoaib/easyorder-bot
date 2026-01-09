@@ -1,13 +1,14 @@
 "use client";
 
 import { OrderStatus } from "@/lib/repository/types";
-import { updateOrderStatus } from "@/app/admin/actions";
+import { updateOrderStatus } from "@/app/actions/order-actions";
 import { useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 
 interface StatusSelectorProps {
     orderId: string;
     currentStatus: OrderStatus;
+    slug: string;
 }
 
 const statusColors: Record<OrderStatus, string> = {
@@ -18,7 +19,7 @@ const statusColors: Record<OrderStatus, string> = {
     cancelled: "bg-red-100 text-red-800"
 };
 
-export default function StatusSelector({ orderId, currentStatus }: StatusSelectorProps) {
+export default function StatusSelector({ orderId, currentStatus, slug }: StatusSelectorProps) {
     const [isPending, startTransition] = useTransition();
     
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -32,7 +33,7 @@ export default function StatusSelector({ orderId, currentStatus }: StatusSelecto
         }
 
         startTransition(async () => {
-            await updateOrderStatus(orderId, newStatus);
+            await updateOrderStatus(orderId, newStatus, slug);
         });
     };
 

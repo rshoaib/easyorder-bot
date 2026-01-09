@@ -133,7 +133,7 @@ export default async function AdminPage({ params }: Props) {
                   </td>
                   <td className="py-4 px-6 font-bold text-gray-900">${order.total.toFixed(2)}</td>
                   <td className="py-4 px-6 text-center">
-                    <StatusSelector orderId={order.id} currentStatus={order.status || 'pending'} />
+                    <StatusSelector orderId={order.id} currentStatus={order.status || 'pending'} slug={slug} />
                   </td>
                   <td className="py-4 px-6 text-center">
                     <a 
