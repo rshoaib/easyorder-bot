@@ -1,6 +1,6 @@
 import { getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
 import Link from 'next/link';
-import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign } from 'lucide-react';
+import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag } from 'lucide-react';
 import StatusSelector from '@/components/admin/StatusSelector';
 
 export const dynamic = 'force-dynamic';
