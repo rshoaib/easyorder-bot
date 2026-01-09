@@ -70,7 +70,11 @@ export async function registerTenant(formData: FormData) {
             throw new Error("Failed to create Stripe session");
         }
 
-        return { url: session.url };
+        // Send Welcome Email (Fire and forget)
+        const { sendWelcomeEmail } = await import('@/lib/email');
+        sendWelcomeEmail(email, name, slug).catch(console.error);
+
+        return { success: true, url: session.url! };
 
     } catch (error: any) {
         console.error("Registration Error:", error);

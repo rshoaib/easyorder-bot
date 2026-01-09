@@ -61,6 +61,33 @@ export default async function StorePage({ params }: Props) {
                 price: 24,
                 image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80',
                 isAvailable: false
+            },
+            {
+                id: 'p5',
+                tenantId: 'demo-123',
+                name: 'Tiramisu',
+                category: 'Dessert',
+                price: 8,
+                image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=800&q=80',
+                isAvailable: true
+            },
+            {
+                id: 'p6',
+                tenantId: 'demo-123',
+                name: 'Fresh Orange Juice',
+                category: 'Drinks',
+                price: 5,
+                image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=800&q=80',
+                isAvailable: true
+            },
+            {
+                id: 'p7',
+                tenantId: 'demo-123',
+                name: 'Creamy Carbonara',
+                category: 'Pasta',
+                price: 16,
+                image: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=800&q=80',
+                isAvailable: true
             }
         ];
 
