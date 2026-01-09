@@ -85,6 +85,67 @@ export default async function Home() {
         </div>
       </section>
 
+
+      {/* Pricing Section */}
+      <section className="py-24 bg-white border-y border-gray-100">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Simple, Transparent Pricing</h2>
+            <p className="text-slate-500 text-lg">Start for free, upgrade when you grow.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+             {/* Starter Plan */}
+             <div className="p-8 rounded-3xl border border-gray-200 bg-white hover:border-indigo-100 hover:shadow-xl transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
+                   FREE 14-DAY TRIAL
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Starter</h3>
+                <div className="flex items-baseline gap-1 mb-6">
+                   <span className="text-4xl font-extrabold text-slate-900">$29</span>
+                   <span className="text-slate-500">/month</span>
+                </div>
+                <p className="text-slate-500 mb-8 border-b border-gray-100 pb-8">
+                   Perfect for small cafes and home kitchens starting out.
+                </p>
+                <ul className="space-y-4 mb-8">
+                   <PricingFeature text="Up to 100 Orders/mo" />
+                   <PricingFeature text="Digital Menu & QR Code" />
+                   <PricingFeature text="WhatsApp Integration" />
+                   <PricingFeature text="Basic Analytics" />
+                </ul>
+                <button className="w-full py-3 rounded-xl border-2 border-slate-900 text-slate-900 font-bold hover:bg-slate-900 hover:text-white transition-all">
+                   Start Free Trial
+                </button>
+             </div>
+
+             {/* Pro Plan */}
+             <div className="p-8 rounded-3xl border-2 border-indigo-600 bg-slate-900 text-white relative shadow-2xl shadow-indigo-500/20 transform md:-translate-y-4">
+                <div className="absolute top-0 center w-full text-center -mt-3">
+                   <span className="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Most Popular</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Growth</h3>
+                <div className="flex items-baseline gap-1 mb-6">
+                   <span className="text-4xl font-extrabold text-white">$79</span>
+                   <span className="text-gray-400">/month</span>
+                </div>
+                <p className="text-indigo-200 mb-8 border-b border-indigo-800 pb-8">
+                   For navigation restaurants handling high volume.
+                </p>
+                <ul className="space-y-4 mb-8">
+                   <PricingFeature text="Unlimited Orders" light />
+                   <PricingFeature text="Priority Support" light />
+                   <PricingFeature text="Custom Domain" light />
+                   <PricingFeature text="Remove Branding" light />
+                </ul>
+                <button className="w-full py-4 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/40">
+                   Get Started Now
+                </button>
+             </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Clients */}
       <section className="py-24 bg-slate-50 border-y border-slate-100">
         <div className="max-w-6xl mx-auto px-6">
@@ -167,5 +228,14 @@ function FeatureCard({ icon, title, description }: { icon: any, title: string, d
       <h3 className="text-xl font-bold text-slate-900 mb-3">{title}</h3>
       <p className="text-slate-600 leading-relaxed">{description}</p>
     </div>
+  );
+}
+
+function PricingFeature({ text, light = false }: { text: string, light?: boolean }) {
+  return (
+    <li className="flex items-center gap-3">
+       <CheckCircle2 size={18} className={light ? "text-indigo-400" : "text-indigo-600"} />
+       <span className={light ? "text-gray-300" : "text-slate-600"}>{text}</span>
+    </li>
   );
 }
