@@ -1,4 +1,6 @@
 
+export type OrderStatus = 'pending' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
+
 export interface Order {
     id: string;
     date: string;
@@ -9,13 +11,14 @@ export interface Order {
     };
     items: any[];
     total: number;
-    status: string;
+    status: OrderStatus;
 }
 
 export interface OrderRepository {
     saveOrder(order: Order): Promise<void>;
     getOrders(): Promise<Order[]>;
     getOrderById(id: string): Promise<Order | null>;
+    updateOrderStatus(id: string, status: OrderStatus): Promise<void>;
 }
 
 export interface Product {

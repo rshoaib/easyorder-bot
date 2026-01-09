@@ -1,5 +1,5 @@
 
-import { Order, OrderRepository, Product, ProductRepository } from './types';
+import { Order, OrderRepository, Product, ProductRepository, OrderStatus } from './types';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -41,6 +41,22 @@ export class JsonOrderRepository implements OrderRepository {
             return orders.find(o => o.id === id) || null;
         } catch {
             return null;
+        }
+    }
+
+    async updateOrderStatus(id: string, status: OrderStatus): Promise<void> {
+        const filePath = this.getFilePath();
+        try {
+            const fileData = await fs.readFile(filePath, 'utf8');
+            let orders: Order[] = JSON.parse(fileData);
+
+            const orderIndex = orders.findIndex(o => o.id === id);
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = status;
+                await fs.writeFile(filePath, JSON.stringify(orders, null, 2));
+            }
+        } catch {
+            // Ignore if file doesn't exist
         }
     }
 }

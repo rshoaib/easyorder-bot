@@ -1,5 +1,5 @@
 
-import { Order, OrderRepository, Product, ProductRepository } from './types';
+import { Order, OrderRepository, Product, ProductRepository, OrderStatus } from './types';
 import { supabase } from '../supabase';
 
 export class SupabaseOrderRepository implements OrderRepository {
@@ -61,8 +61,19 @@ export class SupabaseOrderRepository implements OrderRepository {
             customer: data.customer,
             items: data.items,
             total: data.total,
-            status: data.status
+            status: data.status as OrderStatus
         };
+    }
+
+    async updateOrderStatus(id: string, status: OrderStatus): Promise<void> {
+        const { error } = await supabase
+            .from('orders')
+            .update({ status })
+            .eq('id', id);
+
+        if (error) {
+            throw new Error(error.message);
+        }
     }
 }
 

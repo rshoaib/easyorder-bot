@@ -1,6 +1,7 @@
 import { getOrderRepository } from "@/lib/repository";
 import Link from 'next/link';
 import { FileText, RefreshCw, ArrowLeft, MoreHorizontal } from 'lucide-react';
+import StatusSelector from '@/components/admin/StatusSelector';
 
 // Force dynamic rendering ensures we always fetch the latest data from DB
 export const dynamic = 'force-dynamic';
@@ -55,6 +56,7 @@ export default async function AdminPage() {
                 <th className="py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
                 <th className="py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
                 <th className="py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
+                <th className="py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Status</th>
                 <th className="py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Invoice</th>
               </tr>
             </thead>
@@ -74,6 +76,9 @@ export default async function AdminPage() {
                     <div className="text-xs text-gray-400 truncate max-w-[150px]">{order.customer.address}</div>
                   </td>
                   <td className="py-4 px-6 font-bold text-gray-900">${order.total.toFixed(2)}</td>
+                  <td className="py-4 px-6 text-center">
+                    <StatusSelector orderId={order.id} currentStatus={order.status || 'pending'} />
+                  </td>
                   <td className="py-4 px-6 text-center">
                     <a 
                       href={`/api/invoice/${order.id}`} 
