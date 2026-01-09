@@ -63,6 +63,23 @@ We will confirm your delivery shortly.`;
         const cleanPhone = customer.phone.replace(/\D/g, '');
         await sendWhatsAppMessage(cleanPhone, customerMessage);
 
+        // 7. Send Message to Owner
+        const ownerPhone = process.env.OWNER_PHONE_NUMBER;
+        if (ownerPhone) {
+            const ownerMessage = `🔔 *New Order Received!*
+            
+📦 *Order:* ${orderId}
+👤 *Customer:* ${customer.name} (${customer.phone})
+💰 *Total:* $${total.toFixed(2)}
+
+See full details in Admin Dashboard:
+https://easyorder-bot.vercel.app/admin`;
+
+            // Clean owner phone just in case
+            const cleanOwnerPhone = ownerPhone.replace(/\D/g, '');
+            await sendWhatsAppMessage(cleanOwnerPhone, ownerMessage);
+        }
+
         // 7. (Saved already)
 
         // 6. Send Message to Owner (Placeholder logic)
