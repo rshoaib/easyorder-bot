@@ -8,8 +8,11 @@ export interface Order {
         name: string;
         phone: string;
         address: string;
+        locationLink?: string;
     };
     items: any[];
+    subtotal: number;
+    deliveryFee: number;
     total: number;
     status: OrderStatus;
 }

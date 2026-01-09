@@ -14,18 +14,24 @@ export default function CartPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const [locationLink, setLocationLink] = useState("");
+
   const handleLocationClick = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser");
       return;
     }
 
-    setLoading(true); // Re-use loading state or add a specific one temporarily
+    setLoading(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-        setFormData((prev) => ({ ...prev, address: `📍 Current Location: ${mapsLink}` }));
+        const link = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        setLocationLink(link);
+        // Also auto-fill address if empty specific location is found
+        if (!formData.address) {
+             setFormData(prev => ({ ...prev, address: "📍 GPS Location Shared" }));
+        }
         setLoading(false);
       },
       (error) => {
@@ -56,7 +62,10 @@ export default function CartPage() {
       const response = await axios.post("/api/checkout", {
         items,
         total,
-        customer: formData,
+        customer: {
+            ...formData,
+            locationLink
+        },
       });
 
       if (response.data.success) {
@@ -117,9 +126,17 @@ export default function CartPage() {
         ))}
         
         <div className="mt-4 pt-4" style={{borderTop: '1px solid #f0f0f0'}}>
+          <div className="flex justify-between text-sm text-gray-500 mb-2">
+            <span>Subtotal</span>
+            <span>${total.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-sm text-gray-500 mb-2">
+             <span>Delivery Fee</span>
+             <span>${parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0").toFixed(2)}</span>
+          </div>
           <div className="flex justify-between text-xl font-bold">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>${(total + parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0")).toFixed(2)}</span>
           </div>
         </div>
       </div>
@@ -156,9 +173,9 @@ export default function CartPage() {
               <button
                 type="button"
                 onClick={handleLocationClick}
-                className="btn-secondary"
+                className={`btn-secondary ${locationLink ? 'bg-green-100 text-green-700' : ''}`}
               >
-                <MapPin size={14} /> Current Location
+                <MapPin size={14} /> {locationLink ? "Location Shared ✅" : "Share GPS Location"}
               </button>
             </label>
             <textarea 

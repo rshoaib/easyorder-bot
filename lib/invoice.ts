@@ -19,6 +19,8 @@ interface Order {
         address: string;
     };
     items: OrderItem[];
+    subtotal?: number;
+    deliveryFee?: number;
     total: number;
 }
 
@@ -139,6 +141,11 @@ export const generateInvoiceBuffer = async (order: Order): Promise<Buffer> => {
         ];
         tableRows.push(itemData);
     });
+
+    // Add Delivery Fee if present
+    if ((order.deliveryFee || 0) > 0) {
+        tableRows.push(['Delivery Fee', '', '', `$${(order.deliveryFee || 0).toFixed(2)}`]);
+    }
 
     // @ts-ignore
     autoTable(doc, {

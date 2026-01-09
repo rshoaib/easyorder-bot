@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendWhatsAppMessage } from '@/lib/whatsapp';
 import { getOrderRepository } from '@/lib/repository';
+import { Order } from '@/lib/repository/types';
 
 export async function POST(req: NextRequest) {
     try {
@@ -16,13 +17,27 @@ export async function POST(req: NextRequest) {
         const orderId = `ORD-${Date.now().toString().slice(-6)}`;
 
         // 2. Prepare Order Object
-        const newOrder = {
+        const subtotal = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
+        const deliveryFee = parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
+        const finalTotal = subtotal + deliveryFee;
+
+        // Verify total matches (within small margin due to potential float math, or just overwrite it)
+        // Better to trust server calculation
+
+        const newOrder: Order = {
             id: orderId,
             date: new Date().toISOString(),
-            customer,
+            customer: {
+                name: customer.name,
+                phone: customer.phone,
+                address: customer.address,
+                locationLink: customer.locationLink
+            },
             items,
-            total,
-            status: 'Pending'
+            subtotal,
+            deliveryFee,
+            total: finalTotal,
+            status: 'pending'
         };
 
         // 3. Save Order FIRST (so it exists for the invoice link)

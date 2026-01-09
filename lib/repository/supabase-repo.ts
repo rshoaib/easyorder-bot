@@ -13,6 +13,8 @@ export class SupabaseOrderRepository implements OrderRepository {
                 date: order.date,
                 customer: order.customer, // Supabase client auto-stringifies for JSONB cols if passing objects
                 items: order.items,
+                subtotal: order.subtotal,
+                "deliveryFee": order.deliveryFee, // Quote to ensure matches column if case sensitive
                 total: order.total,
                 status: order.status
             });
@@ -39,6 +41,8 @@ export class SupabaseOrderRepository implements OrderRepository {
             date: row.date,
             customer: row.customer,
             items: row.items,
+            subtotal: row.subtotal || 0,
+            deliveryFee: row.deliveryFee || 0,
             total: row.total,
             status: row.status
         }));
@@ -60,6 +64,8 @@ export class SupabaseOrderRepository implements OrderRepository {
             date: data.date,
             customer: data.customer,
             items: data.items,
+            subtotal: data.subtotal || 0,
+            deliveryFee: data.deliveryFee || 0,
             total: data.total,
             status: data.status as OrderStatus
         };
