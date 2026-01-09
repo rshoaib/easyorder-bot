@@ -22,7 +22,8 @@ export async function addProduct(slug: string, formData: FormData) {
         category: formData.get('category') as string,
         image: formData.get('image') as string,
         description: formData.get('description') as string || '',
-        tenantId: tenant.id
+        tenantId: tenant.id,
+        isAvailable: true
     };
 
     await repo.addProduct(product);
