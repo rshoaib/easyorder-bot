@@ -6,7 +6,11 @@ import { Order } from '@/lib/repository/types';
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { items, customer, slug, promoCode } = body;
+        const { items, customer, slug, promoCode, paymentMethod } = body;
+
+        // ... (lines 11-52 skipped for brevity, keeping same logic)
+
+
 
         // 0. Get Tenant
         const tenantRepo = getTenantRepository();
@@ -66,6 +70,7 @@ export async function POST(req: NextRequest) {
             discount,
             promoCode: discount > 0 ? promoCode : undefined,
             total: finalTotal,
+            paymentMethod: paymentMethod || 'Cash on Delivery',
             status: 'pending'
         };
 
@@ -100,6 +105,7 @@ ${itemSummary}
 *Total:* $${finalTotal.toFixed(2)}
 ${discount > 0 ? `(Discount: -$${discount.toFixed(2)})` : ''}
 *Delivery Address:* ${customer.address}
+*Payment Method:* ${paymentMethod || 'Cash on Delivery'}
 
 📄 *Invoice:* ${invoiceLink}
 

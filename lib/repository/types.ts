@@ -32,6 +32,7 @@ export interface Order {
     discount?: number;
     promoCode?: string;
     total: number;
+    paymentMethod?: string;
     status: OrderStatus;
 }
 

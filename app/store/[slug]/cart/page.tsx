@@ -61,6 +61,7 @@ export default function CartPage() {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', locationLink: '' });
+    const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
     const params = useParams();
     const slug = params.slug as string;
     const router = useRouter();
@@ -124,7 +125,8 @@ export default function CartPage() {
                 total: finalTotal, // API calculates simpler, but we pass for reference
                 customer,
                 slug, // Pass slug so API knows which tenant!
-                promoCode: appliedPromo?.code
+                promoCode: appliedPromo?.code,
+                paymentMethod
             });
 
             if (response.data.success) {
@@ -292,6 +294,29 @@ export default function CartPage() {
                             <MapPin size={12} /> Location attached
                         </p>
                     )}
+                </div>
+
+                <div>
+                    <label className="form-label mb-2 block">Payment Method</label>
+                    <div className="space-y-2">
+                        {['Cash on Delivery', 'Card on Delivery', 'Bank Transfer'].map((method) => (
+                            <label key={method} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                                paymentMethod === method 
+                                ? 'border-indigo-600 bg-indigo-50 text-indigo-900' 
+                                : 'border-gray-200 hover:bg-gray-50'
+                            }`}>
+                                <input 
+                                    type="radio" 
+                                    name="paymentMethod" 
+                                    value={method}
+                                    checked={paymentMethod === method}
+                                    onChange={(e) => setPaymentMethod(e.target.value)}
+                                    className="w-5 h-5 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span className="font-medium">{method}</span>
+                            </label>
+                        ))}
+                    </div>
                 </div>
 
                 <button 
