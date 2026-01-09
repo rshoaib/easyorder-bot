@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
                     // For now, we'll send a placeholder or the localhost link (which won't work on mobile unless tunneled)
 
                     // TODO: Replace with deployed URL
-                    const appUrl = 'https://franklin-caffeinic-rank.ngrok-free.dev';
+                    const appUrl = 'https://easyorder-bot.vercel.app';
 
                     await sendWhatsAppMessage(
                         from,
