@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Image, { ImageProps } from "next/image";
 
@@ -23,7 +25,7 @@ export default function ImageWithFallback({
   }, [src]);
 
   return (
-  return (
+
     <Image
       {...props}
       src={imgSrc || fallbackSrc}
@@ -36,6 +38,5 @@ export default function ImageWithFallback({
         }
       }}
     />
-  );
   );
 }
