@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendWhatsAppMessage } from '@/lib/whatsapp';
-import { generateInvoicePDF } from '@/lib/invoice';
-import fs from 'fs/promises';
-import path from 'path';
+import { sendWhatsAppMessage } from '@/lib/whatsapp';
+import { getOrderRepository } from '@/lib/repository';
 
 export async function POST(req: NextRequest) {
     try {
@@ -27,19 +26,19 @@ export async function POST(req: NextRequest) {
             status: 'Pending'
         };
 
-        // 3. Generate PDF Invoice
-        let invoiceLink = '';
+        // 3. Save Order FIRST (so it exists for the invoice link)
         try {
-            // Generate the relative path
-            const relativePath = await generateInvoicePDF(newOrder);
-            // Prepend the public domain (Ngrok) so it's clickable in WhatsApp
-            // TODO: Move domain to env var
-            const baseUrl = 'https://franklin-caffeinic-rank.ngrok-free.dev';
-            invoiceLink = `${baseUrl}${relativePath}`;
-        } catch (err) {
-            console.error('Failed to generate PDF:', err);
-            // Continue without invoice if fails, just log it
+            const repo = getOrderRepository();
+            await repo.saveOrder(newOrder);
+        } catch (saveError) {
+            console.error('Failed to save order:', saveError);
+            return new NextResponse('Failed to save order', { status: 500 });
         }
+
+        // 4. Generate Invoice Link
+        // Use the deployed Vercel URL
+        const baseUrl = 'https://easyorder-bot.vercel.app';
+        const invoiceLink = `${baseUrl}/api/invoice/${orderId}`;
 
         // 4. Format Items for Message
         const itemSummary = items.map((item: any) =>
@@ -65,15 +64,7 @@ We will confirm your delivery shortly.`;
         const cleanPhone = customer.phone.replace(/\D/g, '');
         await sendWhatsAppMessage(cleanPhone, customerMessage);
 
-        // 7. Save Order (Hybrid: Local JSON or Cloud DB)
-        try {
-            const { getOrderRepository } = require('@/lib/repository');
-            const repo = getOrderRepository();
-            await repo.saveOrder(newOrder);
-        } catch (saveError) {
-            console.error('Failed to save order:', saveError);
-            // Non-blocking error for User response, but log it.
-        }
+        // 7. (Saved already)
 
         // 6. Send Message to Owner (Placeholder logic)
         // In a real app, this would go to process.env.OWNER_PHONE_NUMBER

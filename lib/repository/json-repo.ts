@@ -33,4 +33,14 @@ export class JsonOrderRepository implements OrderRepository {
             return [];
         }
     }
+
+    async getOrderById(id: string): Promise<Order | null> {
+        try {
+            const fileData = await fs.readFile(this.getFilePath(), 'utf8');
+            const orders: Order[] = JSON.parse(fileData);
+            return orders.find(o => o.id === id) || null;
+        } catch {
+            return null;
+        }
+    }
 }

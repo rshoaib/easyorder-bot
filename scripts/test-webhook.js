@@ -19,7 +19,7 @@ const run = async () => {
         ]
     };
 
-    const url = 'https://franklin-caffeinic-rank.ngrok-free.dev/webhook';
+    const url = 'https://easyorder-bot.vercel.app/webhook';
     console.log(`Sending simulated WhatsApp message to ${url}...`);
     
     try {

@@ -43,4 +43,25 @@ export class SupabaseOrderRepository implements OrderRepository {
             status: row.status
         }));
     }
+
+    async getOrderById(id: string): Promise<Order | null> {
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error || !data) {
+            return null;
+        }
+
+        return {
+            id: data.id,
+            date: data.date,
+            customer: data.customer,
+            items: data.items,
+            total: data.total,
+            status: data.status
+        };
+    }
 }

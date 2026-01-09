@@ -15,4 +15,5 @@ export interface Order {
 export interface OrderRepository {
     saveOrder(order: Order): Promise<void>;
     getOrders(): Promise<Order[]>;
+    getOrderById(id: string): Promise<Order | null>;
 }
