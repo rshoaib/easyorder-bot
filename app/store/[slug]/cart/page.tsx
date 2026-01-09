@@ -1,3 +1,5 @@
+'use client';
+
 import { useCart } from "@/context/CartContext";
 import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin, Tag } from "lucide-react";
 import Link from "next/link";
