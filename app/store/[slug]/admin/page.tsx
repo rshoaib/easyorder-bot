@@ -84,7 +84,7 @@ export default async function AdminPage({ params }: Props) {
             <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
          </h2>
          <div className="flex gap-2">
-             <LanguageSelector slug={params.slug} currentLanguage={tenant.language} /> {/* Added LanguageSelector */}
+             <LanguageSelector slug={slug} currentLanguage={tenant.language} /> {/* Added LanguageSelector */}
              <Link href={`/store/${slug}/admin/menu`}>
                 <button className="btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100">
                     Menu Manager
