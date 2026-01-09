@@ -13,6 +13,7 @@ export interface Tenant {
     stripeCustomerId?: string;
     password?: string;
     language: 'en' | 'es' | 'fr';
+    customDomain?: string;
 }
 
 export interface Order {
@@ -96,6 +97,8 @@ export interface TenantRepository {
     createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant>;
     updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void>;
     updateTenantLanguage(id: string, language: string): Promise<void>;
+    updateTenantDomain(id: string, domain: string): Promise<void>;
+    getTenantByDomain(domain: string): Promise<Tenant | null>;
 }
 
 

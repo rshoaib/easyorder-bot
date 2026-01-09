@@ -1,6 +1,7 @@
 import { getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
 import Link from "next/link";
 import { LanguageSelector } from "@/components/admin/LanguageSelector";
+import { DomainSettings } from "@/components/admin/DomainSettings";
 import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag } from 'lucide-react';
 import StatusSelector from '@/components/admin/StatusSelector';
 
@@ -76,6 +77,9 @@ export default async function AdminPage({ params }: Props) {
             </div>
         </div>
       )}
+
+      {/* Domain Settings */}
+      <DomainSettings slug={slug} currentDomain={tenant.customDomain} />
 
       {/* Controls */}
       <div className="flex justify-between mb-4 items-center px-2">

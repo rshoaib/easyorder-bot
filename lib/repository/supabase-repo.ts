@@ -171,7 +171,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             status: data.status,
             stripeCustomerId: data.stripe_customer_id,
             password: data.password,
-            language: data.language || 'en'
+            language: data.language || 'en',
+            customDomain: data.custom_domain
         };
     }
 
@@ -194,7 +195,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             status: row.status,
             stripeCustomerId: row.stripe_customer_id,
             password: row.password,
-            language: row.language || 'en'
+            language: row.language || 'en',
+            customDomain: row.custom_domain
         }));
     }
 
@@ -229,7 +231,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             status: data.status,
             stripeCustomerId: data.stripe_customer_id,
             password: data.password,
-            language: data.language || 'en'
+            language: data.language || 'en',
+            customDomain: data.custom_domain
         };
     }
 
@@ -240,6 +243,40 @@ export class SupabaseTenantRepository implements TenantRepository {
             .eq('id', id);
 
         if (error) throw new Error(error.message);
+    }
+
+    async updateTenantDomain(id: string, domain: string): Promise<void> {
+        const { error } = await supabase
+            .from('tenants')
+            .update({ custom_domain: domain })
+            .eq('id', id);
+
+        if (error) throw new Error(error.message);
+    }
+
+    async getTenantByDomain(domain: string): Promise<Tenant | null> {
+        const { data, error } = await supabase
+            .from('tenants')
+            .select('*')
+            .eq('custom_domain', domain)
+            .single();
+
+        if (error || !data) return null;
+
+        return {
+            id: data.id,
+            slug: data.slug,
+            name: data.name,
+            ownerPhone: data.owner_phone,
+            currency: data.currency,
+            themeColor: data.theme_color,
+            email: data.email,
+            status: data.status,
+            stripeCustomerId: data.stripe_customer_id,
+            password: data.password,
+            language: data.language || 'en',
+            customDomain: data.custom_domain
+        };
     }
 
     async updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void> {
