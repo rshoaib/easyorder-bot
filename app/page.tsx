@@ -15,7 +15,7 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
           <div className="flex items-center gap-2 font-bold text-xl text-indigo-600">
             <ShoppingBag strokeWidth={2.5} />
-            <span>EasyOrder</span>
+            <span>OrderViaChat</span>
           </div>
           <div className="flex gap-4">
             <Link href="/register">
@@ -165,7 +165,7 @@ export default async function Home() {
               <TestimonialCard 
                  name="Sarah Jenkins"
                  role="Owner, The Daily Grind"
-                 text="Since switching to EasyOrder, we've saved over $400/month in delivery commissions. Our customers love ordering via WhatsApp!"
+                 text="Since switching to OrderViaChat, we've saved over $400/month in delivery commissions. Our customers love ordering via WhatsApp!"
                  initial="S"
                  color="bg-orange-100 text-orange-600"
               />
@@ -193,7 +193,7 @@ export default async function Home() {
           <div className="flex justify-between items-end mb-12">
              <div>
                 <h2 className="text-3xl font-bold text-slate-900">Featured Partners</h2>
-                <p className="text-slate-500 mt-2">See who is already growing with EasyOrder.</p>
+                <p className="text-slate-500 mt-2">See who is already growing with OrderViaChat.</p>
              </div>
              <Link href="/super-admin/login" className="hidden sm:block text-indigo-600 font-semibold hover:underline">
                 Become a partner &rarr;
@@ -233,7 +233,7 @@ export default async function Home() {
            <div className="col-span-2">
               <div className="flex items-center gap-2 font-bold text-xl text-white mb-4">
                 <ShoppingBag strokeWidth={2.5} />
-                <span>EasyOrder</span>
+                <span>OrderViaChat</span>
               </div>
               <p className="max-w-xs">Helping small businesses complete with the giants. One WhatsApp order at a time.</p>
            </div>
@@ -255,7 +255,7 @@ export default async function Home() {
            </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 text-sm text-center">
-           &copy; {new Date().getFullYear()} EasyOrder Inc. All rights reserved.
+           &copy; {new Date().getFullYear()} OrderViaChat Inc. All rights reserved.
         </div>
       </footer>
     </main>

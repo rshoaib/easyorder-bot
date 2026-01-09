@@ -6,7 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "EasyOrder | Shop Local",
+  title: "OrderViaChat | Shop Local",
   description: "Order fresh items directly via WhatsApp",
 };
 
