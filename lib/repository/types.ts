@@ -54,5 +54,6 @@ export interface ProductRepository {
 // New Interface for Tenant Management
 export interface TenantRepository {
     getTenantBySlug(slug: string): Promise<Tenant | null>;
+    getAllTenants(): Promise<Tenant[]>;
     createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant>;
 }

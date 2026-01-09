@@ -153,6 +153,25 @@ export class SupabaseTenantRepository implements TenantRepository {
         };
     }
 
+    async getAllTenants(): Promise<Tenant[]> {
+        const { data, error } = await supabase
+            .from('tenants')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) return [];
+
+        return data.map((row: any) => ({
+            id: row.id,
+            slug: row.slug,
+            name: row.name,
+            ownerPhone: row.owner_phone,
+            currency: row.currency,
+            themeColor: row.theme_color,
+            password: row.password
+        }));
+    }
+
     async createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant> {
         const { data, error } = await supabase
             .from('tenants')

@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
         // 4. Generate Invoice Link
         // Use the deployed Vercel URL
         const baseUrl = 'https://easyorder-bot.vercel.app';
+        // Ideally we should point to /store/[slug]/invoice/[id] or keep api link
         const invoiceLink = `${baseUrl}/api/invoice/${orderId}`;
 
         // 4. Format Items for Message
