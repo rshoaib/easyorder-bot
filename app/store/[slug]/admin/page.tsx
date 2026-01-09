@@ -93,7 +93,9 @@ export default async function AdminPage({ params }: Props) {
                     <Tag size={16} /> Promos
                 </button>
              </Link>
-                 <RefreshCw size={14} />
+             <Link href={`/store/${slug}/admin`}>
+                <button className="btn-secondary" title="Check for new orders">
+                <RefreshCw size={14} />
                 Refresh
                 </button>
              </Link>
