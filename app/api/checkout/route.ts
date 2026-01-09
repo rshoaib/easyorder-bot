@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendWhatsAppMessage } from '@/lib/whatsapp';
-import { sendWhatsAppMessage } from '@/lib/whatsapp';
 import { getOrderRepository } from '@/lib/repository';
 
 export async function POST(req: NextRequest) {

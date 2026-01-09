@@ -23,7 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         const pdfBuffer = await generateInvoiceBuffer(order);
 
         // Return as PDF file
-        return new NextResponse(pdfBuffer, {
+        return new NextResponse(pdfBuffer as any, {
             headers: {
                 'Content-Type': 'application/pdf',
                 'Content-Disposition': `inline; filename="invoice_${id}.pdf"`,
