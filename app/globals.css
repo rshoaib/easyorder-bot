@@ -1,4 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f5f5f7;
+  --foreground: #1d1d1f;
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] font-sans antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 active:scale-95 transition-all outline-none flex items-center justify-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-700 font-medium py-2 px-4 rounded-xl border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm;
+  }
+
+  .btn-block {
+    @apply w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium bg-gray-50/50 focus:bg-white;
+  }
+
+  .form-label {
+    @apply block text-sm font-semibold text-gray-700 mb-1.5;
+  }
+
+  .panel-card {
+    @apply bg-white p-5 rounded-2xl border border-gray-100 shadow-sm;
+  }
+
+  .container {
+    @apply max-w-lg mx-auto p-6 pb-24;
+  }
+}
 
 :root {
   --background: #f5f5f7;
