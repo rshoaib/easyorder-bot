@@ -99,7 +99,11 @@ export class SupabaseProductRepository implements ProductRepository {
             console.error("Supabase Products Fetch Error:", error);
             return [];
         }
-        return data.map((d: any) => ({ ...d, tenantId: d.tenant_id })) as Product[];
+        return data.map((d: any) => ({
+            ...d,
+            tenantId: d.tenant_id,
+            isAvailable: d.is_available // Map from DB column
+        })) as Product[];
     }
 
     async addProduct(product: Product): Promise<void> {
@@ -112,7 +116,8 @@ export class SupabaseProductRepository implements ProductRepository {
                 category: product.category,
                 image: product.image,
                 description: product.description,
-                tenant_id: product.tenantId
+                tenant_id: product.tenantId,
+                is_available: true
             });
 
         if (error) {
@@ -124,6 +129,17 @@ export class SupabaseProductRepository implements ProductRepository {
         const { error } = await supabase
             .from('products')
             .delete()
+            .eq('id', id);
+
+        if (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    async toggleAvailability(id: string, isAvailable: boolean): Promise<void> {
+        const { error } = await supabase
+            .from('products')
+            .update({ is_available: isAvailable })
             .eq('id', id);
 
         if (error) {

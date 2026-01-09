@@ -3,6 +3,7 @@ import { addProduct, deleteProduct } from "./actions";
 import { Trash2, Plus, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
+import ProductToggle from "@/components/admin/ProductToggle";
 
 export const dynamic = 'force-dynamic';
 
@@ -90,6 +91,14 @@ export default async function AdminMenuPage({ params }: Props) {
                                 <h3 className="font-bold">{product.name}</h3>
                                 <div className="text-sm text-gray-500">{product.category} • ${product.price.toFixed(2)}</div>
                             </div>
+                            
+                            {/* Toggle Availability */}
+                            <ProductToggle 
+                                id={product.id} 
+                                initialAvailable={product.isAvailable ?? true} 
+                                slug={slug} 
+                            />
+
                             {/* Delete Button (Wrapped in form for Server Action) */}
                             <form action={deleteProductWithSlug}>
                                 <button type="submit" className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete Item">

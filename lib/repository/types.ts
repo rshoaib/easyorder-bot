@@ -45,12 +45,14 @@ export interface Product {
     category: string;
     image: string;
     description: string;
+    isAvailable: boolean;
 }
 
 export interface ProductRepository {
     getProducts(tenantId: string): Promise<Product[]>;
     addProduct(product: Product): Promise<void>;
     deleteProduct(id: string): Promise<void>;
+    toggleAvailability(id: string, isAvailable: boolean): Promise<void>;
 }
 
 // Analytics Interface

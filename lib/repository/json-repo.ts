@@ -99,4 +99,20 @@ export class JsonProductRepository implements ProductRepository {
             // Nothing to delete
         }
     }
+
+    async toggleAvailability(id: string, isAvailable: boolean): Promise<void> {
+        const filePath = this.getFilePath();
+        try {
+            const fileData = await fs.readFile(filePath, 'utf8');
+            let products: Product[] = JSON.parse(fileData);
+
+            const productIndex = products.findIndex(p => p.id === id);
+            if (productIndex !== -1) {
+                products[productIndex].isAvailable = isAvailable;
+                await fs.writeFile(filePath, JSON.stringify(products, null, 2));
+            }
+        } catch {
+            // Ignore
+        }
+    }
 }
