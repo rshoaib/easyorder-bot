@@ -27,5 +27,5 @@ export default async function StorePage({ params }: Props) {
     const products = await repo.getProducts(tenant.id);
 
     // We can pass tenant details to StoreFront for branding if we want later (name, theme color)
-    return <StoreFront initialProducts={products} />; 
+    return <StoreFront initialProducts={products} tenant={tenant} />; 
 }

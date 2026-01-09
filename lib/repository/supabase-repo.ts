@@ -170,7 +170,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             email: data.email,
             status: data.status,
             stripeCustomerId: data.stripe_customer_id,
-            password: data.password
+            password: data.password,
+            language: data.language || 'en'
         };
     }
 
@@ -192,7 +193,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             email: row.email,
             status: row.status,
             stripeCustomerId: row.stripe_customer_id,
-            password: row.password
+            password: row.password,
+            language: row.language || 'en'
         }));
     }
 
@@ -208,7 +210,8 @@ export class SupabaseTenantRepository implements TenantRepository {
                 email: tenant.email,
                 status: tenant.status,
                 stripe_customer_id: tenant.stripeCustomerId,
-                password: tenant.password
+                password: tenant.password,
+                language: tenant.language || 'en'
             })
             .select()
             .single();
@@ -225,8 +228,18 @@ export class SupabaseTenantRepository implements TenantRepository {
             email: data.email,
             status: data.status,
             stripeCustomerId: data.stripe_customer_id,
-            password: data.password
+            password: data.password,
+            language: data.language || 'en'
         };
+    }
+
+    async updateTenantLanguage(id: string, language: string): Promise<void> {
+        const { error } = await supabase
+            .from('tenants')
+            .update({ language })
+            .eq('id', id);
+
+        if (error) throw new Error(error.message);
     }
 
     async updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void> {

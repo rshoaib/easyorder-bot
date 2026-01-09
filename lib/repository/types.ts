@@ -12,6 +12,7 @@ export interface Tenant {
     status: 'active' | 'pending_payment' | 'disabled';
     stripeCustomerId?: string;
     password?: string;
+    language: 'en' | 'es' | 'fr';
 }
 
 export interface Order {
@@ -94,6 +95,7 @@ export interface TenantRepository {
     getAllTenants(): Promise<Tenant[]>;
     createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant>;
     updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void>;
+    updateTenantLanguage(id: string, language: string): Promise<void>;
 }
 
 

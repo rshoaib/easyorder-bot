@@ -32,7 +32,8 @@ export async function registerTenant(formData: FormData) {
             status: 'pending_payment',
             currency: 'USD', // Default
             themeColor: '#2563eb', // Default Blue
-            ownerPhone: '' // Can be updated later
+            ownerPhone: '', // Can be updated later
+            language: 'en'
         });
 
         // 2. Create Stripe Checkout Session

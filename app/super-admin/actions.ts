@@ -21,7 +21,8 @@ export async function createStore(formData: FormData) {
         password,
         currency: '$',
         themeColor: 'black',
-        status: 'active'
+        status: 'active',
+        language: 'en'
     });
 
     revalidatePath('/super-admin');

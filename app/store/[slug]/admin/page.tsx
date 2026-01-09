@@ -1,5 +1,6 @@
 import { getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
-import Link from 'next/link';
+import Link from "next/link";
+import { LanguageSelector } from "@/components/admin/LanguageSelector";
 import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag } from 'lucide-react';
 import StatusSelector from '@/components/admin/StatusSelector';
 
@@ -83,14 +84,16 @@ export default async function AdminPage({ params }: Props) {
             <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
          </h2>
          <div className="flex gap-2">
+             <LanguageSelector slug={params.slug} currentLanguage={tenant.language} /> {/* Added LanguageSelector */}
              <Link href={`/store/${slug}/admin/menu`}>
                 <button className="btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100">
                     Menu Manager
                 </button>
              </Link>
              <Link href={`/store/${slug}/admin/promos`}>
-                <button className="btn-secondary bg-purple-50 text-purple-600 border-purple-100 hover:bg-purple-100">
-                    <Tag size={16} /> Promos
+                <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors">
+                    <Tag size={18} />
+                    Promos
                 </button>
              </Link>
              <Link href={`/store/${slug}/admin`}>
