@@ -109,7 +109,14 @@ We will confirm your delivery shortly.`;
         const cleanPhone = customer.phone.replace(/\D/g, '');
         await sendWhatsAppMessage(cleanPhone, customerMessage);
 
-        // 7. Send Message to Owner
+        // 7. Send Email Notification to Owner (if they have email)
+        if (tenant.email) {
+            const { sendOrderNotification } = await import('@/lib/email');
+            // Fire and forget email to not slow down response
+            sendOrderNotification(tenant.email, orderId, finalTotal, customer.name).catch(console.error);
+        }
+
+        // 8. Send WhatsApp to Owner
         const ownerPhone = process.env.OWNER_PHONE_NUMBER;
         if (ownerPhone) {
             const ownerMessage = `🔔 *New Order Received!*
@@ -125,15 +132,6 @@ https://easyorder-bot.vercel.app/admin`;
             const cleanOwnerPhone = ownerPhone.replace(/\D/g, '');
             await sendWhatsAppMessage(cleanOwnerPhone, ownerMessage);
         }
-
-        // 7. (Saved already)
-
-        // 6. Send Message to Owner (Placeholder logic)
-        // In a real app, this would go to process.env.OWNER_PHONE_NUMBER
-        // const ownerPhone = process.env.OWNER_PHONE_NUMBER;
-        // if (ownerPhone) {
-        //    await sendWhatsAppMessage(ownerPhone, `🔔 New Order ${orderId} from ${customer.name} ...`);
-        // }
 
         return NextResponse.json({ success: true, orderId });
     } catch (error) {
