@@ -21,7 +21,7 @@ export async function createStore(formData: FormData) {
         password,
         currency: '$',
         themeColor: 'black',
-        // Default owner phone empty initially
+        status: 'active'
     });
 
     revalidatePath('/super-admin');
