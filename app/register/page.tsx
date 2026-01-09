@@ -83,6 +83,18 @@ export default function RegisterPage() {
                     </div>
 
                     <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp Number (inc. Country Code)</label>
+                        <input 
+                            name="ownerPhone" 
+                            type="tel" 
+                            required 
+                            defaultValue="+"
+                            placeholder="+1234567890" 
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 bg-gray-50 focus:bg-white"
+                        />
+                    </div>
+
+                    <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
                         <input 
                             name="password" 

@@ -9,8 +9,9 @@ export async function registerTenant(formData: FormData) {
     const slug = formData.get('slug') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
+    const ownerPhone = formData.get('ownerPhone') as string;
 
-    if (!name || !slug || !email || !password) {
+    if (!name || !slug || !email || !password || !ownerPhone) {
         return { error: "All fields are required" };
     }
 
@@ -32,7 +33,7 @@ export async function registerTenant(formData: FormData) {
             status: 'pending_payment',
             currency: 'USD', // Default
             themeColor: '#2563eb', // Default Blue
-            ownerPhone: '', // Can be updated later
+            ownerPhone,
             language: 'en'
         });
 

@@ -60,7 +60,7 @@ function PromoCodeSection({ tenantId, onApply }: { tenantId: string, onApply: (p
 export default function CartPage() {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [customer, setCustomer] = useState({ name: '', phone: '', address: '', locationLink: '' });
+    const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', locationLink: '' });
     const params = useParams();
     const slug = params.slug as string;
     const router = useRouter();
@@ -254,7 +254,12 @@ export default function CartPage() {
                         className="form-input"
                         placeholder="+1234567890"
                         value={customer.phone}
-                        onChange={e => setCustomer({...customer, phone: e.target.value})}
+                        onChange={e => {
+                            // Enforce starting with +
+                            let val = e.target.value;
+                            if(!val.startsWith('+')) val = '+' + val.replace(/^\+/, '');
+                            setCustomer({...customer, phone: val})
+                        }}
                     />
                 </div>
 
