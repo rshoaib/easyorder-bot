@@ -8,7 +8,10 @@ export interface Tenant {
     ownerPhone?: string;
     currency: string;
     themeColor: string;
-    password?: string; // Only for internal check
+    email?: string;
+    status: 'active' | 'pending_payment' | 'disabled';
+    stripeCustomerId?: string;
+    password?: string;
 }
 
 export interface Order {

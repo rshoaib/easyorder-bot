@@ -167,6 +167,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             ownerPhone: data.owner_phone,
             currency: data.currency,
             themeColor: data.theme_color,
+            email: data.email,
+            status: data.status,
+            stripeCustomerId: data.stripe_customer_id,
             password: data.password
         };
     }
@@ -186,6 +189,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             ownerPhone: row.owner_phone,
             currency: row.currency,
             themeColor: row.theme_color,
+            email: row.email,
+            status: row.status,
+            stripeCustomerId: row.stripe_customer_id,
             password: row.password
         }));
     }
@@ -199,6 +205,9 @@ export class SupabaseTenantRepository implements TenantRepository {
                 owner_phone: tenant.ownerPhone,
                 currency: tenant.currency,
                 theme_color: tenant.themeColor,
+                email: tenant.email,
+                status: tenant.status,
+                stripe_customer_id: tenant.stripeCustomerId,
                 password: tenant.password
             })
             .select()
@@ -213,6 +222,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             ownerPhone: data.owner_phone,
             currency: data.currency,
             themeColor: data.theme_color,
+            email: data.email,
+            status: data.status,
+            stripeCustomerId: data.stripe_customer_id,
             password: data.password
         };
     }
