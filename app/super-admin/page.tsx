@@ -32,7 +32,7 @@ export default async function SuperAdminPage() {
                     
                     {/* Create New Store Form */}
                     <div className="lg:col-span-4">
-                        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+                        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 text-gray-900">
                             <div className="bg-gray-50 p-6 border-b border-gray-100">
                                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                                     <Plus size={20} className="text-indigo-600" /> New Restaurant
