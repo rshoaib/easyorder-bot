@@ -88,6 +88,33 @@ export default async function StorePage({ params }: Props) {
                 price: 16,
                 image: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=800&q=80',
                 isAvailable: true
+            },
+            {
+                id: 'p8',
+                tenantId: 'demo-123',
+                name: 'Ribeye Steak',
+                category: 'Steak',
+                price: 32,
+                image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=800&q=80',
+                isAvailable: true
+            },
+            {
+                id: 'p9',
+                tenantId: 'demo-123',
+                name: 'Chocolate Lava Cake',
+                category: 'Dessert',
+                price: 9,
+                image: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&w=800&q=80',
+                isAvailable: true
+            },
+             {
+                id: 'p10',
+                tenantId: 'demo-123',
+                name: 'Iced Caramel Latte',
+                category: 'Drinks',
+                price: 6,
+                image: 'https://images.unsplash.com/photo-1517701604599-bb29b5dd7359?auto=format&fit=crop&w=800&q=80',
+                isAvailable: true
             }
         ];
 
