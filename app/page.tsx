@@ -86,23 +86,26 @@ export default async function Home() {
       </section>
 
 
+
       {/* Pricing Section */}
-      <section className="py-24 bg-white border-y border-gray-100">
-        <div className="max-w-6xl mx-auto px-6">
+      <section className="py-24 bg-white border-y border-gray-100 relative overflow-hidden">
+        <div className="absolute top-0 w-full h-full bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-5"></div>
+        <div className="max-w-6xl mx-auto px-6 relative">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Simple, Transparent Pricing</h2>
-            <p className="text-slate-500 text-lg">Start for free, upgrade when you grow.</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Unbeatable Launch Offer</h2>
+            <p className="text-slate-500 text-lg">Get premium features for the price of a coffee. Limited time only.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
              {/* Starter Plan */}
              <div className="p-8 rounded-3xl border border-gray-200 bg-white hover:border-indigo-100 hover:shadow-xl transition-all relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
-                   FREE 14-DAY TRIAL
+                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
+                   70% OFF
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Starter</h3>
-                <div className="flex items-baseline gap-1 mb-6">
-                   <span className="text-4xl font-extrabold text-slate-900">$29</span>
+                <div className="flex items-baseline gap-2 mb-6">
+                   <span className="text-xl text-gray-400 line-through decoration-red-500">$29</span>
+                   <span className="text-5xl font-extrabold text-slate-900">$8</span>
                    <span className="text-slate-500">/month</span>
                 </div>
                 <p className="text-slate-500 mb-8 border-b border-gray-100 pb-8">
@@ -122,15 +125,16 @@ export default async function Home() {
              {/* Pro Plan */}
              <div className="p-8 rounded-3xl border-2 border-indigo-600 bg-slate-900 text-white relative shadow-2xl shadow-indigo-500/20 transform md:-translate-y-4">
                 <div className="absolute top-0 center w-full text-center -mt-3">
-                   <span className="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Most Popular</span>
+                   <span className="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Best Value</span>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Growth</h3>
-                <div className="flex items-baseline gap-1 mb-6">
-                   <span className="text-4xl font-extrabold text-white">$79</span>
+                <div className="flex items-baseline gap-2 mb-6">
+                   <span className="text-xl text-indigo-300 line-through decoration-indigo-400">$79</span>
+                   <span className="text-5xl font-extrabold text-white">$24</span>
                    <span className="text-gray-400">/month</span>
                 </div>
                 <p className="text-indigo-200 mb-8 border-b border-indigo-800 pb-8">
-                   For navigation restaurants handling high volume.
+                   For busy restaurants handling high volume.
                 </p>
                 <ul className="space-y-4 mb-8">
                    <PricingFeature text="Unlimited Orders" light />
@@ -143,6 +147,40 @@ export default async function Home() {
                 </button>
              </div>
           </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
+           <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">Trusted by Store Owners</h2>
+              <p className="text-slate-500 text-lg">Don't just take our word for it.</p>
+           </div>
+           
+           <div className="grid md:grid-cols-3 gap-8">
+              <TestimonialCard 
+                 name="Sarah Jenkins"
+                 role="Owner, The Daily Grind"
+                 text="Since switching to EasyOrder, we've saved over $400/month in delivery commissions. Our customers love ordering via WhatsApp!"
+                 initial="S"
+                 color="bg-orange-100 text-orange-600"
+              />
+              <TestimonialCard 
+                 name="Mike Chen"
+                 role="Manager, Golden Dragon"
+                 text="The setup was instant. I created my menu in 10 minutes and started getting orders the same day. Highly recommended!"
+                 initial="M"
+                 color="bg-blue-100 text-blue-600"
+              />
+              <TestimonialCard 
+                 name="Emma Wilson"
+                 role="Founder, Sweet Treats"
+                 text="Best investment for my bakery. The digital menu looks professional and the WhatsApp integration is flawless."
+                 initial="E"
+                 color="bg-pink-100 text-pink-600"
+              />
+           </div>
         </div>
       </section>
 
