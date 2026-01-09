@@ -24,6 +24,8 @@ export interface Order {
     items: any[];
     subtotal: number;
     deliveryFee: number;
+    discount?: number;
+    promoCode?: string;
     total: number;
     status: OrderStatus;
 }
@@ -62,10 +64,30 @@ export interface AnalyticsRepository {
     getSummary(tenantId: string): Promise<AnalyticsSummary>;
 }
 
+// Promo Code Interface
+export interface PromoCode {
+    id: string;
+    tenantId: string;
+    code: string;
+    discountType: 'percent' | 'fixed';
+    value: number;
+    isActive: boolean;
+    usageCount: number;
+}
+
+export interface PromoCodeRepository {
+    getPromo(code: string, tenantId: string): Promise<PromoCode | null>;
+    createPromo(promo: Omit<PromoCode, 'id' | 'usageCount' | 'isActive'>): Promise<void>;
+    getPromos(tenantId: string): Promise<PromoCode[]>;
+    togglePromo(id: string, isActive: boolean): Promise<void>;
+    incrementUsage(id: string): Promise<void>;
+}
+
 // New Interface for Tenant Management
 export interface TenantRepository {
     getTenantBySlug(slug: string): Promise<Tenant | null>;
     getAllTenants(): Promise<Tenant[]>;
     createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant>;
 }
+
 

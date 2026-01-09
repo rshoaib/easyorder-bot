@@ -1,12 +1,59 @@
-'use client';
-
 import { useCart } from "@/context/CartContext";
-import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin } from "lucide-react";
+import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin, Tag } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import axios from 'axios';
+import { validatePromoCode } from "@/app/actions/promo-actions";
+import { getTenantRepository } from "@/lib/repository"; // Careful, can't use server repo on client
+
+// Helper to calc discount
+function calculateDiscount(subtotal: number, promo: any) {
+    if (promo.type === 'percent') return subtotal * (promo.value / 100);
+    return promo.value;
+}
+
+function PromoCodeSection({ tenantId, onApply }: { tenantId: string, onApply: (p: any) => void }) {
+    const [code, setCode] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState('');
+
+    async function handleApply() {
+        if(!code) return;
+        setLoading(true);
+        const res = await validatePromoCode(code, tenantId);
+        setLoading(false);
+        if(res.success) {
+            setMsg('Applied!');
+            onApply(res.promo);
+        } else {
+            setMsg(res.message || 'Invalid code');
+            onApply(null);
+        }
+    }
+
+    return (
+        <div className="bg-gray-50 p-3 rounded-xl mb-4">
+             <div className="flex gap-2">
+                 <input 
+                    className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm uppercase"
+                    placeholder="Promo Code"
+                    value={code}
+                    onChange={e => setCode(e.target.value)}
+                 />
+                 <button 
+                    disabled={loading}
+                    onClick={handleApply}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+                 >
+                    {loading ? '...' : 'Apply'}
+                 </button>
+             </div>
+             {msg && <p className={`text-xs mt-2 ${msg === 'Applied!' ? 'text-green-600' : 'text-red-500'}`}>{msg}</p>}
+        </div>
+    );
+}
 
 export default function CartPage() {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
@@ -17,12 +64,26 @@ export default function CartPage() {
     const router = useRouter();
 
     const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [tenantId, setTenantId] = useState(''); // Need tenantId for validation
+    const [appliedPromo, setAppliedPromo] = useState<any>(null); // { code, type, value }
+
+    // Fetch tenant ID for current store (we could also pass it via props if this was server component)
+    useEffect(() => {
+        // Quick way to get tenant ID: call an API or just look it up. 
+        // Since we are client side, we can't easily use getTenantRepository.
+        // Let's create a tiny API endpoint or pass it down?
+        // Actually, validatePromoCode server action takes tenantId. 
+        // We need to resolve slug -> tenantId securely.
+        // Strategy: We will call a server action to exchange slug -> tenantId first?
+        // Or simpler: validatePromoCode can also accept slug!
+        // Let's modify validatePromoCode to take SLUG instead of ID. That's easier for frontend.
+    }, [slug]);
 
     // Get Delivery Fee from env (this is client side, so we only see NEXT_PUBLIC)
     // Note: In a real multi-tenant app, we should fetch this from the Tenant config API
     // For now, let's assume it's global or we'll fetch tenant details later.
     const deliveryFee = parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
-    const finalTotal = total + deliveryFee;
+    const finalTotal = Math.max(0, total + deliveryFee - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0));
 
     const handleLocationClick = () => {
         setLocationStatus('loading');
@@ -60,7 +121,8 @@ export default function CartPage() {
                 items,
                 total: finalTotal, // API calculates simpler, but we pass for reference
                 customer,
-                slug // Pass slug so API knows which tenant!
+                slug, // Pass slug so API knows which tenant!
+                promoCode: appliedPromo?.code
             });
 
             if (response.data.success) {
@@ -140,19 +202,30 @@ export default function CartPage() {
 
             {/* Order Summary */}
             <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm mb-8 space-y-2">
-                <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Subtotal</span>
-                    <span className="font-medium">${total.toFixed(2)}</span>
-                </div>
-                {deliveryFee > 0 && (
+                <PromoCodeSection tenantId={slug} onApply={setAppliedPromo} />
+                
+                <div className="border-t border-gray-100 pt-4 space-y-2">
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">Delivery Fee</span>
-                        <span className="font-medium">${deliveryFee.toFixed(2)}</span>
+                        <span className="text-gray-500">Subtotal</span>
+                        <span className="font-medium">${total.toFixed(2)}</span>
                     </div>
-                )}
+                    {deliveryFee > 0 && (
+                        <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">Delivery Fee</span>
+                            <span className="font-medium">${deliveryFee.toFixed(2)}</span>
+                        </div>
+                    )}
+                    {appliedPromo && (
+                        <div className="flex justify-between text-sm text-green-600">
+                            <span className="font-medium flex items-center gap-1"><Tag size={12}/> Code: {appliedPromo.code}</span>
+                            <span className="font-bold">-${calculateDiscount(total, appliedPromo).toFixed(2)}</span>
+                        </div>
+                    )}
+                </div>
+                
                 <div className="border-t border-gray-100 my-2 pt-2 flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span>${finalTotal.toFixed(2)}</span>
+                    <span>${Math.max(0, total + deliveryFee - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0)).toFixed(2)}</span>
                 </div>
             </div>
 

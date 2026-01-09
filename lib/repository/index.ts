@@ -36,9 +36,13 @@ export function getTenantRepository(): TenantRepository {
     return new SupabaseTenantRepository();
 }
 
-import { AnalyticsRepository } from './types';
-import { SupabaseAnalyticsRepository } from './supabase-repo';
+import { AnalyticsRepository, PromoCodeRepository } from './types';
+import { SupabaseAnalyticsRepository, SupabasePromoCodeRepository } from './supabase-repo';
 
 export function getAnalyticsRepository(): AnalyticsRepository {
     return new SupabaseAnalyticsRepository();
+}
+
+export function getPromoCodeRepository(): PromoCodeRepository {
+    return new SupabasePromoCodeRepository();
 }

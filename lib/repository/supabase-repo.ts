@@ -15,6 +15,8 @@ export class SupabaseOrderRepository implements OrderRepository {
                 items: order.items,
                 subtotal: order.subtotal,
                 "deliveryFee": order.deliveryFee,
+                discount: order.discount || 0,
+                promo_code: order.promoCode || null,
                 total: order.total,
                 status: order.status
             });
@@ -236,5 +238,89 @@ export class SupabaseAnalyticsRepository implements AnalyticsRepository {
             totalRevenue,
             recentRevenue
         };
+    }
+}
+
+import { PromoCode, PromoCodeRepository } from './types';
+
+export class SupabasePromoCodeRepository implements PromoCodeRepository {
+    async getPromo(code: string, tenantId: string): Promise<PromoCode | null> {
+        const { data, error } = await supabase
+            .from('promo_codes')
+            .select('*')
+            .eq('code', code)
+            .eq('tenant_id', tenantId)
+            .eq('is_active', true)
+            .single();
+
+        if (error || !data) return null;
+
+        return {
+            id: data.id,
+            tenantId: data.tenant_id,
+            code: data.code,
+            discountType: data.discount_type,
+            value: data.value,
+            isActive: data.is_active,
+            usageCount: data.usage_count
+        };
+    }
+
+    async createPromo(promo: Omit<PromoCode, 'id' | 'usageCount' | 'isActive'>): Promise<void> {
+        const { error } = await supabase
+            .from('promo_codes')
+            .insert({
+                tenant_id: promo.tenantId,
+                code: promo.code,
+                discount_type: promo.discountType,
+                value: promo.value
+            });
+
+        if (error) throw new Error(error.message);
+    }
+
+    async getPromos(tenantId: string): Promise<PromoCode[]> {
+        const { data, error } = await supabase
+            .from('promo_codes')
+            .select('*')
+            .eq('tenant_id', tenantId)
+            .order('created_at', { ascending: false });
+
+        if (error) return [];
+
+        return data?.map((d: any) => ({
+            id: d.id,
+            tenantId: d.tenant_id,
+            code: d.code,
+            discountType: d.discount_type,
+            value: d.value,
+            isActive: d.is_active,
+            usageCount: d.usage_count
+        })) || [];
+    }
+
+    async togglePromo(id: string, isActive: boolean): Promise<void> {
+        const { error } = await supabase
+            .from('promo_codes')
+            .update({ is_active: isActive })
+            .eq('id', id);
+
+        if (error) throw new Error(error.message);
+    }
+
+    async incrementUsage(id: string): Promise<void> {
+        // Supabase doesn't support atomic increment easily via simple client without RPC or manual update
+        // For MVP, we'll read and write, or use rpc if we had one. 
+        // Let's just ignore precise race conditions for now or use a raw query if possible?
+        // Actually, let's keep it simple: we aren't enforcing limits yet.
+        const { error } = await supabase.rpc('increment_promo_usage', { row_id: id });
+        // If RPC doesn't exist, this will fail. Let's fallback to manual update if RPC fails? 
+        // Or simpler: just don't increment for now to avoid complexity, OR assume the user didn't run the RPC SQL.
+        // Wait, I can't assume RPC exists. I'll do a read-update for now.
+
+        const { data } = await supabase.from('promo_codes').select('usage_count').eq('id', id).single();
+        if (data) {
+            await supabase.from('promo_codes').update({ usage_count: (data.usage_count || 0) + 1 }).eq('id', id);
+        }
     }
 }

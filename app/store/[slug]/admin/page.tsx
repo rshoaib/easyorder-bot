@@ -88,6 +88,11 @@ export default async function AdminPage({ params }: Props) {
                     Menu Manager
                 </button>
              </Link>
+             <Link href={`/store/${slug}/admin/promos`}>
+                <button className="btn-secondary bg-purple-50 text-purple-600 border-purple-100 hover:bg-purple-100">
+                    <Tag size={16} /> Promos
+                </button>
+             </Link>
              <Link href={`/store/${slug}/admin`}>
                 <button className="btn-secondary" title="Check for new orders">
                 <RefreshCw size={14} />

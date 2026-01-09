@@ -6,7 +6,7 @@ import { Order } from '@/lib/repository/types';
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { items, total, customer, slug } = body;
+        const { items, customer, slug, promoCode } = body;
 
         // 0. Get Tenant
         const tenantRepo = getTenantRepository();
@@ -29,10 +29,26 @@ export async function POST(req: NextRequest) {
         // 2. Prepare Order Object
         const subtotal = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
         const deliveryFee = parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
-        const finalTotal = subtotal + deliveryFee;
 
-        // Verify total matches (within small margin due to potential float math, or just overwrite it)
-        // Better to trust server calculation
+        // Calculate Discount
+        let discount = 0;
+        if (promoCode) {
+            const { getPromoCodeRepository } = await import('@/lib/repository');
+            const promoRepo = getPromoCodeRepository();
+            const promo = await promoRepo.getPromo(promoCode, tenant.id);
+
+            if (promo && promo.isActive) {
+                if (promo.discountType === 'percent') {
+                    discount = subtotal * (promo.value / 100);
+                } else {
+                    discount = promo.value;
+                }
+                // Increment usage (fire and forget)
+                promoRepo.incrementUsage(promo.id);
+            }
+        }
+
+        const finalTotal = Math.max(0, subtotal + deliveryFee - discount);
 
         const newOrder: Order = {
             id: orderId,
@@ -47,6 +63,8 @@ export async function POST(req: NextRequest) {
             items,
             subtotal,
             deliveryFee,
+            discount,
+            promoCode: discount > 0 ? promoCode : undefined,
             total: finalTotal,
             status: 'pending'
         };
@@ -79,7 +97,8 @@ Hello ${customer.name}, we received your order!
 *Items:*
 ${itemSummary}
 
-*Total:* $${total.toFixed(2)}
+*Total:* $${finalTotal.toFixed(2)}
+${discount > 0 ? `(Discount: -$${discount.toFixed(2)})` : ''}
 *Delivery Address:* ${customer.address}
 
 📄 *Invoice:* ${invoiceLink}
@@ -97,7 +116,7 @@ We will confirm your delivery shortly.`;
             
 📦 *Order:* ${orderId}
 👤 *Customer:* ${customer.name} (${customer.phone})
-💰 *Total:* $${total.toFixed(2)}
+💰 *Total:* $${finalTotal.toFixed(2)} ${discount > 0 ? `(Saved $${discount.toFixed(2)})` : ''}
 
 See full details in Admin Dashboard:
 https://easyorder-bot.vercel.app/admin`;

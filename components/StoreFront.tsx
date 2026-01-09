@@ -32,7 +32,7 @@ export default function StoreFront({ initialProducts }: StoreFrontProps) {
           <p className="text-gray-500 font-medium">Good evening</p>
         </div>
         <div className="cart-btn-wrapper">
-          <Link href="/cart">
+          <Link href="cart">
             <button className="cart-btn">
               <ShoppingBag size={22} />
               {itemCount > 0 && (
