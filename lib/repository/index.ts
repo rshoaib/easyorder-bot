@@ -1,7 +1,7 @@
 
-import { OrderRepository, ProductRepository } from './types';
+import { OrderRepository, ProductRepository, TenantRepository } from './types';
 import { JsonOrderRepository, JsonProductRepository } from './json-repo';
-import { SupabaseOrderRepository, SupabaseProductRepository } from './supabase-repo';
+import { SupabaseOrderRepository, SupabaseProductRepository, SupabaseTenantRepository } from './supabase-repo';
 
 // Factory function to get the correct repository
 export function getOrderRepository(): OrderRepository {
