@@ -52,7 +52,7 @@ export function DomainSettings({ slug, currentDomain }: { slug: string, currentD
             {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
             
             <div className="mt-4 text-xs text-gray-400 bg-gray-50 p-3 rounded-lg">
-                <strong>DNS Setup:</strong> Create a CNAME record for <code>{domain || 'your-domain.com'}</code> pointing to <code>easyorder-bot.vercel.app</code>
+                <strong>DNS Setup:</strong> Create a CNAME record for <code>{domain || 'your-domain.com'}</code> pointing to <code>cname.vercel-dns.com</code> (or <code>orderviachat.com</code> if using A record).
             </div>
         </div>
     );

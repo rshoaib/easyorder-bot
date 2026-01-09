@@ -31,12 +31,12 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
 }
 
 export async function sendWelcomeEmail(email: string, name: string, slug: string) {
-    const dashboardUrl = `https://easyorder-bot.vercel.app/store/${slug}/admin`;
+    const dashboardUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'}/store/${slug}/admin`;
     const html = `
         <h1>Welcome to EasyOrder, ${name}! 🚀</h1>
         <p>Your store is now successfully created.</p>
         <p>You can access your admin dashboard here:</p>
-        <p><a href="${dashboardUrl}">Go to Dashboard</a></p>
+        <p><a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'}/admin">Go to Dashboard</a></p>
         <br/>
         <p>If you have any questions, just reply to this email.</p>
     `;
@@ -55,7 +55,7 @@ export async function sendOrderNotification(tenantEmail: string, orderId: string
         <p><strong>Customer:</strong> ${customerName}</p>
         <p><strong>Total:</strong> $${total.toFixed(2)}</p>
         <br/>
-        <p><a href="https://easyorder-bot.vercel.app/admin">View Order in Dashboard</a></p>
+        <p><a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'}/admin">View Order in Dashboard</a></p>
     `;
 
     await sendEmail({

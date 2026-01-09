@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
 
         // 4. Generate Invoice Link
         // Use the deployed Vercel URL
-        const baseUrl = 'https://easyorder-bot.vercel.app';
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com';
         // Ideally we should point to /store/[slug]/invoice/[id] or keep api link
         const invoiceLink = `${baseUrl}/api/invoice/${orderId}`;
 
@@ -126,7 +126,7 @@ We will confirm your delivery shortly.`;
 💰 *Total:* $${finalTotal.toFixed(2)} ${discount > 0 ? `(Saved $${discount.toFixed(2)})` : ''}
 
 See full details in Admin Dashboard:
-https://easyorder-bot.vercel.app/admin`;
+https://orderviachat.com/admin`;
 
             // Clean owner phone just in case
             const cleanOwnerPhone = ownerPhone.replace(/\D/g, '');

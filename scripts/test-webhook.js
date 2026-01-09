@@ -19,7 +19,7 @@ const run = async () => {
         ]
     };
 
-    const url = 'https://easyorder-bot.vercel.app/webhook';
+    const url = 'https://orderviachat.com/webhook';
     console.log(`Sending simulated WhatsApp message to ${url}...`);
     
     try {

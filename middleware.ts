@@ -20,12 +20,14 @@ export function middleware(request: NextRequest) {
     // Define the domains that constitute "our app" and should NOT be treated as custom domains.
     // Replace 'easyorder-bot.vercel.app' with your actual Vercel domain.
     // Also include localhost for dev.
-    const isOurDomain =
-        hostname.includes('vercel.app') ||
-        hostname.includes('localhost') ||
-        hostname.includes('easyorder.com'); // Future proofing
+    // 2. Check for Custom Domain
+    let currentDomain = hostname.replace('.localhost:3000', '');
 
-    if (!isOurDomain) {
+    // Replace with your VERCEL domain (or the new production domain)
+    const isVercelDomain = currentDomain.includes('vercel.app') || currentDomain.includes('orderviachat.com');
+
+    // If it's a custom domain (e.g. menu.mypizza.com)
+    if (!isVercelDomain && !currentDomain.includes('localhost')) {
         // It's a custom domain! (e.g. menu.pizza.com)
         // We rewrite it to a special route that handles domain lookup.
         // We pass the hostname as the dynamic route param.
