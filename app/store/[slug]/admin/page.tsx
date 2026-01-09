@@ -24,7 +24,7 @@ async function getOrders(slug: string) {
 }
 
 export default async function AdminPage({ params }: Props) {
-  const { slug } = params;
+  const { slug } = await params;
   const { orders, tenant } = await getOrders(slug);
 
   if (!tenant) return <div className="p-10">Store not found</div>;

@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default async function AdminMenuPage({ params }: Props) {
-    const { slug } = params;
+    const { slug } = await params;
     const tenantRepo = getTenantRepository();
     const tenant = await tenantRepo.getTenantBySlug(slug);
     
