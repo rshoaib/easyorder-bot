@@ -18,11 +18,11 @@ export default async function Home() {
             <span>EasyOrder</span>
           </div>
           <div className="flex gap-4">
-            <Link href="/super-admin/login">
-              <button className="text-sm font-semibold text-gray-600 hover:text-indigo-600 transition-colors">
-                Platform Login
-              </button>
-            </Link>
+            <Link href="/register">
+            <button className="bg-blue-600 text-white px-5 py-2.5 rounded-full font-bold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg text-sm">
+                Get Started
+            </button>
+          </Link>
           </div>
         </div>
       </nav>
@@ -117,9 +117,11 @@ export default async function Home() {
                    <PricingFeature text="WhatsApp Integration" />
                    <PricingFeature text="Basic Analytics" />
                 </ul>
-                <button className="w-full py-3 rounded-xl border-2 border-slate-900 text-slate-900 font-bold hover:bg-slate-900 hover:text-white transition-all">
-                   Start Free Trial
-                </button>
+                <Link href="/register" className="block w-full">
+                    <button className="w-full mt-8 bg-blue-100 text-blue-700 font-bold py-3 rounded-xl hover:bg-blue-200 transition-colors">
+                        Start Free Trial
+                    </button>
+                </Link>
              </div>
 
              {/* Pro Plan */}
