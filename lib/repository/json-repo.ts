@@ -1,5 +1,5 @@
 
-import { Order, OrderRepository } from './types';
+import { Order, OrderRepository, Product, ProductRepository } from './types';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -41,6 +41,46 @@ export class JsonOrderRepository implements OrderRepository {
             return orders.find(o => o.id === id) || null;
         } catch {
             return null;
+        }
+    }
+}
+
+export class JsonProductRepository implements ProductRepository {
+    private getFilePath() {
+        return path.join(process.cwd(), 'data', 'products.json');
+    }
+
+    async getProducts(): Promise<Product[]> {
+        try {
+            const fileData = await fs.readFile(this.getFilePath(), 'utf8');
+            return JSON.parse(fileData);
+        } catch {
+            return [];
+        }
+    }
+
+    async addProduct(product: Product): Promise<void> {
+        const filePath = this.getFilePath();
+        let products: Product[] = [];
+        try {
+            const fileData = await fs.readFile(filePath, 'utf8');
+            products = JSON.parse(fileData);
+        } catch {
+            // Fresh start
+        }
+        products.push(product);
+        await fs.writeFile(filePath, JSON.stringify(products, null, 2));
+    }
+
+    async deleteProduct(id: string): Promise<void> {
+        const filePath = this.getFilePath();
+        try {
+            const fileData = await fs.readFile(filePath, 'utf8');
+            let products: Product[] = JSON.parse(fileData);
+            products = products.filter(p => p.id !== id);
+            await fs.writeFile(filePath, JSON.stringify(products, null, 2));
+        } catch {
+            // Nothing to delete
         }
     }
 }

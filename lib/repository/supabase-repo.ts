@@ -1,5 +1,5 @@
 
-import { Order, OrderRepository } from './types';
+import { Order, OrderRepository, Product, ProductRepository } from './types';
 import { supabase } from '../supabase';
 
 export class SupabaseOrderRepository implements OrderRepository {
@@ -63,5 +63,40 @@ export class SupabaseOrderRepository implements OrderRepository {
             total: data.total,
             status: data.status
         };
+    }
+}
+
+export class SupabaseProductRepository implements ProductRepository {
+    async getProducts(): Promise<Product[]> {
+        const { data, error } = await supabase
+            .from('products')
+            .select('*');
+
+        if (error) {
+            console.error("Supabase Products Fetch Error:", error);
+            return [];
+        }
+        return data as Product[];
+    }
+
+    async addProduct(product: Product): Promise<void> {
+        const { error } = await supabase
+            .from('products')
+            .insert(product);
+
+        if (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    async deleteProduct(id: string): Promise<void> {
+        const { error } = await supabase
+            .from('products')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            throw new Error(error.message);
+        }
     }
 }

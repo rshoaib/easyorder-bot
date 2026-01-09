@@ -1,7 +1,7 @@
 
-import { OrderRepository } from './types';
-import { JsonOrderRepository } from './json-repo';
-import { SupabaseOrderRepository } from './supabase-repo';
+import { OrderRepository, ProductRepository } from './types';
+import { JsonOrderRepository, JsonProductRepository } from './json-repo';
+import { SupabaseOrderRepository, SupabaseProductRepository } from './supabase-repo';
 
 // Factory function to get the correct repository
 export function getOrderRepository(): OrderRepository {
@@ -20,4 +20,14 @@ export function getOrderRepository(): OrderRepository {
 
     // Default to JSON for local development
     return new JsonOrderRepository();
+}
+
+export function getProductRepository(): ProductRepository {
+    const useSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    if (isProduction && useSupabase) {
+        return new SupabaseProductRepository();
+    }
+    return new JsonProductRepository();
 }
