@@ -277,3 +277,23 @@ function PricingFeature({ text, light = false }: { text: string, light?: boolean
     </li>
   );
 }
+
+function TestimonialCard({ name, role, text, initial, color }: { name: string, role: string, text: string, initial: string, color: string }) {
+  return (
+    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+      <div className="flex items-center gap-4 mb-4">
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${color}`}>
+          {initial}
+        </div>
+        <div>
+          <h4 className="font-bold text-gray-900">{name}</h4>
+          <p className="text-sm text-gray-500">{role}</p>
+        </div>
+      </div>
+      <p className="text-gray-600 leading-relaxed italic">"{text}"</p>
+      <div className="flex gap-1 mt-4">
+         {[1,2,3,4,5].map(i => <Star key={i} size={14} className="text-yellow-400" fill="currentColor" />)}
+      </div>
+    </div>
+  );
+}
