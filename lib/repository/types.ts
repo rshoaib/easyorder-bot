@@ -51,9 +51,21 @@ export interface ProductRepository {
     deleteProduct(id: string): Promise<void>;
 }
 
+// Analytics Interface
+export interface AnalyticsSummary {
+    totalRevenue: number;
+    totalOrders: number;
+    recentRevenue: number; // Last 30 days
+}
+
+export interface AnalyticsRepository {
+    getSummary(tenantId: string): Promise<AnalyticsSummary>;
+}
+
 // New Interface for Tenant Management
 export interface TenantRepository {
     getTenantBySlug(slug: string): Promise<Tenant | null>;
     getAllTenants(): Promise<Tenant[]>;
     createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant>;
 }
+

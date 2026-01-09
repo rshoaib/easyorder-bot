@@ -1,6 +1,6 @@
-import { getOrderRepository, getTenantRepository } from "@/lib/repository";
+import { getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
 import Link from 'next/link';
-import { FileText, RefreshCw, ArrowLeft } from 'lucide-react';
+import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign } from 'lucide-react';
 import StatusSelector from '@/components/admin/StatusSelector';
 
 export const dynamic = 'force-dynamic';
@@ -14,18 +14,22 @@ interface Props {
 async function getOrders(slug: string) {
   const tenantRepo = getTenantRepository();
   const tenant = await tenantRepo.getTenantBySlug(slug);
-  if (!tenant) return { orders: [], tenant: null };
+  if (!tenant) return { orders: [], tenant: null, analytics: null };
   
   const repo = getOrderRepository();
   const orders = await repo.getOrders(tenant.id);
+  
+  const analyticsRepo = getAnalyticsRepository();
+  const analytics = await analyticsRepo.getSummary(tenant.id);
+
   // Ensure strict date sorting desc
   const sortedOrders = orders.slice().sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  return { orders: sortedOrders, tenant };
+  return { orders: sortedOrders, tenant, analytics };
 }
 
 export default async function AdminPage({ params }: Props) {
   const { slug } = await params;
-  const { orders, tenant } = await getOrders(slug);
+  const { orders, tenant, analytics } = await getOrders(slug);
 
   if (!tenant) return <div className="p-10">Store not found</div>;
 
@@ -44,6 +48,33 @@ export default async function AdminPage({ params }: Props) {
            </button>
         </Link>
       </div>
+
+      {/* Analytics Cards */}
+      {analytics && (
+        <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 text-gray-500 mb-2">
+                    <div className="p-2 bg-green-50 text-green-600 rounded-lg"><DollarSign size={20} /></div>
+                    <span className="text-sm font-medium">Total Revenue</span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900 ml-1">{tenant.currency}{analytics.totalRevenue.toLocaleString()}</div>
+            </div>
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 text-gray-500 mb-2">
+                    <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><ShoppingBag size={20} /></div>
+                    <span className="text-sm font-medium">Total Orders</span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900 ml-1">{analytics.totalOrders}</div>
+            </div>
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 text-gray-500 mb-2">
+                    <div className="p-2 bg-purple-50 text-purple-600 rounded-lg"><TrendingUp size={20} /></div>
+                    <span className="text-sm font-medium">Last 30 Days</span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900 ml-1">{tenant.currency}{analytics.recentRevenue.toLocaleString()}</div>
+            </div>
+        </div>
+      )}
 
       {/* Controls */}
       <div className="flex justify-between mb-4 items-center px-2">

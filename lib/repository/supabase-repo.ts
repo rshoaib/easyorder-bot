@@ -199,3 +199,42 @@ export class SupabaseTenantRepository implements TenantRepository {
         };
     }
 }
+
+import { AnalyticsRepository, AnalyticsSummary } from './types';
+
+export class SupabaseAnalyticsRepository implements AnalyticsRepository {
+    async getSummary(tenantId: string): Promise<AnalyticsSummary> {
+        // Total Orders
+        const { count, error: countError } = await supabase
+            .from('orders')
+            .select('*', { count: 'exact', head: true })
+            .eq('tenant_id', tenantId);
+
+        if (countError) throw new Error(countError.message);
+
+        // Revenue Calculation (This is heavy for client-side if many orders, but okay for MVP)
+        // Ideally, we would use a Supabase Database Function (RPC) for this aggregation.
+        const { data: revenueData, error: revenueError } = await supabase
+            .from('orders')
+            .select('total, date')
+            .eq('tenant_id', tenantId);
+
+        if (revenueError) throw new Error(revenueError.message);
+
+        const totalRevenue = revenueData.reduce((sum: number, order: any) => sum + (order.total || 0), 0);
+
+        // Recent Revenue (Last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const recentRevenue = revenueData
+            .filter((o: any) => new Date(o.date) > thirtyDaysAgo)
+            .reduce((sum: number, order: any) => sum + (order.total || 0), 0);
+
+        return {
+            totalOrders: count || 0,
+            totalRevenue,
+            recentRevenue
+        };
+    }
+}

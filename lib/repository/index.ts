@@ -35,3 +35,10 @@ export function getProductRepository(): ProductRepository {
 export function getTenantRepository(): TenantRepository {
     return new SupabaseTenantRepository();
 }
+
+import { AnalyticsRepository } from './types';
+import { SupabaseAnalyticsRepository } from './supabase-repo';
+
+export function getAnalyticsRepository(): AnalyticsRepository {
+    return new SupabaseAnalyticsRepository();
+}
