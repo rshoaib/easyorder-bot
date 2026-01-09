@@ -27,7 +27,6 @@ export default async function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="relative pt-20 pb-32 overflow-hidden bg-slate-50">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-100/50 via-slate-50 to-white -z-10" />
         
@@ -45,14 +44,16 @@ export default async function Home() {
             No downloads required. No commissions.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/super-admin/login">
+            <Link href="/register">
               <button className="btn-primary py-4 px-8 text-lg shadow-xl shadow-indigo-500/20">
-                Start Your Free Store <ArrowRight size={20} />
+                Get Started <ArrowRight size={20} />
               </button>
             </Link>
-            <button className="px-8 py-4 rounded-xl font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all shadow-sm">
-              View Demo
-            </button>
+            <Link href="/store/demo">
+                <button className="px-8 py-4 rounded-xl font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all shadow-sm">
+                View Demo Store
+                </button>
+            </Link>
           </div>
         </div>
       </section>
