@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendWhatsAppMessage } from '@/lib/whatsapp';
-import { getOrderRepository } from '@/lib/repository';
+import { getOrderRepository, getTenantRepository } from '@/lib/repository';
 import { Order } from '@/lib/repository/types';
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { items, total, customer } = body;
+        const { items, total, customer, slug } = body;
+
+        // 0. Get Tenant
+        const tenantRepo = getTenantRepository();
+        // Use slug from request, fallback to default if not provided (legacy support)
+        const targetSlug = slug || 'default';
+        const tenant = await tenantRepo.getTenantBySlug(targetSlug);
+
+        if (!tenant) {
+            return new NextResponse(`Store '${targetSlug}' not found`, { status: 404 });
+        }
 
         // Validate inputs
         if (!items || !customer || !customer.phone) {
@@ -26,6 +36,7 @@ export async function POST(req: NextRequest) {
 
         const newOrder: Order = {
             id: orderId,
+            tenantId: tenant.id,
             date: new Date().toISOString(),
             customer: {
                 name: customer.name,
