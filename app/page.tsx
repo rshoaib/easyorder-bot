@@ -57,7 +57,64 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      {/* Visual Showcase Section */}
+      <section className="py-20 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-16">
+                <h2 className="text-3xl font-bold text-slate-900 mb-4">Experience the Ecosystem</h2>
+                <p className="text-slate-500 text-lg">A complete suite of tools to run your food business.</p>
+            </div>
 
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 items-start">
+                {/* Storefront */}
+                <div className="flex flex-col items-center">
+                    <div className="relative group w-full max-w-[280px] mx-auto">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-[2.5rem] blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
+                        <img 
+                            src="/images/showcase-store.png" 
+                            alt="Mobile Storefront" 
+                            className="relative rounded-[2rem] border-8 border-slate-900 shadow-2xl"
+                        />
+                    </div>
+                    <div className="text-center mt-8">
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Beautiful Storefront</h3>
+                        <p className="text-slate-500 text-sm">Customers order in seconds. No app download needed.</p>
+                    </div>
+                </div>
+
+                {/* Admin Dashboard */}
+                <div className="flex flex-col items-center md:pt-12">
+                     <div className="relative group w-full shadow-2xl rounded-xl overflow-hidden border border-gray-200">
+                        <div className="absolute inset-0 bg-indigo-900/5 group-hover:bg-transparent transition-colors"></div>
+                        <img 
+                            src="/images/showcase-admin.png" 
+                            alt="Admin Dashboard" 
+                            className="w-full h-auto object-cover"
+                        />
+                    </div>
+                    <div className="text-center mt-8">
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Powerful Insights</h3>
+                        <p className="text-slate-500 text-sm">Track sales, manage menu, and watch your business grow.</p>
+                    </div>
+                </div>
+
+                {/* Kitchen View */}
+                <div className="flex flex-col items-center">
+                    <div className="relative group w-full shadow-2xl rounded-xl overflow-hidden border border-gray-800 bg-gray-900">
+                         <img 
+                            src="/images/showcase-kitchen.png" 
+                            alt="Kitchen Display System" 
+                            className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity"
+                        />
+                    </div>
+                    <div className="text-center mt-8">
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Kitchen Display</h3>
+                        <p className="text-slate-500 text-sm">Keep your kitchen organized in real-time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
       {/* Features Grid */}
       <section className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
