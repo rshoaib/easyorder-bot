@@ -31,3 +31,7 @@ export function getProductRepository(): ProductRepository {
     }
     return new JsonProductRepository();
 }
+
+export function getTenantRepository(): TenantRepository {
+    return new SupabaseTenantRepository();
+}

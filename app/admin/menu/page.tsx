@@ -1,4 +1,4 @@
-import { getProductRepository } from "@/lib/repository";
+import { getProductRepository, getTenantRepository } from "@/lib/repository";
 import { addProduct, deleteProduct } from "./actions";
 import { Trash2, Plus, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -7,8 +7,13 @@ import ImageWithFallback from "@/components/ui/ImageWithFallback";
 export const dynamic = 'force-dynamic';
 
 export default async function AdminMenuPage() {
+    const tenantRepo = getTenantRepository();
+    const tenant = await tenantRepo.getTenantBySlug('default');
+    
+    if (!tenant) return <div>Tenant not found</div>;
+
     const repo = getProductRepository();
-    const products = await repo.getProducts();
+    const products = await repo.getProducts(tenant.id);
 
     return (
         <main className="container pt-6 pb-10" style={{ maxWidth: '900px' }}>

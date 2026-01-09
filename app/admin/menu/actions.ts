@@ -1,10 +1,14 @@
 'use server';
 
-import { getProductRepository } from "@/lib/repository";
+import { getProductRepository, getTenantRepository } from "@/lib/repository";
 import { Product } from "@/lib/repository/types";
 import { revalidatePath } from "next/cache";
 
 export async function addProduct(formData: FormData) {
+    const tenantRepo = getTenantRepository();
+    const tenant = await tenantRepo.getTenantBySlug('default');
+    if (!tenant) throw new Error("Default tenant not found");
+
     const repo = getProductRepository();
 
     // Simple random ID for MVP. In prod use uuid or let DB handle it.
@@ -17,6 +21,7 @@ export async function addProduct(formData: FormData) {
         category: formData.get('category') as string,
         image: formData.get('image') as string,
         description: formData.get('description') as string || '',
+        tenantId: tenant.id
     };
 
     await repo.addProduct(product);

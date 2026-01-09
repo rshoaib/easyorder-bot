@@ -1,8 +1,19 @@
 
 export type OrderStatus = 'pending' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
 
+export interface Tenant {
+    id: string;
+    slug: string;
+    name: string;
+    ownerPhone?: string;
+    currency: string;
+    themeColor: string;
+    password?: string; // Only for internal check
+}
+
 export interface Order {
     id: string;
+    tenantId: string;
     date: string;
     customer: {
         name: string;
@@ -19,13 +30,14 @@ export interface Order {
 
 export interface OrderRepository {
     saveOrder(order: Order): Promise<void>;
-    getOrders(): Promise<Order[]>;
+    getOrders(tenantId: string): Promise<Order[]>;
     getOrderById(id: string): Promise<Order | null>;
     updateOrderStatus(id: string, status: OrderStatus): Promise<void>;
 }
 
 export interface Product {
     id: string;
+    tenantId?: string; // Optional during transition or local dev
     name: string;
     price: number;
     category: string;
@@ -34,7 +46,13 @@ export interface Product {
 }
 
 export interface ProductRepository {
-    getProducts(): Promise<Product[]>;
+    getProducts(tenantId: string): Promise<Product[]>;
     addProduct(product: Product): Promise<void>;
     deleteProduct(id: string): Promise<void>;
+}
+
+// New Interface for Tenant Management
+export interface TenantRepository {
+    getTenantBySlug(slug: string): Promise<Tenant | null>;
+    createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant>;
 }

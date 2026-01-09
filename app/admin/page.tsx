@@ -1,4 +1,4 @@
-import { getOrderRepository } from "@/lib/repository";
+import { getOrderRepository, getTenantRepository } from "@/lib/repository";
 import Link from 'next/link';
 import { FileText, RefreshCw, ArrowLeft, MoreHorizontal } from 'lucide-react';
 import StatusSelector from '@/components/admin/StatusSelector';
@@ -7,8 +7,12 @@ import StatusSelector from '@/components/admin/StatusSelector';
 export const dynamic = 'force-dynamic';
 
 async function getOrders() {
+  const tenantRepo = getTenantRepository();
+  const tenant = await tenantRepo.getTenantBySlug('default');
+  if (!tenant) return [];
+  
   const repo = getOrderRepository();
-  return await repo.getOrders();
+  return await repo.getOrders(tenant.id);
 }
 
 export default async function AdminPage() {

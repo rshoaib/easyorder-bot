@@ -21,7 +21,7 @@ export class JsonOrderRepository implements OrderRepository {
         await fs.writeFile(filePath, JSON.stringify(orders, null, 2));
     }
 
-    async getOrders(): Promise<Order[]> {
+    async getOrders(tenantId: string): Promise<Order[]> {
         try {
             const fileData = await fs.readFile(this.getFilePath(), 'utf8');
             const orders = JSON.parse(fileData);
@@ -66,7 +66,7 @@ export class JsonProductRepository implements ProductRepository {
         return path.join(process.cwd(), 'data', 'products.json');
     }
 
-    async getProducts(): Promise<Product[]> {
+    async getProducts(tenantId: string): Promise<Product[]> {
         try {
             const fileData = await fs.readFile(this.getFilePath(), 'utf8');
             return JSON.parse(fileData);
