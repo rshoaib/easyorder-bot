@@ -3,9 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.easyorder.app",
+      "package_name": "com.orderviachat.twa",
       "sha256_cert_fingerprints": [
-        "REPLACE_WITH_YOUR_SHA256_FINGERPRINT_FROM_PWABUILDER_OR_PLAY_CONSOLE"
+        "3C:98:51:97:4B:1D:CC:AE:5D:DD:C3:E3:47:F9:A7:41:95:81:5D:08:02:01:8A:B8:8C:A8:73:58:18:4A:19:7C"
       ]
     }
   }
