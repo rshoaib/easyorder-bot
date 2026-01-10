@@ -1,6 +1,6 @@
 import { getTenantRepository } from "@/lib/repository";
 import Link from "next/link";
-import { createStore, activateTenant } from "./actions";
+import { createStore, activateTenant, deactivateTenant } from "./actions";
 import { Building2, Plus, ExternalLink, Lock } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
@@ -111,20 +111,32 @@ export default async function SuperAdminPage() {
                                                             <span className={`w-2 h-2 rounded-full bg-green-500 animate-pulse`}></span>
                                                             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Live</span>
                                                         </>
-                                                    ) : (
+                                                    ) : tenant.status === 'pending_payment' ? (
                                                         <>
                                                             <span className={`w-2 h-2 rounded-full bg-yellow-500`}></span>
                                                             <span className="text-xs font-semibold text-yellow-600 uppercase tracking-wide">Pending Payment</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span className={`w-2 h-2 rounded-full bg-red-500`}></span>
+                                                            <span className="text-xs font-semibold text-red-600 uppercase tracking-wide">Disabled</span>
                                                         </>
                                                     )}
                                                 </div>
                                             </div>
                                         </div>
-                                        {tenant.status !== 'active' && (
+                                        {tenant.status !== 'active' ? (
                                             <form action={activateTenant}>
                                                 <input type="hidden" name="id" value={tenant.id} />
                                                 <button className="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm transition-colors">
                                                     Activate
+                                                </button>
+                                            </form>
+                                        ) : (
+                                            <form action={deactivateTenant}>
+                                                <input type="hidden" name="id" value={tenant.id} />
+                                                <button className="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm transition-colors">
+                                                    Deactivate
                                                 </button>
                                             </form>
                                         )}

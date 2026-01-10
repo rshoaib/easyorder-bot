@@ -37,3 +37,14 @@ export async function activateTenant(formData: FormData) {
     await repo.updateTenantStatus(id, 'active');
     revalidatePath('/super-admin');
 }
+
+export async function deactivateTenant(formData: FormData) {
+    const repo = getTenantRepository();
+    const id = formData.get('id') as string;
+
+    if (!id) return;
+
+    await repo.updateTenantStatus(id, 'disabled');
+    revalidatePath('/super-admin');
+}
+
