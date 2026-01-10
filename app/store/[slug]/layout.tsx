@@ -24,10 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const tenant = await repo.getTenantBySlug(slug);
     const name = tenant?.name || "EasyOrder";
 
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
+    const manifestUrl = `${baseUrl}/store/${slug}/manifest.webmanifest`;
+
     return {
         title: name,
         description: `Order from ${name}`,
-        manifest: `/store/${slug}/manifest.webmanifest`, // Next.js creates .webmanifest or .json
+        manifest: manifestUrl,
         appleWebApp: {
             capable: true,
             statusBarStyle: 'default',
