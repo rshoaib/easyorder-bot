@@ -1,0 +1,98 @@
+import { getTenantRepository } from "@/lib/repository";
+import { ArrowLeft, Save, Instagram, Facebook } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+
+export const dynamic = 'force-dynamic';
+
+interface Props {
+    params: {
+        slug: string;
+    }
+}
+
+async function updateSocials(formData: FormData) {
+    'use server';
+    
+    const tenantRepo = getTenantRepository();
+    const id = formData.get('id') as string;
+    const slug = formData.get('slug') as string;
+    const instagram = formData.get('instagram') as string;
+    const facebook = formData.get('facebook') as string;
+
+    if (!id || !slug) return;
+
+    await tenantRepo.updateTenantSocials(id, instagram, facebook);
+    revalidatePath(`/store/${slug}`);
+    revalidatePath(`/store/${slug}/admin/settings`);
+}
+
+export default async function SettingsPage({ params }: Props) {
+    const { slug } = await params;
+    const repo = getTenantRepository();
+    const tenant = await repo.getTenantBySlug(slug);
+
+    if (!tenant) return <div>Store not found</div>;
+
+    return (
+        <main className="container pt-6 pb-10" style={{ maxWidth: '600px' }}>
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-8">
+                <Link href={`/store/${slug}/admin`}>
+                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600">
+                        <ArrowLeft size={24} />
+                    </button>
+                </Link>
+                <div>
+                    <h1 className="text-2xl font-bold">Store Settings</h1>
+                    <p className="text-gray-500">Manage your store profile and links</p>
+                </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="p-6 border-b border-gray-100 bg-gray-50">
+                    <h2 className="font-bold text-gray-900">Social Profiles</h2>
+                    <p className="text-sm text-gray-500 mt-1">Connect your social media to build trust.</p>
+                </div>
+                
+                <form action={updateSocials} className="p-6 space-y-6">
+                    <input type="hidden" name="id" value={tenant.id} />
+                    <input type="hidden" name="slug" value={slug} />
+
+                    {/* Instagram */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                             <Instagram size={16} className="text-pink-600" /> Instagram URL
+                        </label>
+                        <input 
+                            name="instagram" 
+                            defaultValue={tenant.instagramUrl} 
+                            placeholder="https://instagram.com/your-store"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium" 
+                        />
+                    </div>
+
+                    {/* Facebook */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                             <Facebook size={16} className="text-blue-600" /> Facebook URL
+                        </label>
+                        <input 
+                            name="facebook" 
+                            defaultValue={tenant.facebookUrl} 
+                            placeholder="https://facebook.com/your-store"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium" 
+                        />
+                    </div>
+
+                    <div className="pt-4">
+                        <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 active:scale-95">
+                            <Save size={20} /> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    );
+}

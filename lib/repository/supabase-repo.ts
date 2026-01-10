@@ -172,7 +172,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeCustomerId: data.stripe_customer_id,
             password: data.password,
             language: data.language || 'en',
-            customDomain: data.custom_domain
+            customDomain: data.custom_domain,
+            instagramUrl: data.instagram_url,
+            facebookUrl: data.facebook_url
         };
     }
 
@@ -196,7 +198,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeCustomerId: row.stripe_customer_id,
             password: row.password,
             language: row.language || 'en',
-            customDomain: row.custom_domain
+            customDomain: row.custom_domain,
+            instagramUrl: row.instagram_url,
+            facebookUrl: row.facebook_url
         }));
     }
 
@@ -288,6 +292,18 @@ export class SupabaseTenantRepository implements TenantRepository {
         const { error } = await supabase
             .from('tenants')
             .update(updateData)
+            .eq('id', id);
+
+        if (error) throw new Error(error.message);
+    }
+
+    async updateTenantSocials(id: string, instagramUrl?: string, facebookUrl?: string): Promise<void> {
+        const { error } = await supabase
+            .from('tenants')
+            .update({
+                instagram_url: instagramUrl,
+                facebook_url: facebookUrl
+            })
             .eq('id', id);
 
         if (error) throw new Error(error.message);
