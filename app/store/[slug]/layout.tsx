@@ -25,7 +25,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const name = tenant?.name || "EasyOrder";
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
-    const manifestUrl = `${baseUrl}/store/${slug}/manifest.webmanifest`;
+    // Fallback to static manifest for demo to ensure PWABuilder crawler doesn't timeout
+    const manifestUrl = slug === 'demo' 
+        ? `${baseUrl}/manifest.json`
+        : `${baseUrl}/store/${slug}/manifest.webmanifest`;
 
     return {
         title: name,
