@@ -61,8 +61,8 @@ function PricingContent() {
              </div>
         )}
 
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border-2 border-brand-500 relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-brand-500 text-white text-xs px-2 py-1 uppercase font-bold">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border-2 border-blue-500 relative overflow-hidden">
+            <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs px-2 py-1 uppercase font-bold">
                 Recommended
             </div>
             
@@ -88,7 +88,7 @@ function PricingContent() {
                 <button
                     onClick={handleSubscribe}
                     disabled={loading}
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 disabled:opacity-50"
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
                 >
                     {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'Subscribe to Pro'}
                 </button>
@@ -107,7 +107,7 @@ function PricingContent() {
 
 export default function PricingPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8 text-brand-600" /></div>}>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8 text-blue-600" /></div>}>
             <PricingContent />
         </Suspense>
     );
