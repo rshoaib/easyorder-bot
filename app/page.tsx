@@ -5,8 +5,17 @@ import { ArrowRight, CheckCircle2, ShoppingBag, Truck, Smartphone, Star } from "
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const repo = getTenantRepository();
-  const tenants = await repo.getAllTenants();
+  // const repo = getTenantRepository();
+  // const tenants = await repo.getAllTenants();
+  
+  const featuredPartners = [
+    { id: 'd1', name: 'Burger & Beans', slug: 'demo', category: 'Fast Food', color: 'bg-orange-50 text-orange-600' },
+    { id: 'd2', name: 'Sushi Zen', slug: 'demo', category: 'Japanese', color: 'bg-rose-50 text-rose-600' },
+    { id: 'd3', name: 'Green Bowl', slug: 'demo', category: 'Healthy', color: 'bg-green-50 text-green-600' },
+    { id: 'd4', name: 'La Dolce Vita', slug: 'demo', category: 'Italian', color: 'bg-yellow-50 text-yellow-600' },
+    { id: 'd5', name: 'Coffee House', slug: 'demo', category: 'Cafe', color: 'bg-stone-50 text-stone-600' },
+    { id: 'd6', name: 'Fire Wok', slug: 'demo', category: 'Asian', color: 'bg-red-50 text-red-600' },
+  ];
 
   return (
     <main className="min-h-screen bg-white">
@@ -258,28 +267,22 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tenants.length > 0 ? (
-               tenants.map(tenant => (
-                  <Link href={`/store/${tenant.slug}`} key={tenant.id} className="group">
-                    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col justify-between">
-                       <div>
-                          <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                             <ShoppingBag size={24} />
-                          </div>
-                          <h3 className="font-bold text-lg text-slate-900 mb-1">{tenant.name}</h3>
-                          <p className="text-sm text-slate-500">Review their digital storefront</p>
-                       </div>
-                       <div className="mt-4 pt-4 border-t border-gray-50 flex items-center text-indigo-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                          Visit Store <ArrowRight size={16} className="ml-1" />
-                       </div>
-                    </div>
-                  </Link>
-               ))
-            ) : (
-                <div className="col-span-3 text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
-                    <p className="text-gray-400">No active stores yet. Be the first!</p>
-                </div>
-            )}
+            {featuredPartners.map(partner => (
+                   <Link href={`/store/${partner.slug}`} key={partner.id} className="group">
+                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col justify-between">
+                        <div>
+                           <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors ${partner.color}`}>
+                              <ShoppingBag size={24} />
+                           </div>
+                           <h3 className="font-bold text-lg text-slate-900 mb-1">{partner.name}</h3>
+                           <p className="text-sm text-slate-500">{partner.category}</p>
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-gray-50 flex items-center text-indigo-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                           Visit Store <ArrowRight size={16} className="ml-1" />
+                        </div>
+                     </div>
+                   </Link>
+                ))}
           </div>
         </div>
       </section>
