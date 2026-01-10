@@ -12,7 +12,6 @@
     "@google/generative-ai": "^0.24.1",
     "@lemonsqueezy/lemonsqueezy.js": "^4.0.0",
     "@next/third-parties": "^16.1.1",
-    "@stripe/stripe-js": "^8.6.1",
     "@supabase/supabase-js": "^2.90.0",
     "@types/jspdf": "^2.0.0",
     "axios": "^1.13.2",
@@ -24,8 +23,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-facebook-pixel": "^1.0.4",
-    "resend": "^6.7.0",
-    "stripe": "^20.1.2"
+    "resend": "^6.7.0"
   },
   "devDependencies": {
     "@types/node": "^20",
