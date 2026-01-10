@@ -130,7 +130,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
       </div>
 
 
-      <footer className="mt-12 py-8 border-t border-gray-100 text-center">
+      <footer className="mt-12 py-8 border-t border-gray-100 text-center pb-24 md:pb-8">
         <Link 
             href={`${process.env.NEXT_PUBLIC_BASE_URL || '/'}`} 
             target="_blank" 
@@ -140,6 +140,23 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
             <span className="font-bold">OrderViaChat</span>
         </Link>
       </footer>
+
+      {/* Sticky Viral Button (Mobile Only, Hidden if Cart has items) */}
+      {itemCount === 0 && (
+          <div className="md:hidden fixed bottom-4 left-4 right-4 z-40 animate-in slide-in-from-bottom-5 duration-700">
+              <Link href="/register" target="_blank">
+                  <div className="bg-gray-900 text-white p-4 rounded-xl shadow-2xl flex items-center justify-between border border-gray-800">
+                      <div>
+                          <p className="font-bold text-sm">Want a store like this?</p>
+                          <p className="text-xs text-gray-400">Launch for free in 2 minutes.</p>
+                      </div>
+                      <div className="bg-white text-gray-900 px-3 py-1.5 rounded-lg text-xs font-bold">
+                          Start 🚀
+                      </div>
+                  </div>
+              </Link>
+          </div>
+      )}
     </main>
   );
 }
