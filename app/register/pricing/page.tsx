@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, Check } from 'lucide-react';
 
-export default function PricingPage() {
+function PricingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -103,4 +103,12 @@ export default function PricingPage() {
       </div>
     </div>
   );
+}
+
+export default function PricingPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8 text-brand-600" /></div>}>
+            <PricingContent />
+        </Suspense>
+    );
 }
