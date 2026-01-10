@@ -104,6 +104,8 @@ export interface TenantRepository {
     updateTenantDomain(id: string, domain: string): Promise<void>;
     updateTenantSocials(id: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string): Promise<void>;
     getTenantByDomain(domain: string): Promise<Tenant | null>;
+    getTenantById(id: string): Promise<Tenant | null>;
+    updateTenantBilling(id: string, billingData: { lemonsqueezy_customer_id?: string; lemonsqueezy_subscription_id?: string; lemonsqueezy_variant_id?: string; subscription_status?: string }): Promise<void>;
 }
 
 

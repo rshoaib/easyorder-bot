@@ -1,147 +1,72 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sendWhatsAppMessage } from '@/lib/whatsapp';
-import { getOrderRepository, getTenantRepository } from '@/lib/repository';
-import { Order } from '@/lib/repository/types';
+import { createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
+import { getTenantRepository } from '@/lib/repository';
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { items, customer, slug, promoCode, paymentMethod } = body;
+        const { variantId, tenantId } = body;
 
-        // ... (lines 11-52 skipped for brevity, keeping same logic)
+        // Use environment variant ID if not provided (default plan)
+        const finalVariantId = variantId || process.env.LEMONSQUEEZY_VARIANT_ID;
 
+        if (!finalVariantId || !tenantId) {
+            return NextResponse.json({ error: 'Missing variantId or tenantId' }, { status: 400 });
+        }
 
-
-        // 0. Get Tenant
-        const tenantRepo = getTenantRepository();
-        // Use slug from request, fallback to default if not provided (legacy support)
-        const targetSlug = slug || 'default';
-        const tenant = await tenantRepo.getTenantBySlug(targetSlug);
-
+        const repo = getTenantRepository();
+        const tenant = await repo.getTenantById(tenantId);
         if (!tenant) {
-            return new NextResponse(`Store '${targetSlug}' not found`, { status: 404 });
+            return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
         }
 
-        // Validate inputs
-        if (!items || !customer || !customer.phone) {
-            return new NextResponse('Missing required fields', { status: 400 });
+        const storeId = process.env.LEMONSQUEEZY_STORE_ID;
+        if (!storeId) {
+            return NextResponse.json({ error: 'Store ID not configured' }, { status: 500 });
         }
 
-        // 1. Generate Order ID
-        const orderId = `ORD-${Date.now().toString().slice(-6)}`;
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`;
 
-        // 2. Prepare Order Object
-        const subtotal = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
-        const deliveryFee = parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
+        // If ID is a UUID (long string), it's likely a Checkout Link hash, not a Variant ID
+        // We can just construct the URL manually with query params
+        if (finalVariantId.length > 20 && finalVariantId.includes('-')) {
+            const checkoutUrl = new URL(`https://store.lemonsqueezy.com/checkout/buy/${finalVariantId}`);
+            checkoutUrl.searchParams.append('checkout[custom][tenant_id]', tenantId);
+            // checkoutUrl.searchParams.append('checkout[email]', '...'); // Optional
 
-        // Calculate Discount
-        let discount = 0;
-        if (promoCode) {
-            const { getPromoCodeRepository } = await import('@/lib/repository');
-            const promoRepo = getPromoCodeRepository();
-            const promo = await promoRepo.getPromo(promoCode, tenant.id);
+            // Custom redirect after success
+            checkoutUrl.searchParams.append('checkout[product_options][redirect_url]', `${baseUrl}/admin/dashboard?success=true`);
 
-            if (promo && promo.isActive) {
-                if (promo.discountType === 'percent') {
-                    discount = subtotal * (promo.value / 100);
-                } else {
-                    discount = promo.value;
+            return NextResponse.json({ url: checkoutUrl.toString() });
+        }
+
+        // Otherwise, assume it's an integer Variant ID and use the SDK
+        const checkout = await createCheckout(
+            storeId,
+            finalVariantId,
+            {
+                checkoutData: {
+                    custom: {
+                        tenant_id: tenantId // Pass tenant ID to webhook
+                    },
+                    email: 'user@example.com', // In real app, pass user's email if known
+                },
+                productOptions: {
+                    redirectUrl: `${baseUrl}/admin/dashboard?success=true`,
                 }
-                // Increment usage (fire and forget)
-                promoRepo.incrementUsage(promo.id);
             }
+        );
+
+        // Check if data exists (LemonSqueezy SDK returns wrapper object)
+        if (!checkout.data?.data?.attributes?.url) {
+            console.error("LemonSqueezy Response:", checkout);
+            return NextResponse.json({ error: 'Failed to create checkout URL' }, { status: 500 });
         }
 
-        const finalTotal = Math.max(0, subtotal + deliveryFee - discount);
+        return NextResponse.json({ url: checkout.data.data.attributes.url });
 
-        const newOrder: Order = {
-            id: orderId,
-            tenantId: tenant.id,
-            date: new Date().toISOString(),
-            customer: {
-                name: customer.name,
-                phone: customer.phone,
-                address: customer.address,
-                locationLink: customer.locationLink
-            },
-            items,
-            subtotal,
-            deliveryFee,
-            discount,
-            promoCode: discount > 0 ? promoCode : undefined,
-            total: finalTotal,
-            paymentMethod: paymentMethod || 'Cash on Delivery',
-            status: 'pending'
-        };
-
-        // 3. Save Order FIRST (so it exists for the invoice link)
-        try {
-            const repo = getOrderRepository();
-            await repo.saveOrder(newOrder);
-        } catch (saveError) {
-            console.error('Failed to save order:', saveError);
-            return new NextResponse('Failed to save order', { status: 500 });
-        }
-
-        // 4. Generate Invoice Link
-        // Use the deployed Vercel URL
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com';
-        // Ideally we should point to /store/[slug]/invoice/[id] or keep api link
-        const invoiceLink = `${baseUrl}/api/invoice/${orderId}`;
-
-        // 4. Format Items for Message
-        const itemSummary = items.map((item: any) =>
-            `- ${item.quantity}x ${item.name} ($${(item.price * item.quantity).toFixed(2)})`
-        ).join('\n');
-
-        // 5. Construct WhatsApp Message for Customer
-        const customerMessage = `🧾 *Order Confirmation ${orderId}*
-
-Hello ${customer.name}, we received your order!
-
-*Items:*
-${itemSummary}
-
-*Total:* $${finalTotal.toFixed(2)}
-${discount > 0 ? `(Discount: -$${discount.toFixed(2)})` : ''}
-*Delivery Address:* ${customer.address}
-*Payment Method:* ${paymentMethod || 'Cash on Delivery'}
-
-📄 *Invoice:* ${invoiceLink}
-
-We will confirm your delivery shortly.`;
-
-        // 6. Send Message to Customer
-        const cleanPhone = customer.phone.replace(/\D/g, '');
-        await sendWhatsAppMessage(cleanPhone, customerMessage);
-
-        // 7. Send Email Notification to Owner (if they have email)
-        if (tenant.email) {
-            const { sendOrderNotification } = await import('@/lib/email');
-            // Fire and forget email to not slow down response
-            sendOrderNotification(tenant.email, orderId, finalTotal, customer.name).catch(console.error);
-        }
-
-        // 8. Send WhatsApp to Owner
-        const ownerPhone = process.env.OWNER_PHONE_NUMBER;
-        if (ownerPhone) {
-            const ownerMessage = `🔔 *New Order Received!*
-            
-📦 *Order:* ${orderId}
-👤 *Customer:* ${customer.name} (${customer.phone})
-💰 *Total:* $${finalTotal.toFixed(2)} ${discount > 0 ? `(Saved $${discount.toFixed(2)})` : ''}
-
-See full details in Admin Dashboard:
-https://orderviachat.com/admin`;
-
-            // Clean owner phone just in case
-            const cleanOwnerPhone = ownerPhone.replace(/\D/g, '');
-            await sendWhatsAppMessage(cleanOwnerPhone, ownerMessage);
-        }
-
-        return NextResponse.json({ success: true, orderId });
-    } catch (error) {
-        console.error('Checkout API error:', error);
-        return new NextResponse('Internal Server Error', { status: 500 });
+    } catch (error: any) {
+        console.error('LemonSqueezy Checkout Error:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

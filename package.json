@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@lemonsqueezy/lemonsqueezy.js": "^4.0.0",
     "@next/third-parties": "^16.1.1",
+    "@stripe/stripe-js": "^8.6.1",
     "@supabase/supabase-js": "^2.90.0",
     "@types/jspdf": "^2.0.0",
     "axios": "^1.13.2",

@@ -311,6 +311,49 @@ export class SupabaseTenantRepository implements TenantRepository {
 
         if (error) throw new Error(error.message);
     }
+
+    async getTenantById(id: string): Promise<Tenant | null> {
+        const { data, error } = await supabase
+            .from('tenants')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error || !data) return null;
+
+        return {
+            id: data.id,
+            slug: data.slug,
+            name: data.name,
+            ownerPhone: data.owner_phone,
+            currency: data.currency,
+            themeColor: data.theme_color,
+            email: data.email,
+            status: data.status,
+            stripeCustomerId: data.stripe_customer_id,
+            password: data.password,
+            language: data.language || 'en',
+            customDomain: data.custom_domain,
+            instagramUrl: data.instagram_url,
+            facebookUrl: data.facebook_url,
+            metaPixelId: data.meta_pixel_id
+        };
+    }
+
+    async updateTenantBilling(id: string, billingData: { lemonsqueezy_customer_id?: string; lemonsqueezy_subscription_id?: string; lemonsqueezy_variant_id?: string; subscription_status?: string }): Promise<void> {
+        const updateData: any = {};
+        if (billingData.lemonsqueezy_customer_id) updateData.lemonsqueezy_customer_id = billingData.lemonsqueezy_customer_id;
+        if (billingData.lemonsqueezy_subscription_id) updateData.lemonsqueezy_subscription_id = billingData.lemonsqueezy_subscription_id;
+        if (billingData.lemonsqueezy_variant_id) updateData.lemonsqueezy_variant_id = billingData.lemonsqueezy_variant_id;
+        if (billingData.subscription_status) updateData.subscription_status = billingData.subscription_status;
+
+        const { error } = await supabase
+            .from('tenants')
+            .update(updateData)
+            .eq('id', id);
+
+        if (error) throw new Error(error.message);
+    }
 }
 
 import { AnalyticsRepository, AnalyticsSummary } from './types';
