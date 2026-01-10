@@ -44,12 +44,12 @@ export async function POST(req: NextRequest) {
                     // In a real deployment, this would be the actual URL of the web app
                     // For now, we'll send a placeholder or the localhost link (which won't work on mobile unless tunneled)
 
-                    // TODO: Replace with deployed URL
-                    const appUrl = 'https://easyorder-bot.vercel.app';
+                    // Send branding response
+                    const appUrl = 'https://orderviachat.com';
 
                     await sendWhatsAppMessage(
                         from,
-                        `👋 Welcome to EasyOrder! \n\n🛒 Browse our catalog and order here: ${appUrl}\n\nWe will send you an invoice as soon as you place an order!`
+                        `👋 Welcome to OrderViaChat! 🚀\n\nCreate your own WhatsApp store or browse our demo here: ${appUrl}\n\nWe help businesses sell directly on WhatsApp!`
                     );
                 }
             }

@@ -35,7 +35,7 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
 export async function sendWelcomeEmail(email: string, name: string, slug: string) {
     const dashboardUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'}/store/${slug}/admin`;
     const html = `
-        <h1>Welcome to EasyOrder, ${name}! 🚀</h1>
+        <h1>Welcome to OrderViaChat, ${name}! 🚀</h1>
         <p>Your store is now successfully created.</p>
         <p>You can access your admin dashboard here:</p>
         <p><a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'}/admin">Go to Dashboard</a></p>
@@ -45,7 +45,7 @@ export async function sendWelcomeEmail(email: string, name: string, slug: string
 
     await sendEmail({
         to: email,
-        subject: 'Welcome to EasyOrder!',
+        subject: 'Welcome to OrderViaChat!',
         html
     });
 }
