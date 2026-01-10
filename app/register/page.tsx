@@ -51,9 +51,10 @@ export default function RegisterPage() {
 
                     <div className="bg-gray-100 p-4 rounded-xl text-left mb-6 font-mono text-sm">
                         <p className="text-gray-500 text-xs uppercase mb-1">Bank Transfer Details</p>
-                        <p><strong>Bank:</strong> City Bank</p>
-                        <p><strong>Account:</strong> 1234-5678-9012</p>
-                        <p><strong>Name:</strong> OrderViaChat Inc.</p>
+                        <p><strong>Bank:</strong> Askari Bank Limited (Johar Town, Lahore)</p>
+                        <p><strong>Account Title:</strong> RIZWAN SHOAIB</p>
+                        <p><strong>Account No:</strong> 01000100579994</p>
+                        <p><strong>IBAN:</strong> PK48ASCM0001000100579994</p>
                     </div>
 
                     <Link href="/">
