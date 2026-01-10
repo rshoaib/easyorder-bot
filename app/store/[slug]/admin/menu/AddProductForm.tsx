@@ -6,6 +6,9 @@ import { addProduct } from './actions';
 import { Plus, Loader2, Upload } from 'lucide-react';
 import Image from 'next/image';
 
+import { generateProductDescription } from '@/app/actions/ai-actions';
+import { Sparkles } from 'lucide-react';
+
 interface Props {
     slug: string;
     tenantId: string;
@@ -13,7 +16,37 @@ interface Props {
 
 export default function AddProductForm({ slug, tenantId }: Props) {
     const [isUploading, setIsUploading] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
+    const [description, setDescription] = useState('');
+
+    async function handleAIGenerate() {
+        // Get current name/category from form inputs by ID since we don't control them with state for simplicity
+        const form = document.getElementById('addProductForm') as HTMLFormElement;
+        const formData = new FormData(form);
+        const name = formData.get('name') as string;
+        const category = formData.get('category') as string;
+
+        if (!name || !category) {
+            alert('Please enter a Name and Category first.');
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            const result = await generateProductDescription(name, category);
+            if (result.success && result.description) {
+                setDescription(result.description);
+            } else {
+                alert(result.message || 'Failed to generate description');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error generating description');
+        } finally {
+            setIsGenerating(false);
+        }
+    }
 
     async function handleSubmit(formData: FormData) {
         setIsUploading(true);
@@ -29,24 +62,17 @@ export default function AddProductForm({ slug, tenantId }: Props) {
                 }
             }
 
-            // We need to pass the final URL to the server action
-            // Since we can't easily modify the formData object passed to the action in the form action prop directly 
-            // if we are doing async work first, we'll manually call the action.
-            
-            // Create a new FormData to send to the server action
             const submitData = new FormData();
             submitData.set('name', formData.get('name') as string);
             submitData.set('price', formData.get('price') as string);
             submitData.set('category', formData.get('category') as string);
-            submitData.set('description', formData.get('description') as string);
-            submitData.set('image', imageUrl); // This is the string URL
+            submitData.set('description', description || (formData.get('description') as string)); // Use state if available
+            submitData.set('image', imageUrl);
 
             await addProduct(slug, submitData);
             
-            // Reset form (optional, but good UX - simplified here by just reloading or clearing)
-            // Ideally we'd reset the form ref, but for MVP let's rely on the action revalidating path
-            // to show the new item. We might want to clear the preview manually.
             setPreview(null);
+            setDescription(''); // Reset
             (document.getElementById('addProductForm') as HTMLFormElement)?.reset();
 
         } catch (error) {
@@ -89,10 +115,7 @@ export default function AddProductForm({ slug, tenantId }: Props) {
                 {/* Image Upload */}
                 <div>
                     <label className="form-label">Product Image</label>
-                    
-                    {/* Hidden input for the final URL logic if needed, but we handle in handleSubmit */}
                     <input type="hidden" name="image" value={preview || ''} /> 
-
                     <div className="mt-1 flex items-center justify-center w-full">
                         <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors relative overflow-hidden">
                             {preview ? (
@@ -109,8 +132,26 @@ export default function AddProductForm({ slug, tenantId }: Props) {
                 </div>
 
                 <div>
-                    <label className="form-label">Description</label>
-                    <textarea name="description" placeholder="A juicy beef burger..." className="form-input" rows={2} />
+                    <div className="flex justify-between items-center mb-1">
+                        <label className="form-label mb-0">Description</label>
+                        <button 
+                            type="button" 
+                            onClick={handleAIGenerate}
+                            disabled={isGenerating}
+                            className="text-xs font-bold text-indigo-600 flex items-center gap-1 hover:text-indigo-800 transition-colors"
+                        >
+                            {isGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                            {isGenerating ? 'Writing...' : 'Auto-Write ✨'}
+                        </button>
+                    </div>
+                    <textarea 
+                        name="description" 
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="A juicy beef burger..." 
+                        className="form-input" 
+                        rows={2} 
+                    />
                 </div>
                 
                 <button type="submit" disabled={isUploading} className="btn-block mt-2 flex items-center justify-center gap-2">
