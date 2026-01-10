@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "OrderViaChat | Shop Local",
   description: "Order fresh items directly via WhatsApp",
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
