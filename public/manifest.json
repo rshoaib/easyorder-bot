@@ -10,44 +10,16 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/icons/android-chrome-192x192.png",
+      "src": "https://orderviachat.com/icons/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "/icons/android-chrome-512x512.png",
+      "src": "https://orderviachat.com/icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-       "src": "/icons/android-chrome-512x512.png",
-       "sizes": "512x512",
-       "type": "image/png",
-       "form_factor": "wide",
-       "label": "EasyOrder Storefront"
-    },
-    {
-       "src": "/icons/android-chrome-512x512.png",
-       "sizes": "512x512",
-       "type": "image/png",
-       "form_factor": "narrow",
-       "label": "Mobile Ordering"
+      "purpose": "any maskable"
     }
   ]
 }
