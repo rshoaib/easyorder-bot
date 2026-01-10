@@ -37,45 +37,14 @@ export async function registerTenant(formData: FormData) {
             language: 'en'
         });
 
-        // 2. Create Stripe Checkout Session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: 'EasyOrder Pro Subscription',
-                            description: `Monthly subscription for ${name}`,
-                        },
-                        unit_amount: 2900, // $29.00
-                        recurring: {
-                            interval: 'month',
-                        },
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: 'subscription',
-            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/store/${slug}/admin?success=true`,
-            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/register?canceled=true`,
-            client_reference_id: tenant.id, // Important: We use this to link payment to tenant in webhook
-            customer_email: email,
-            metadata: {
-                tenantId: tenant.id,
-                slug: slug
-            }
-        });
-
-        if (!session.url) {
-            throw new Error("Failed to create Stripe session");
-        }
+        // 2. Stripe Removed for Manual Payment Workflow
+        // We now just return success, and the frontend will show payment instructions.
 
         // Send Welcome Email (Fire and forget)
         const { sendWelcomeEmail } = await import('@/lib/email');
         sendWelcomeEmail(email, name, slug).catch(console.error);
 
-        return { success: true, url: session.url! };
+        return { success: true, pending: true };
 
     } catch (error: any) {
         console.error("Registration Error:", error);

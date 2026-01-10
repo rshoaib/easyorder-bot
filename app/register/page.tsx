@@ -2,28 +2,67 @@
 
 import { registerTenant } from "@/app/actions/register-actions";
 import { useTransition, useState } from "react";
-import { Loader2, ArrowRight, Store, CheckCircle } from "lucide-react";
+import { Loader2, ArrowRight, Store, CheckCircle, Check } from "lucide-react";
 import Link from "next/link";
 
 export default function RegisterPage() {
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false); // Added loading state as per instruction's finally block
 
     const handleSubmit = async (formData: FormData) => {
         setError(null);
+        setLoading(true); // Set loading true at the start of submission
         startTransition(async () => {
             try {
                 const result = await registerTenant(formData);
-                if (result.url) {
-                    window.location.href = result.url; // Redirect to Stripe
+                if (result.success) {
+                    setSuccess(true);
                 } else if (result.error) {
                     setError(result.error);
                 }
-            } catch (e: any) {
-                setError(e.message || "An unexpected error occurred.");
+            } catch (err) {
+                setError("Something went wrong");
+            } finally {
+                setLoading(false);
             }
         });
     };
+
+    if (success) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+                <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
+                        <Check size={32} />
+                    </div>
+                    <h2 className="text-2xl font-bold mb-2">Registration Successful!</h2>
+                    <p className="text-gray-600 mb-6">Your store has been created but is pending activation.</p>
+                    
+                    <div className="bg-blue-50 p-4 rounded-xl text-left mb-6 border border-blue-100">
+                        <h3 className="font-bold text-blue-900 mb-2">Activation Steps:</h3>
+                        <ol className="list-decimal list-inside space-y-2 text-sm text-blue-800">
+                            <li>Transfer <strong>$29.00</strong> to the account below.</li>
+                            <li>Send the receipt to our WhatsApp: <a href="https://wa.me/1234567890" className="underline font-bold">+1 (234) 567-890</a></li>
+                            <li>We will activate your store immediately!</li>
+                        </ol>
+                    </div>
+
+                    <div className="bg-gray-100 p-4 rounded-xl text-left mb-6 font-mono text-sm">
+                        <p className="text-gray-500 text-xs uppercase mb-1">Bank Transfer Details</p>
+                        <p><strong>Bank:</strong> City Bank</p>
+                        <p><strong>Account:</strong> 1234-5678-9012</p>
+                        <p><strong>Name:</strong> OrderViaChat Inc.</p>
+                    </div>
+
+                    <Link href="/">
+                        <button className="text-gray-500 hover:text-gray-700 text-sm">Back to Home</button>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">

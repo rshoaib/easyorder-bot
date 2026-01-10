@@ -27,3 +27,13 @@ export async function createStore(formData: FormData) {
 
     revalidatePath('/super-admin');
 }
+
+export async function activateTenant(formData: FormData) {
+    const repo = getTenantRepository();
+    const id = formData.get('id') as string;
+
+    if (!id) return;
+
+    await repo.updateTenantStatus(id, 'active');
+    revalidatePath('/super-admin');
+}
