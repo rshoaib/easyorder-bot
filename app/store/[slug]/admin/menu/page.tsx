@@ -5,6 +5,7 @@ import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import ProductToggle from "@/components/admin/ProductToggle";
 import AddProductForm from "./AddProductForm";
+import ImportExportButtons from "./ImportExportButtons";
 
 export const dynamic = 'force-dynamic';
 
@@ -28,18 +29,20 @@ export default async function AdminMenuPage({ params }: Props) {
 
     return (
         <main className="container pt-6 pb-10" style={{ maxWidth: '900px' }}>
-             {/* Header Section */}
-             <div className="flex justify-between mb-8 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+            <div className="flex justify-between mb-8 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-wrap gap-4">
                 <div>
                     <h1 className="text-2xl font-bold mb-1">Menu Manager</h1>
                     <p className="text-gray-500 text-sm">Add or remove items for {tenant.name}</p>
                 </div>
-                <Link href={`/store/${slug}/admin`}>
-                    <button className="btn-secondary">
-                        <ArrowLeft size={16} />
-                        Back to Orders
-                    </button>
-                </Link>
+                <div className="flex gap-2">
+                    <ImportExportButtons slug={slug} products={products} />
+                    <Link href={`/store/${slug}/admin`}>
+                        <button className="btn-secondary">
+                            <ArrowLeft size={16} />
+                            Back to Orders
+                        </button>
+                    </Link>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -39,3 +39,23 @@ export async function deleteProduct(slug: string, id: string) {
     revalidatePath(`/store/${slug}/admin/menu`);
     revalidatePath(`/store/${slug}`);
 }
+
+export async function importProducts(slug: string, products: Omit<Product, 'id' | 'tenantId'>[]) {
+    const tenantRepo = getTenantRepository();
+    const tenant = await tenantRepo.getTenantBySlug(slug);
+    if (!tenant) throw new Error("Tenant not found");
+
+    const repo = getProductRepository();
+
+    for (const p of products) {
+        const product: Product = {
+            ...p,
+            id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+            tenantId: tenant.id
+        };
+        await repo.addProduct(product);
+    }
+
+    revalidatePath(`/store/${slug}/admin/menu`);
+    revalidatePath(`/store/${slug}`);
+}
