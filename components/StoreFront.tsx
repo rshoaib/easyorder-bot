@@ -16,7 +16,7 @@ interface StoreFrontProps {
 
 export default function StoreFront({ initialProducts, tenant }: StoreFrontProps) {
   const [category, setCategory] = useState("All");
-  const { itemCount } = useCart();
+  const { itemCount, total } = useCart();
   const dict = getDictionary(tenant.language as any);
 
   const products = initialProducts;
@@ -101,16 +101,31 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
         </Link>
       </footer>
 
-      {/* Sticky Viral Button (Mobile Only, Hidden if Cart has items) */}
-      {itemCount === 0 && (
+      {/* Sticky Cart Summary (Mobile Only, Shows when items in cart) */}
+      {itemCount > 0 ? (
+          <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-5 duration-300">
+              <Link href={`${tenant.slug}/cart`}>
+                  <div className="bg-gray-900 text-white p-4 rounded-xl shadow-2xl flex items-center justify-between border border-gray-800">
+                      <div className="flex flex-col">
+                          <span className="text-xs text-gray-400 font-medium">{itemCount} items</span>
+                          <span className="font-bold text-lg leading-none">{tenant.currency}{total.toFixed(2)}</span>
+                      </div>
+                      <div className="flex items-center gap-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-bold">
+                          View Cart <ShoppingBag size={16} />
+                      </div>
+                  </div>
+              </Link>
+          </div>
+      ) : (
+          /* Sticky Viral Button (Only when cart is empty) */
           <div className="md:hidden fixed bottom-4 left-4 right-4 z-40 animate-in slide-in-from-bottom-5 duration-700">
               <Link href="/register" target="_blank">
-                  <div className="bg-gray-900 text-white p-4 rounded-xl shadow-2xl flex items-center justify-between border border-gray-800">
+                  <div className="bg-white/90 backdrop-blur-md text-gray-900 p-4 rounded-xl shadow-lg flex items-center justify-between border border-gray-200">
                       <div>
                           <p className="font-bold text-sm">Want a store like this?</p>
-                          <p className="text-xs text-gray-400">Launch for free in 2 minutes.</p>
+                          <p className="text-xs text-gray-500">Launch for free in 2 mins.</p>
                       </div>
-                      <div className="bg-white text-gray-900 px-3 py-1.5 rounded-lg text-xs font-bold">
+                      <div className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">
                           Start 🚀
                       </div>
                   </div>
