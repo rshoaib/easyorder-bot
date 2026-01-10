@@ -44,7 +44,7 @@ export default function RegisterPage() {
                         <h3 className="font-bold text-blue-900 mb-2">Activation Steps:</h3>
                         <ol className="list-decimal list-inside space-y-2 text-sm text-blue-800">
                             <li>Transfer <strong>$29.00</strong> to the account below.</li>
-                            <li>Send the receipt to our WhatsApp: <a href="https://wa.me/1234567890" className="underline font-bold">+1 (234) 567-890</a></li>
+                            <li>Send the receipt to our WhatsApp: <a href="https://wa.me/923224609117" className="underline font-bold">+92 322 4609117</a></li>
                             <li>We will activate your store immediately!</li>
                         </ol>
                     </div>
