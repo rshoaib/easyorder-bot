@@ -4,6 +4,7 @@ import { Trash2, Plus, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import ProductToggle from "@/components/admin/ProductToggle";
+import AddProductForm from "./AddProductForm";
 
 export const dynamic = 'force-dynamic';
 
@@ -45,36 +46,7 @@ export default async function AdminMenuPage({ params }: Props) {
                 
                 {/* Add Product Form */}
                 <div className="md:col-span-1">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-4">
-                        <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                             <Plus size={18} /> Add New Item
-                        </h2>
-                        <form action={addProductWithSlug} className="flex flex-col gap-4">
-                            <div>
-                                <label className="form-label">Name</label>
-                                <input name="name" required placeholder="e.g. Cheese Burger" className="form-input" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label className="form-label">Price ($)</label>
-                                    <input name="price" type="number" step="0.01" required placeholder="10.50" className="form-input" />
-                                </div>
-                                <div>
-                                    <label className="form-label">Category</label>
-                                    <input name="category" required placeholder="e.g. Burgers" className="form-input" />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="form-label">Image URL</label>
-                                <input name="image" required placeholder="https://..." className="form-input" />
-                            </div>
-                            <div>
-                                <label className="form-label">Description</label>
-                                <textarea name="description" placeholder="A juicy beef burger..." className="form-input" rows={2} />
-                            </div>
-                            <button type="submit" className="btn-block mt-2">Add Item</button>
-                        </form>
-                    </div>
+                    <AddProductForm slug={slug} tenantId={tenant.id} />
                 </div>
 
                 {/* Product List */}
