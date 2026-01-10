@@ -20,10 +20,11 @@ async function updateSocials(formData: FormData) {
     const slug = formData.get('slug') as string;
     const instagram = formData.get('instagram') as string;
     const facebook = formData.get('facebook') as string;
+    const metaPixelId = formData.get('metaPixelId') as string;
 
     if (!id || !slug) return;
 
-    await tenantRepo.updateTenantSocials(id, instagram, facebook);
+    await tenantRepo.updateTenantSocials(id, instagram, facebook, metaPixelId);
     revalidatePath(`/store/${slug}`);
     revalidatePath(`/store/${slug}/admin/settings`);
 }
@@ -84,6 +85,29 @@ export default async function SettingsPage({ params }: Props) {
                             placeholder="https://facebook.com/your-store"
                             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium" 
                         />
+                    </div>
+
+                    <div className="pt-4 border-t border-gray-100"></div>
+
+                    <div className="mb-2">
+                        <h2 className="font-bold text-gray-900">Marketing & Analytics</h2>
+                        <p className="text-sm text-gray-500 mt-1">Track your visitors and run ads.</p>
+                    </div>
+
+                    {/* Meta Pixel */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                             Meta Pixel ID
+                        </label>
+                        <input 
+                            name="metaPixelId" 
+                            defaultValue={tenant.metaPixelId} 
+                            placeholder="e.g. 1234567890"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium font-mono" 
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                            Find this in your Facebook Events Manager. We'll automatically convert it into a tracking script.
+                        </p>
                     </div>
 
                     <div className="pt-4">

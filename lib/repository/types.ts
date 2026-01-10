@@ -16,6 +16,7 @@ export interface Tenant {
     customDomain?: string;
     instagramUrl?: string;
     facebookUrl?: string;
+    metaPixelId?: string;
 }
 
 export interface Order {
@@ -101,7 +102,7 @@ export interface TenantRepository {
     updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void>;
     updateTenantLanguage(id: string, language: string): Promise<void>;
     updateTenantDomain(id: string, domain: string): Promise<void>;
-    updateTenantSocials(id: string, instagramUrl?: string, facebookUrl?: string): Promise<void>;
+    updateTenantSocials(id: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string): Promise<void>;
     getTenantByDomain(domain: string): Promise<Tenant | null>;
 }
 

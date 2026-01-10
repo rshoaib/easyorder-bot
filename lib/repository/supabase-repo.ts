@@ -174,7 +174,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             language: data.language || 'en',
             customDomain: data.custom_domain,
             instagramUrl: data.instagram_url,
-            facebookUrl: data.facebook_url
+            facebookUrl: data.facebook_url,
+            metaPixelId: data.meta_pixel_id
         };
     }
 
@@ -200,7 +201,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             language: row.language || 'en',
             customDomain: row.custom_domain,
             instagramUrl: row.instagram_url,
-            facebookUrl: row.facebook_url
+            facebookUrl: row.facebook_url,
+            metaPixelId: row.meta_pixel_id
         }));
     }
 
@@ -297,12 +299,13 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSocials(id: string, instagramUrl?: string, facebookUrl?: string): Promise<void> {
+    async updateTenantSocials(id: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string): Promise<void> {
         const { error } = await supabase
             .from('tenants')
             .update({
                 instagram_url: instagramUrl,
-                facebook_url: facebookUrl
+                facebook_url: facebookUrl,
+                meta_pixel_id: metaPixelId
             })
             .eq('id', id);
 
