@@ -116,6 +116,18 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
           </div>
         ))}
       </div>
+
+
+      <footer className="mt-12 py-8 border-t border-gray-100 text-center">
+        <Link 
+            href={`${process.env.NEXT_PUBLIC_BASE_URL || '/'}`} 
+            target="_blank" 
+            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-indigo-600 transition-colors bg-gray-50 hover:bg-indigo-50 px-4 py-2 rounded-full"
+        >
+            <span>Powered by</span>
+            <span className="font-bold">OrderViaChat</span>
+        </Link>
+      </footer>
     </main>
   );
 }
