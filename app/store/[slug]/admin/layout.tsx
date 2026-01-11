@@ -55,9 +55,20 @@ export default async function AdminLayout({
         </div>
       </nav>
 
-      {/* Mobile Bottom Nav - (Hidden for now as it causes layout issues) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 hidden">
-          {/* ... items ... */}
+      {/* Mobile Bottom Nav */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 flex pb-safe">
+          <Link href={`/store/${slug}/admin`} className="flex-1 flex flex-col items-center justify-center h-16 text-xs text-gray-500 hover:text-indigo-600 active:bg-gray-50 transition-colors">
+                <LayoutDashboard size={20} className="mb-1" /> Dashboard
+          </Link>
+          <Link href={`/store/${slug}/admin/menu`} className="flex-1 flex flex-col items-center justify-center h-16 text-xs text-gray-500 hover:text-indigo-600 active:bg-gray-50 transition-colors">
+                <Menu size={20} className="mb-1" /> Menu
+          </Link>
+          <Link href={`/store/${slug}/admin/promos`} className="flex-1 flex flex-col items-center justify-center h-16 text-xs text-gray-500 hover:text-indigo-600 active:bg-gray-50 transition-colors">
+                <Tag size={20} className="mb-1" /> Promos
+          </Link>
+          <Link href={`/store/${slug}/admin/settings`} className="flex-1 flex flex-col items-center justify-center h-16 text-xs text-gray-500 hover:text-indigo-600 active:bg-gray-50 transition-colors">
+                <Settings size={20} className="mb-1" /> Settings
+          </Link>
       </div>
 
       {children}
