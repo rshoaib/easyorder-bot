@@ -60,6 +60,16 @@ export default async function StoreLayout({
     <>
       {tenant?.metaPixelId && <FacebookPixel pixelId={tenant.metaPixelId} />}
       {children}
+      
+      {/* Demo Admin Access Button */}
+      {slug === 'demo' && (
+        <a 
+          href="/store/demo/admin" 
+          className="fixed bottom-24 right-4 z-50 bg-gray-900 text-white px-4 py-3 rounded-full shadow-xl font-bold text-sm flex items-center gap-2 hover:scale-105 transition-transform border border-gray-700 animate-bounce"
+        >
+          Try Admin Panel 🚀
+        </a>
+      )}
     </>
   );
 }

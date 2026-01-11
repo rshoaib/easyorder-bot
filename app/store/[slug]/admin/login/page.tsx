@@ -30,6 +30,11 @@ export default function LoginPage() {
     }
   };
 
+  // Auto-fill for demo
+  if (slug === 'demo' && !password) {
+      setPassword('demo');
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm">
@@ -39,6 +44,7 @@ export default function LoginPage() {
             </div>
             <h1 className="text-xl font-bold">Admin Access</h1>
             <p className="text-gray-400 text-sm">Enter password for {slug}</p>
+            {slug === 'demo' && <p className="text-blue-500 text-xs mt-1 font-medium bg-blue-50 px-2 py-1 rounded">Password is: <b>demo</b></p>}
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
