@@ -75,9 +75,17 @@ export default async function AdminPage({ params }: Props) {
 
       {/* Controls */}
       <div className="flex flex-col md:flex-row justify-between mb-6 gap-4 px-2 items-start md:items-center">
-         <h2 className="text-lg font-bold flex items-center gap-2">
-            Recent Orders 
-            <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
+         <h2 className="text-lg font-bold flex items-center gap-2 w-full justify-between md:justify-start">
+            <div className="flex items-center gap-2">
+                Recent Orders 
+                <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
+            </div>
+            {/* Mobile Refresh Button */}
+            <Link href={`/store/${slug}/admin`} className="md:hidden">
+                <button className="p-2 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200">
+                    <RefreshCw size={16} />
+                </button>
+            </Link>
          </h2>
          <div className="flex items-center gap-2">
              <div className="md:hidden">
