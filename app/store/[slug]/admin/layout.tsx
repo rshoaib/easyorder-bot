@@ -56,7 +56,7 @@ export default async function AdminLayout({
       </nav>
 
       {/* Mobile Bottom Nav */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 flex pb-safe">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-[100] flex items-center justify-around pb-4 pt-1 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
           <Link href={`/store/${slug}/admin`} className="flex-1 flex flex-col items-center justify-center h-16 text-xs text-gray-500 hover:text-indigo-600 active:bg-gray-50 transition-colors">
                 <LayoutDashboard size={20} className="mb-1" /> Dashboard
           </Link>

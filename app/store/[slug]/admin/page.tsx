@@ -79,8 +79,14 @@ export default async function AdminPage({ params }: Props) {
             Recent Orders 
             <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
          </h2>
-         <div className="hidden md:flex flex-wrap gap-2 w-full md:w-auto">
-             <LanguageSelector slug={slug} currentLanguage={tenant.language} /> {/* Added LanguageSelector */}
+         <div className="flex items-center gap-2">
+             <div className="md:hidden">
+                 <LanguageSelector slug={slug} currentLanguage={tenant.language} />
+             </div>
+             <div className="hidden md:flex flex-wrap gap-2 w-full md:w-auto">
+                 <div className="hidden md:block">
+                    <LanguageSelector slug={slug} currentLanguage={tenant.language} />
+                 </div>
              <Link href={`/store/${slug}/admin/menu`}>
                 <button className="btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100 whitespace-nowrap">
                     Menu Manager
