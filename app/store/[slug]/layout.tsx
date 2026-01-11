@@ -1,6 +1,7 @@
 import { getTenantRepository } from "@/lib/repository";
 import { FacebookPixel } from "@/components/FacebookPixel";
 import { Metadata, Viewport } from "next";
+import DemoAdminButton from "@/components/DemoAdminButton";
 
 export async function generateViewport({ params }: { params: Promise<{ slug: string }> }): Promise<Viewport> {
     const { slug } = await params;
@@ -61,15 +62,8 @@ export default async function StoreLayout({
       {tenant?.metaPixelId && <FacebookPixel pixelId={tenant.metaPixelId} />}
       {children}
       
-      {/* Demo Admin Access Button */}
-      {slug === 'demo' && (
-        <a 
-          href="/store/demo/admin" 
-          className="fixed bottom-24 right-4 z-50 bg-gray-900 text-white px-4 py-3 rounded-full shadow-xl font-bold text-sm flex items-center gap-2 hover:scale-105 transition-transform border border-gray-700 animate-bounce"
-        >
-          Try Admin Panel 🚀
-        </a>
-      )}
+      {/* Demo Admin Access Button (Client Component handles visibility) */}
+      {slug === 'demo' && <DemoAdminButton />}
     </>
   );
 }

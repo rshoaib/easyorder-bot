@@ -37,18 +37,10 @@ export default async function AdminPage({ params }: Props) {
 
   return (
     <main className="container pt-6 pb-10" style={{ maxWidth: '900px' }}>
-      {/* Header Section */}
-      <div className="flex justify-between mb-8 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-        <div>
-           <h1 className="text-2xl font-bold mb-1">{tenant.name} &bull; Admin</h1>
-           <p className="text-gray-500 text-sm">Manage your store orders</p>
-        </div>
-        <Link href={`/store/${slug}`}>
-           <button className="btn-secondary">
-             <ArrowLeft size={16} />
-             Back to Shop
-           </button>
-        </Link>
+      {/* Header Section (Replaced by Layout) */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-500 text-sm">Welcome back to {tenant.name}</p>
       </div>
 
       {/* Analytics Cards */}
