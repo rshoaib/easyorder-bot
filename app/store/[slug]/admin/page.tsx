@@ -2,7 +2,7 @@ import { getOrderRepository, getTenantRepository, getAnalyticsRepository } from 
 import Link from "next/link";
 import { LanguageSelector } from "@/components/admin/LanguageSelector";
 import { DomainSettings } from "@/components/admin/DomainSettings";
-import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag } from 'lucide-react';
+import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag, Settings } from 'lucide-react';
 import StatusSelector from '@/components/admin/StatusSelector';
 
 export const dynamic = 'force-dynamic';
@@ -74,39 +74,39 @@ export default async function AdminPage({ params }: Props) {
       <DomainSettings slug={slug} currentDomain={tenant.customDomain} />
 
       {/* Controls */}
-      <div className="flex justify-between mb-4 items-center px-2">
+      <div className="flex flex-col md:flex-row justify-between mb-6 gap-4 px-2 items-start md:items-center">
          <h2 className="text-lg font-bold flex items-center gap-2">
             Recent Orders 
             <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
          </h2>
-         <div className="flex gap-2">
+         <div className="flex flex-wrap gap-2 w-full md:w-auto">
              <LanguageSelector slug={slug} currentLanguage={tenant.language} /> {/* Added LanguageSelector */}
              <Link href={`/store/${slug}/admin/menu`}>
-                <button className="btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100">
+                <button className="btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100 whitespace-nowrap">
                     Menu Manager
                 </button>
              </Link>
              <Link href={`/store/${slug}/admin/promos`}>
-                <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors">
+                <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap">
                     <Tag size={18} />
                     Promos
                 </button>
              </Link>
              <Link href={`/store/${slug}/admin`}>
-                <button className="btn-secondary" title="Check for new orders">
+                <button className="btn-secondary whitespace-nowrap" title="Check for new orders">
                 <RefreshCw size={14} />
                 Refresh
                 </button>
              </Link>
              <Link href={`/store/${slug}/kitchen`} target="_blank">
-                <button className="btn-secondary bg-orange-50 text-orange-600 border-orange-100 hover:bg-orange-100">
-                    Kitchen View
+                <button className="btn-secondary bg-orange-50 text-orange-600 border-orange-100 hover:bg-orange-100 whitespace-nowrap">
+                    Kitchen
                 </button>
              </Link>
              <Link href={`/store/${slug}/admin/settings`}>
                 <button className="btn-secondary" title="Store Settings">
                     <span className="sr-only">Settings</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <Settings size={18} />
                 </button>
              </Link>
          </div>
