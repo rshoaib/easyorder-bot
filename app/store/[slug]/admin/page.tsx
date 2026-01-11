@@ -45,7 +45,7 @@ export default async function AdminPage({ params }: Props) {
 
       {/* Analytics Cards */}
       {analytics && (
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div className="flex items-center gap-3 text-gray-500 mb-2">
                     <div className="p-2 bg-green-50 text-green-600 rounded-lg"><DollarSign size={20} /></div>

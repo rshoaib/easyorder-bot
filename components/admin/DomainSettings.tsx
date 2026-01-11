@@ -30,7 +30,7 @@ export function DomainSettings({ slug, currentDomain }: { slug: string, currentD
                 <span className="text-sm font-medium">Custom Domain</span>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
                 <input 
                     type="text" 
                     value={domain}
@@ -41,7 +41,7 @@ export function DomainSettings({ slug, currentDomain }: { slug: string, currentD
                 <button 
                     onClick={handleSave}
                     disabled={isPending}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-indigo-700 disabled:opacity-50"
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 disabled:opacity-50"
                 >
                     {isPending ? <Loader2 size={16} className="animate-spin"/> : <Save size={16} />}
                     Save
