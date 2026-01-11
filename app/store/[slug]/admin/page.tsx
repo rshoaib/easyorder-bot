@@ -117,6 +117,7 @@ export default async function AdminPage({ params }: Props) {
              </Link>
          </div>
       </div>
+    </div>
 
       {/* Orders Table */}
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
