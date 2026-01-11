@@ -96,14 +96,46 @@ export default function CartPage() {
             return;
         }
 
+        // Show loading state in the input immediately
+        setCustomer(prev => ({
+            ...prev,
+            address: "Fetching precise address..."
+        }));
+
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            async (position) => {
                 const { latitude, longitude } = position.coords;
                 const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
                 
+                // Default fallback
+                let addressText = `Shared Location (${latitude.toFixed(5)}, ${longitude.toFixed(5)})`;
+
+                try {
+                    // Method 1: BigDataCloud (Free, No Key, Good for Client-Side)
+                    const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+                    const data = await res.json();
+                    
+                    // Construct readable address
+                    const components = [
+                        data.locality,
+                        data.city,
+                        data.principalSubdivision,
+                        data.countryName
+                    ].filter(Boolean);
+                    
+                    // Remove duplicates (sometimes locality == city)
+                    const uniqueComponents = [...new Set(components)];
+                    
+                    if (uniqueComponents.length > 0) {
+                        addressText = uniqueComponents.join(', ');
+                    }
+                } catch (e) {
+                    console.error("Geocoding failed", e);
+                }
+                
                 setCustomer(prev => ({
                     ...prev,
-                    address: `Shared Location (${latitude.toFixed(5)}, ${longitude.toFixed(5)})`, // Placeholder text
+                    address: addressText,
                     locationLink: mapsLink
                 }));
                 setLocationStatus('success');
@@ -111,6 +143,10 @@ export default function CartPage() {
             () => {
                 alert("Unable to retrieve your location");
                 setLocationStatus('error');
+                setCustomer(prev => ({
+                     ...prev,
+                     address: "" // Clear loading text
+                }));
             }
         );
     };
