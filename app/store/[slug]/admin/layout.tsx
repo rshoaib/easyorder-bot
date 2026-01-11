@@ -55,20 +55,9 @@ export default async function AdminLayout({
         </div>
       </nav>
 
-      {/* Mobile Bottom Nav - (Can enable later if needed) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 flex">
-          <a href={`/store/${slug}/admin`} className="flex-1 flex flex-col items-center justify-center text-xs text-gray-500 active:text-indigo-600 p-2">
-                <LayoutDashboard size={20} className="mb-1" /> Home
-          </a>
-          <a href={`/store/${slug}/admin/menu`} className="flex-1 flex flex-col items-center justify-center text-xs text-gray-500 active:text-indigo-600 p-2">
-                <Menu size={20} className="mb-1" /> Menu
-          </a>
-          <a href={`/store/${slug}/admin/promos`} className="flex-1 flex flex-col items-center justify-center text-xs text-gray-500 active:text-indigo-600 p-2">
-                <Tag size={20} className="mb-1" /> Promos
-          </a>
-          <a href={`/store/${slug}/admin/settings`} className="flex-1 flex flex-col items-center justify-center text-xs text-gray-500 active:text-indigo-600 p-2">
-                <Settings size={20} className="mb-1" /> Settings
-          </a>
+      {/* Mobile Bottom Nav - (Hidden for now as it causes layout issues) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 hidden">
+          {/* ... items ... */}
       </div>
 
       {children}
