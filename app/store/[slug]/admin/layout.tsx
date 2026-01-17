@@ -1,6 +1,6 @@
 import { getTenantRepository } from "@/lib/repository";
 import Link from "next/link";
-import { ExternalLink, LayoutDashboard, Menu, Settings, Tag } from "lucide-react";
+import { ExternalLink, LayoutDashboard, Menu, Settings, Tag, QrCode } from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -41,6 +41,9 @@ export default async function AdminLayout({
                 </Link>
                 <Link href={`/store/${slug}/admin/settings`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
                     <Settings size={16} /> Settings
+                </Link>
+                <Link href={`/store/${slug}/admin/share`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
+                    <QrCode size={16} /> Share
                 </Link>
             </div>
           </div>
