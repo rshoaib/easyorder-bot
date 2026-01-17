@@ -156,7 +156,7 @@ export default function CartPage() {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('/api/checkout', {
+            const response = await axios.post('/api/place-order', {
                 items,
                 total: finalTotal, // API calculates simpler, but we pass for reference
                 customer,
@@ -167,9 +167,15 @@ export default function CartPage() {
 
             if (response.data.success) {
                 clearCart();
-                // We should probably redirect to a success page or back to store
-                alert("Order placed successfully! Check your WhatsApp."); // Simple feedback
-                router.push(`/store/${slug}`);
+                
+                if (response.data.whatsappNumber) {
+                     alert("Order placed! Redirecting to WhatsApp to send your order...");
+                     const url = `https://wa.me/${response.data.whatsappNumber}?text=${response.data.message}`;
+                     window.location.href = url;
+                } else {
+                     alert("Order placed successfully!"); // Simple feedback
+                     router.push(`/store/${slug}`);
+                }
             }
         } catch (error) {
             console.error(error);

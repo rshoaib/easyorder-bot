@@ -1,5 +1,5 @@
 import { getTenantRepository } from "@/lib/repository";
-import { ArrowLeft, Save, Instagram, Facebook } from "lucide-react";
+import { ArrowLeft, Save, Instagram, Facebook, Phone } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -12,19 +12,20 @@ interface Props {
     }
 }
 
-async function updateSocials(formData: FormData) {
+async function updateSettings(formData: FormData) {
     'use server';
     
     const tenantRepo = getTenantRepository();
     const id = formData.get('id') as string;
     const slug = formData.get('slug') as string;
+    const ownerPhone = formData.get('ownerPhone') as string;
     const instagram = formData.get('instagram') as string;
     const facebook = formData.get('facebook') as string;
     const metaPixelId = formData.get('metaPixelId') as string;
 
     if (!id || !slug) return;
 
-    await tenantRepo.updateTenantSocials(id, instagram, facebook, metaPixelId);
+    await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId);
     revalidatePath(`/store/${slug}`);
     revalidatePath(`/store/${slug}/admin/settings`);
 }
@@ -57,9 +58,25 @@ export default async function SettingsPage({ params }: Props) {
                     <p className="text-sm text-gray-500 mt-1">Connect your social media to build trust.</p>
                 </div>
                 
-                <form action={updateSocials} className="p-6 space-y-6">
+                <form action={updateSettings} className="p-6 space-y-6">
                     <input type="hidden" name="id" value={tenant.id} />
                     <input type="hidden" name="slug" value={slug} />
+
+                    {/* Owner Phone */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                             <Phone size={16} className="text-green-600" /> WhatsApp Number (Store Owner)
+                        </label>
+                        <input 
+                            name="ownerPhone" 
+                            defaultValue={tenant.ownerPhone} 
+                            placeholder="+1234567890"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium font-mono" 
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                            Orders will be sent to this WhatsApp number. Format: +[CountryCode][Number]
+                        </p>
+                    </div>
 
                     {/* Instagram */}
                     <div>
