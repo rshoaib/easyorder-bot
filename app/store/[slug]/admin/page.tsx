@@ -2,7 +2,7 @@ import { getOrderRepository, getTenantRepository, getAnalyticsRepository } from 
 import Link from "next/link";
 import { LanguageSelector } from "@/components/admin/LanguageSelector";
 import { DomainSettings } from "@/components/admin/DomainSettings";
-import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag, Settings } from 'lucide-react';
+import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag, Settings, Menu } from 'lucide-react';
 import StatusSelector from '@/components/admin/StatusSelector';
 
 export const dynamic = 'force-dynamic';
@@ -74,57 +74,57 @@ export default async function AdminPage({ params }: Props) {
       <DomainSettings slug={slug} currentDomain={tenant.customDomain} />
 
       {/* Controls */}
-      <div className="flex flex-col md:flex-row justify-between mb-6 gap-4 px-2 items-start md:items-center">
-         <h2 className="text-lg font-bold flex items-center gap-2 w-full justify-between md:justify-start">
-            <div className="flex items-center gap-2">
-                Recent Orders 
-                <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
-            </div>
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
+         <h2 className="text-lg font-bold flex items-center gap-2">
+            Recent Orders 
+            <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
             {/* Mobile Refresh Button */}
-            <Link href={`/store/${slug}/admin`} className="md:hidden">
+            <Link href={`/store/${slug}/admin`} className="md:hidden ml-auto">
                 <button className="p-2 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200">
                     <RefreshCw size={16} />
                 </button>
             </Link>
          </h2>
-         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
-             <div className="w-full md:w-auto">
+         
+         <div className="flex flex-wrap items-center gap-2">
+             <div className="w-full md:w-auto mb-2 md:mb-0">
                  <LanguageSelector slug={slug} currentLanguage={tenant.language} />
              </div>
              
-             {/* Quick Actions Grid */}
-             <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 w-full md:w-auto">
-                 <Link href={`/store/${slug}/admin/menu`} className="contents">
-                    <button className="btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100 whitespace-nowrap justify-center">
+             {/* Quick Actions Toolbar */}
+             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                 <Link href={`/store/${slug}/admin/menu`}>
+                    <button className="flex items-center gap-2 btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100 whitespace-nowrap px-3 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <Menu size={16} /> {/* Add Icon for consistency */}
                         Menu Manager
                     </button>
                  </Link>
-                 <Link href={`/store/${slug}/admin/promos`} className="contents">
-                    <button className="flex items-center justify-center gap-2 bg-white px-4 py-2 rounded-xl text-sm font-bold text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap">
-                        <Tag size={18} />
+                 <Link href={`/store/${slug}/admin/promos`}>
+                    <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap">
+                        <Tag size={16} />
                         Promos
                     </button>
                  </Link>
-                 <Link href={`/store/${slug}/admin`} className="contents">
-                    <button className="btn-secondary whitespace-nowrap justify-center" title="Check for new orders">
-                    <RefreshCw size={14} />
-                    Refresh
+                 <Link href={`/store/${slug}/admin`}>
+                    <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap" title="Check for new orders">
+                        <RefreshCw size={16} />
+                        Refresh
                     </button>
                  </Link>
-                 <Link href={`/store/${slug}/kitchen`} target="_blank" className="contents">
-                    <button className="btn-secondary bg-orange-50 text-orange-600 border-orange-100 hover:bg-orange-100 whitespace-nowrap justify-center">
+                 <Link href={`/store/${slug}/kitchen`} target="_blank">
+                    <button className="flex items-center gap-2 bg-orange-50 text-orange-600 border border-orange-100 hover:bg-orange-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap">
                         Kitchen
                     </button>
                  </Link>
-                 <Link href={`/store/${slug}/admin/settings`} className="md:contents col-span-2 md:col-span-1">
-                    <button className="btn-secondary w-full md:w-auto justify-center" title="Store Settings">
-                        <span className="md:hidden">Settings</span>
+                 <Link href={`/store/${slug}/admin/settings`}>
+                    <button className="flex items-center justify-center p-2 bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 rounded-lg transition-colors" title="Store Settings">
                         <Settings size={18} />
                     </button>
                  </Link>
              </div>
          </div>
-    </div>
+      </div>
 
       {/* Orders Table */}
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">

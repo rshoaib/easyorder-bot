@@ -25,11 +25,11 @@ export default async function AdminLayout({
               <span className="bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-lg">
                 {tenant.name.charAt(0)}
               </span>
-              <span className="hidden sm:inline">{tenant.name} Admin</span>
+              <span className="hidden sm:inline whitespace-nowrap">{tenant.name} Admin</span>
             </Link>
 
             {/* Desktop Nav Links */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-1">
                 <Link href={`/store/${slug}/admin`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
                     <LayoutDashboard size={16} /> Dashboard
                 </Link>
