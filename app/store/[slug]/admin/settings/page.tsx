@@ -71,10 +71,11 @@ export default async function SettingsPage({ params }: Props) {
                             name="ownerPhone" 
                             defaultValue={tenant.ownerPhone} 
                             placeholder="+1234567890"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium font-mono" 
+                            disabled={slug === 'demo'}
+                            className={`w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium font-mono ${slug === 'demo' ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
                         />
                         <p className="text-xs text-gray-500 mt-2">
-                            Orders will be sent to this WhatsApp number. Format: +[CountryCode][Number]
+                            {slug === 'demo' ? 'This option is disabled for the demo store.' : 'Orders will be sent to this WhatsApp number. Format: +[CountryCode][Number]'}
                         </p>
                     </div>
 
