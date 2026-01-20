@@ -18,303 +18,290 @@ export default async function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Navbar */}
-      <nav className="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
-          <div className="flex items-center gap-2 font-bold text-xl text-indigo-600">
-            <ShoppingBag strokeWidth={2.5} />
-            <span>OrderViaChat</span>
+    <main className="min-h-screen bg-slate-50 overflow-x-hidden">
+      {/* Navbar - Glassmorphism */}
+      <nav className="fixed top-0 w-full z-50 glass border-b border-white/20 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+          <div className="flex items-center gap-2 font-bold text-xl text-slate-900">
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                <ShoppingBag strokeWidth={2.5} size={20} />
+            </div>
+            <span className="tracking-tight">OrderViaChat</span>
           </div>
-          <div className="flex gap-4">
-            <Link href="/register">
-            <button className="bg-blue-600 text-white px-5 py-2.5 rounded-full font-bold hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg text-sm">
-                Get Started
-            </button>
-          </Link>
-          </div>
-        </div>
-      </nav>
-
-      <section className="relative pt-20 pb-32 overflow-hidden bg-slate-50">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-100/50 via-slate-50 to-white -z-10" />
-        
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-sm font-semibold mb-6 border border-indigo-100">
-            <Star size={14} fill="currentColor" />
-            <span>Best WhatsApp Ordering System 2026</span>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-            Turn WhatsApp into your <br className="hidden md:block"/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">Sales Machine</span>
-          </h1>
-          <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Create a beautiful digital menu, share the link, and receive orders directly on WhatsApp. 
-            No downloads required. No commissions.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/register">
-              <button className="btn-primary py-4 px-8 text-lg shadow-xl shadow-indigo-500/20">
-                Get Started <ArrowRight size={20} />
-              </button>
-            </Link>
-            <Link href="/store/demo">
-                <button className="px-8 py-4 rounded-xl font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all shadow-sm">
-                View Demo Store
+          <div className="flex gap-4 items-center">
+             <Link href="/store/demo" className="hidden md:block text-slate-600 font-medium hover:text-indigo-600 transition-colors">
+                View Demo
+             </Link>
+             <Link href="/register">
+                <button className="bg-slate-900 text-white px-6 py-3 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-xl shadow-slate-900/20 text-sm">
+                    Get Started
                 </button>
             </Link>
           </div>
         </div>
-      </section>
-      {/* Visual Showcase Section */}
-      <section className="py-20 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold text-slate-900 mb-4">Experience the Ecosystem</h2>
-                <p className="text-slate-500 text-lg">A complete suite of tools to run your food business.</p>
-            </div>
+      </nav>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 items-start">
-                {/* Storefront */}
-                <div className="flex flex-col items-center">
-                    <div className="relative group w-full max-w-[280px] mx-auto">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-[2.5rem] blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
+      {/* Hero Section - Dark & Vibrant */}
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-gradient-mesh text-white">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="text-center lg:text-left space-y-8">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark text-indigo-300 text-sm font-semibold border border-indigo-500/30 animate-fade-in">
+                        <Star size={14} fill="currentColor" className="text-yellow-400" />
+                        <span>#1 WhatsApp Ordering System</span>
+                    </div>
+                    
+                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1] animate-fade-in delay-100">
+                        Turn Chats into <br/>
+                        <span className="text-gradient">Money Machines</span>
+                    </h1>
+                    
+                    <p className="text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed animate-fade-in delay-200">
+                        Stop paying 30% commissions. Create a stunning digital menu and accept orders directly on WhatsApp. 
+                    </p>
+                    
+                    <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 animate-fade-in delay-300">
+                        <Link href="/register">
+                            <button className="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-400 text-white text-lg font-bold py-4 px-8 rounded-2xl shadow-lg shadow-indigo-500/40 transition-all hover:-translate-y-1">
+                                Start Selling Free <ArrowRight className="inline ml-2" />
+                            </button>
+                        </Link>
+                        <Link href="/store/demo">
+                            <button className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-white glass-dark hover:bg-white/10 transition-all">
+                                See Live Demo
+                            </button>
+                        </Link>
+                    </div>
+
+                    <div className="pt-8 flex items-center justify-center lg:justify-start gap-6 text-slate-400 text-sm animate-fade-in delay-300">
+                        <div className="flex items-center gap-2">
+                            <CheckCircle2 size={16} className="text-green-400" /> No credit card
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <CheckCircle2 size={16} className="text-green-400" /> Free forever plan
+                        </div>
+                    </div>
+                </div>
+
+                {/* Hero Visual */}
+                <div className="relative lg:h-[600px] flex items-center justify-center animate-float">
+                    <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full"></div>
+                    {/* Stacked Images Effect */}
+                    <div className="relative w-full max-w-md mx-auto perspective-1000">
                         <img 
                             src="/images/showcase-store.png" 
-                            alt="Mobile Storefront" 
-                            className="relative rounded-[2rem] border-8 border-slate-900 shadow-2xl"
+                            alt="App Interface" 
+                            className="relative z-20 w-full rounded-[2.5rem] border-8 border-slate-900 shadow-2xl shadow-black/50 transform rotate-y-12 rotate-z-3 hover:rotate-0 transition-all duration-700"
                         />
-                    </div>
-                    <div className="text-center mt-8">
-                        <h3 className="text-xl font-bold text-slate-900 mb-2">Beautiful Storefront</h3>
-                        <p className="text-slate-500 text-sm">Customers order in seconds. No app download needed.</p>
-                    </div>
-                </div>
-
-                {/* Admin Dashboard */}
-                <div className="flex flex-col items-center md:pt-12">
-                     <div className="relative group w-full shadow-2xl rounded-xl overflow-hidden border border-gray-200">
-                        <div className="absolute inset-0 bg-indigo-900/5 group-hover:bg-transparent transition-colors"></div>
-                        <img 
-                            src="/images/showcase-admin.png" 
-                            alt="Admin Dashboard" 
-                            className="w-full h-auto object-cover"
-                        />
-                    </div>
-                    <div className="text-center mt-8">
-                        <h3 className="text-xl font-bold text-slate-900 mb-2">Powerful Insights</h3>
-                        <p className="text-slate-500 text-sm">Track sales, manage menu, and watch your business grow.</p>
-                    </div>
-                </div>
-
-                {/* Kitchen View */}
-                <div className="flex flex-col items-center">
-                    <div className="relative group w-full shadow-2xl rounded-xl overflow-hidden border border-gray-800 bg-gray-900">
-                         <img 
-                            src="/images/showcase-kitchen.png" 
-                            alt="Kitchen Display System" 
-                            className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity"
-                        />
-                    </div>
-                    <div className="text-center mt-8">
-                        <h3 className="text-xl font-bold text-slate-900 mb-2">Kitchen Display</h3>
-                        <p className="text-slate-500 text-sm">Keep your kitchen organized in real-time.</p>
+                         <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-64 glass-dark p-4 rounded-xl shadow-xl z-30 hidden md:block animate-pulse-glow">
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white">
+                                    <CheckCircle2 size={20} />
+                                </div>
+                                <div>
+                                    <div className="font-bold text-white text-sm">New Order #284</div>
+                                    <div className="text-xs text-green-300">Paid • $42.50</div>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="h-2 bg-white/20 rounded w-full"></div>
+                                <div className="h-2 bg-white/10 rounded w-2/3"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
       </section>
-      {/* Features Grid */}
-      <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Everything you need to sell online</h2>
-            <p className="text-slate-500 text-lg">Powerful features built for modern restaurants and shops.</p>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <FeatureCard 
-              icon={<Smartphone className="text-indigo-600" size={32} />}
-              title="Mobile First Design"
-              description="Your menu looks stunning on every device. Customers love the app-like experience without installing anything."
-            />
-            <FeatureCard 
-              icon={<CheckCircle2 className="text-green-500" size={32} />}
-              title="WhatsApp Integration"
-              description="Orders land directly in your WhatsApp chat. Confirm orders and chat with customers instantly."
-            />
-            <FeatureCard 
-              icon={<Truck className="text-blue-500" size={32} />}
-              title="Delivery & Tracking"
-              description="Built-in location sharing and delivery fee calculation. Keep your logistics simple and efficient."
-            />
-          </div>
+      {/* Product Showcase Section (Bento Grid) */}
+      <section className="py-24 bg-white relative">
+        <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-20">
+                <h2 className="text-4xl font-bold text-slate-900 mb-6">Complete Toolkit for Growth</h2>
+                <p className="text-slate-500 text-xl max-w-2xl mx-auto">
+                    Everything you need to run a modern food business, without the technical headache.
+                </p>
+            </div>
+
+            <div className="grid md:grid-cols-12 gap-6">
+                {/* Feature 1: Storefront (Big) */}
+                <div className="md:col-span-7 bg-slate-50 rounded-[2rem] p-8 border border-slate-100 overflow-hidden group hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500">
+                    <div className="mb-8">
+                        <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                            <Smartphone size={24} />
+                        </div>
+                        <h3 className="text-2xl font-bold text-slate-900 mb-3">Stunning Mobile Menu</h3>
+                        <p className="text-slate-500">
+                             Give your customers an app-like experience. Load products instantly, add variants, and calculate totals automatically.
+                        </p>
+                    </div>
+                    <div className="relative h-[300px] md:h-[400px] bg-white rounded-t-3xl shadow-lg border border-slate-100 translate-y-8 group-hover:translate-y-4 transition-transform duration-500">
+                        <img src="/images/showcase-store.png" className="w-full h-full object-cover object-top rounded-t-3xl opacity-90 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                </div>
+
+                {/* Feature 2: Admin (Tall) */}
+                <div className="md:col-span-5 bg-slate-900 text-white rounded-[2rem] p-8 border border-slate-800 overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 relative">
+                     <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px]"></div>
+                     <div className="relative z-10">
+                        <div className="w-12 h-12 bg-white/10 text-white rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
+                            <Star size={24} />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-3">Powerful Dashboard</h3>
+                        <p className="text-slate-400 mb-8">
+                            Track revenue, manage orders, and update your menu in real-time.
+                        </p>
+                        <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                             <img src="/images/showcase-admin.png" className="w-full h-auto" />
+                        </div>
+                     </div>
+                </div>
+                
+                 {/* Feature 3: Kitchen (Wide) */}
+                 <div className="md:col-span-12 bg-indigo-50 rounded-[2rem] p-8 md:p-12 border border-indigo-100 flex flex-col md:flex-row items-center gap-12 group hover:bg-indigo-100/50 transition-colors duration-500">
+                    <div className="flex-1 space-y-6">
+                        <div className="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center">
+                            <ShoppingBag size={24} />
+                        </div>
+                        <h3 className="text-3xl font-bold text-slate-900">Kitchen Display System</h3>
+                        <p className="text-slate-600 text-lg leading-relaxed">
+                            No more paper tickets. Orders pop up instantly on your kitchen tablet. Mark them as "Preparing" or "Ready" with a tap, and we'll automatically notify the customer.
+                        </p>
+                        <ul className="space-y-3">
+                             <li className="flex items-center gap-3 text-slate-700 font-medium">
+                                <CheckCircle2 size={20} className="text-indigo-600" /> Syncs across all devices
+                             </li>
+                             <li className="flex items-center gap-3 text-slate-700 font-medium">
+                                <CheckCircle2 size={20} className="text-indigo-600" /> Sound alerts for new orders
+                             </li>
+                        </ul>
+                    </div>
+                     <div className="flex-1 w-full max-w-2xl">
+                        <div className="relative rounded-xl overflow-hidden shadow-2xl border-4 border-white group-hover:rotate-1 transition-transform duration-500">
+                             <img src="/images/showcase-kitchen.png" className="w-full h-auto" />
+                        </div>
+                     </div>
+                 </div>
+            </div>
         </div>
       </section>
 
-
-
-      {/* Pricing Section */}
-      <section className="py-24 bg-white border-y border-gray-100 relative overflow-hidden">
-        <div className="absolute top-0 w-full h-full bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-5"></div>
+      {/* Pricing Section (Refined) */}
+      <section className="py-24 bg-slate-50 border-t border-slate-200">
         <div className="max-w-6xl mx-auto px-6 relative">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Unbeatable Launch Offer</h2>
-            <p className="text-slate-500 text-lg">Get premium features for the price of a coffee. Limited time only.</p>
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-4xl font-bold text-slate-900">Simple, Transparent Pricing</h2>
+            <p className="text-slate-500 text-lg">No hidden fees. No commissions. Cancel anytime.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
              {/* Starter Plan */}
-             <div className="p-8 rounded-3xl border border-gray-200 bg-white hover:border-indigo-100 hover:shadow-xl transition-all relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
-                   70% OFF
+             <div className="p-8 rounded-[2.5rem] bg-white border border-slate-100 hover:shadow-xl transition-all duration-300 relative group">
+                <div className="mb-6">
+                   <h3 className="text-2xl font-bold text-slate-900">Starter</h3>
+                   <p className="text-slate-500 mt-2">For home businesses</p>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Starter</h3>
-                <div className="flex items-baseline gap-2 mb-6">
-                   <span className="text-xl text-gray-400 line-through decoration-red-500">$29</span>
-                   <span className="text-5xl font-extrabold text-slate-900">$8</span>
+                <div className="flex items-baseline gap-2 mb-8">
+                   <span className="text-5xl font-extrabold text-slate-900 tracking-tight">$8</span>
                    <span className="text-slate-500">/month</span>
                 </div>
-                <p className="text-slate-500 mb-8 border-b border-gray-100 pb-8">
-                   Perfect for small cafes and home kitchens starting out.
-                </p>
-                <ul className="space-y-4 mb-8">
+                
+                <Link href="/register" className="block w-full mb-8">
+                    <button className="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold py-4 rounded-xl transition-colors">
+                        Start Free Trial
+                    </button>
+                </Link>
+
+                <ul className="space-y-4 text-slate-600">
                    <PricingFeature text="Up to 100 Orders/mo" />
                    <PricingFeature text="Digital Menu & QR Code" />
                    <PricingFeature text="WhatsApp Integration" />
                    <PricingFeature text="Basic Analytics" />
                 </ul>
-                <Link href="/register" className="block w-full">
-                    <button className="w-full mt-8 bg-blue-100 text-blue-700 font-bold py-3 rounded-xl hover:bg-blue-200 transition-colors">
-                        Start Free Trial
-                    </button>
-                </Link>
              </div>
 
              {/* Pro Plan */}
-             <div className="p-8 rounded-3xl border-2 border-indigo-600 bg-slate-900 text-white relative shadow-2xl shadow-indigo-500/20 transform md:-translate-y-4">
-                <div className="absolute top-0 center w-full text-center -mt-3">
-                   <span className="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Best Value</span>
+             <div className="p-8 rounded-[2.5rem] bg-slate-900 text-white relative shadow-2xl shadow-indigo-500/20 transform md:-translate-y-4 border border-slate-800">
+                <div className="absolute top-0 right-0 p-6">
+                    <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                        Most Popular
+                    </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Growth</h3>
-                <div className="flex items-baseline gap-2 mb-6">
-                   <span className="text-xl text-indigo-300 line-through decoration-indigo-400">$79</span>
-                   <span className="text-5xl font-extrabold text-white">$24</span>
-                   <span className="text-gray-400">/month</span>
+                
+                <div className="mb-6">
+                   <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Growth</h3>
+                   <p className="text-slate-400 mt-2">For serious restaurants</p>
                 </div>
-                <p className="text-indigo-200 mb-8 border-b border-indigo-800 pb-8">
-                   For busy restaurants handling high volume.
-                </p>
-                <ul className="space-y-4 mb-8">
+
+                <div className="flex items-baseline gap-2 mb-8">
+                   <span className="text-5xl font-extrabold text-white tracking-tight">$24</span>
+                   <span className="text-slate-400">/month</span>
+                </div>
+                
+                <Link href="/register" className="block w-full mb-8">
+                     <button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-600/30 transition-all">
+                        Get Started Now
+                    </button>
+                </Link>
+
+                <ul className="space-y-4">
                    <PricingFeature text="Unlimited Orders" light />
                    <PricingFeature text="Priority Support" light />
                    <PricingFeature text="Custom Domain" light />
                    <PricingFeature text="Remove Branding" light />
                 </ul>
-                <button className="w-full py-4 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/40">
-                   Get Started Now
-                </button>
              </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-6">
-           <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">Trusted by Store Owners</h2>
-              <p className="text-slate-500 text-lg">Don't just take our word for it.</p>
-           </div>
-           
-           <div className="grid md:grid-cols-3 gap-8">
-              <TestimonialCard 
-                 name="Sarah Jenkins"
-                 role="Owner, The Daily Grind"
-                 text="Since switching to OrderViaChat, we've saved over $400/month in delivery commissions. Our customers love ordering via WhatsApp!"
-                 initial="S"
-                 color="bg-orange-100 text-orange-600"
-              />
-              <TestimonialCard 
-                 name="Mike Chen"
-                 role="Manager, Golden Dragon"
-                 text="The setup was instant. I created my menu in 10 minutes and started getting orders the same day. Highly recommended!"
-                 initial="M"
-                 color="bg-blue-100 text-blue-600"
-              />
-              <TestimonialCard 
-                 name="Emma Wilson"
-                 role="Founder, Sweet Treats"
-                 text="Best investment for my bakery. The digital menu looks professional and the WhatsApp integration is flawless."
-                 initial="E"
-                 color="bg-pink-100 text-pink-600"
-              />
-           </div>
-        </div>
-      </section>
-
-      {/* Featured Clients */}
-      <section className="py-24 bg-slate-50 border-y border-slate-100">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex justify-between items-end mb-12">
-             <div>
-                <h2 className="text-3xl font-bold text-slate-900">Featured Partners</h2>
-                <p className="text-slate-500 mt-2">See who is already growing with OrderViaChat.</p>
-             </div>
-             <Link href="/super-admin/login" className="hidden sm:block text-indigo-600 font-semibold hover:underline">
-                Become a partner &rarr;
-             </Link>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredPartners.map(partner => (
-                   <Link href={`/store/${partner.slug}`} key={partner.id} className="group">
-                     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col justify-between">
-                        <div>
-                           <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors ${partner.color}`}>
-                              <ShoppingBag size={24} />
-                           </div>
-                           <h3 className="font-bold text-lg text-slate-900 mb-1">{partner.name}</h3>
-                           <p className="text-sm text-slate-500">{partner.category}</p>
-                        </div>
-                        <div className="mt-4 pt-4 border-t border-gray-50 flex items-center text-indigo-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                           Visit Store <ArrowRight size={16} className="ml-1" />
-                        </div>
-                     </div>
-                   </Link>
-                ))}
-          </div>
+      {/* Featured Clients (Logos) */}
+      <section className="py-20 bg-white border-t border-slate-100">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+            <p className="text-slate-400 font-medium mb-8">TRUSTED BY INNOVATIVE BRANDS</p>
+            <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                 {/* Mock Logos */}
+                 {featuredPartners.slice(0, 4).map(partner => (
+                    <div key={partner.id} className="flex items-center gap-2 font-bold text-xl text-slate-800">
+                         <div className={`w-8 h-8 rounded-full ${partner.color.split(' ')[0]}`}></div>
+                         {partner.name}
+                    </div>
+                 ))}
+            </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-12">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
-           <div className="col-span-2">
-              <div className="flex items-center gap-2 font-bold text-xl text-white mb-4">
+      <footer className="bg-slate-950 text-slate-400 py-16">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-12">
+           <div className="col-span-2 space-y-6">
+              <div className="flex items-center gap-2 font-bold text-2xl text-white">
                 <ShoppingBag strokeWidth={2.5} />
                 <span>OrderViaChat</span>
               </div>
-              <p className="max-w-xs">Helping small businesses complete with the giants. One WhatsApp order at a time.</p>
+              <p className="max-w-sm text-lg leading-relaxed">
+                  We're on a mission to democratize restaurant technology. No hidden fees, just great software.
+              </p>
            </div>
            <div>
-              <h4 className="text-white font-bold mb-4">Product</h4>
-              <ul className="space-y-2 text-sm">
-                 <li>Features</li>
-                 <li>Pricing</li>
-                 <li>Showcase</li>
+              <h4 className="text-white font-bold mb-6">Product</h4>
+              <ul className="space-y-4 text-sm">
+                 <li className="hover:text-white cursor-pointer transition-colors">Features</li>
+                 <li className="hover:text-white cursor-pointer transition-colors">Pricing</li>
+                 <li className="hover:text-white cursor-pointer transition-colors">Showcase</li>
               </ul>
            </div>
            <div>
-              <h4 className="text-white font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm">
-                 <li>About Us</li>
-                 <li>Contact</li>
-                 <li>Privacy Policy</li>
+              <h4 className="text-white font-bold mb-6">Company</h4>
+              <ul className="space-y-4 text-sm">
+                 <li className="hover:text-white cursor-pointer transition-colors">About Us</li>
+                 <li className="hover:text-white cursor-pointer transition-colors">Contact</li>
+                 <li className="hover:text-white cursor-pointer transition-colors">Privacy Policy</li>
               </ul>
            </div>
         </div>
-        <div className="max-w-6xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 text-sm text-center">
+        <div className="max-w-6xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800 text-sm text-center">
            &copy; {new Date().getFullYear()} OrderViaChat Inc. All rights reserved.
         </div>
       </footer>
@@ -322,6 +309,16 @@ export default async function Home() {
   );
 }
 
+function PricingFeature({ text, light = false }: { text: string, light?: boolean }) {
+  return (
+    <li className="flex items-center gap-3">
+       <div className={`p-1 rounded-full ${light ? 'bg-indigo-500/20 text-indigo-300' : 'bg-indigo-100 text-indigo-600'}`}>
+         <CheckCircle2 size={14} strokeWidth={3} />
+       </div>
+       <span className={light ? "text-slate-300" : "text-slate-600"}>{text}</span>
+    </li>
+  );
+}
 function FeatureCard({ icon, title, description }: { icon: any, title: string, description: string }) {
   return (
     <div className="p-8 bg-slate-50 rounded-3xl hover:bg-white border border-transparent hover:border-gray-100 hover:shadow-xl transition-all duration-300">
@@ -331,16 +328,6 @@ function FeatureCard({ icon, title, description }: { icon: any, title: string, d
     </div>
   );
 }
-
-function PricingFeature({ text, light = false }: { text: string, light?: boolean }) {
-  return (
-    <li className="flex items-center gap-3">
-       <CheckCircle2 size={18} className={light ? "text-indigo-400" : "text-indigo-600"} />
-       <span className={light ? "text-gray-300" : "text-slate-600"}>{text}</span>
-    </li>
-  );
-}
-
 function TestimonialCard({ name, role, text, initial, color }: { name: string, role: string, text: string, initial: string, color: string }) {
   return (
     <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
