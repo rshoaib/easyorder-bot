@@ -1,4 +1,5 @@
 import { getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
+import { Order } from "@/lib/repository/types";
 import Link from "next/link";
 import { LanguageSelector } from "@/components/admin/LanguageSelector";
 import { DomainSettings } from "@/components/admin/DomainSettings";
@@ -25,7 +26,7 @@ async function getOrders(slug: string) {
   const analytics = await analyticsRepo.getSummary(tenant.id);
 
   // Ensure strict date sorting desc
-  const sortedOrders = orders.slice().sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const sortedOrders = orders.slice().sort((a: Order, b: Order) => new Date(b.date).getTime() - new Date(a.date).getTime());
   return { orders: sortedOrders, tenant, analytics };
 }
 

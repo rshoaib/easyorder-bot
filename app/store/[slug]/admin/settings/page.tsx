@@ -24,6 +24,11 @@ async function updateSettings(formData: FormData) {
     const metaPixelId = formData.get('metaPixelId') as string;
 
     if (!id || !slug) return;
+    
+    // Security: Prevent modifying demo store
+    if (slug === 'demo') {
+        return; // Or throw error, but silent return is safer for now to avoid crashing if UI bypass happens
+    }
 
     await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId);
     revalidatePath(`/store/${slug}`);
