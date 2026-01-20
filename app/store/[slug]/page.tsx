@@ -30,5 +30,43 @@ export default async function StorePage({ params }: Props) {
     const products = await repo.getProducts(tenant.id);
 
     // We can pass tenant details to StoreFront for branding if we want later (name, theme color)
-    return <StoreFront initialProducts={products} tenant={tenant} />; 
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": tenant.name,
+        "image": products.length > 0 ? products[0].image : "", // Fallback to first product image
+        "@id": `https://${process.env.VERCEL_URL || 'orderviachat.com'}/store/${slug}`,
+        "url": `https://${process.env.VERCEL_URL || 'orderviachat.com'}/store/${slug}`,
+        "telephone": tenant.ownerPhone || "",
+        "priceRange": "$$", // Defaulting to medium price range
+        "menu": {
+            "@type": "Menu",
+            "hasMenuSection": [
+                {
+                    "@type": "MenuSection",
+                    "name": "All Items",
+                    "hasMenuItem": products.map(product => ({
+                        "@type": "MenuItem",
+                        "name": product.name,
+                        "description": product.description,
+                        "offers": {
+                            "@type": "Offer",
+                            "price": product.price,
+                            "priceCurrency": tenant.currency
+                        }
+                    }))
+                }
+            ]
+        }
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <StoreFront initialProducts={products} tenant={tenant} />
+        </>
+    );
 }
