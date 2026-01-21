@@ -1,6 +1,6 @@
 # Android App Build Guide 📱
 
-Since your local environment doesn't have the Android SDK/Java installed, you'll need to run the build process manually. I've pre-configured the `twa-manifest.json` for you.
+Since your local environment doesn't have the Android SDK/Java installed, you'll need to run the build process manually. I've pre-configured the `twa-manifest.json` to match your live site's package (`com.orderviachat.twa`).
 
 ## Prerequisites
 1.  **Node.js**: You already have this.
@@ -39,9 +39,10 @@ Look for:
 
 1.  **Create App**: Go to Play Console, create a new app "Pizza Demo Store".
 2.  **Upload**: Go to **Production** (or Internal Testing) -> **Create new release** -> Upload `app-release-bundle.aab`.
-3.  **Digital Asset Links**:
-    - Play Console will likely show a warning about verification.
-    - Go to **Deep links** settings in Play Console.
-    - Copy the **SHA-256 fingerprint** from "Asset links JSON".
-    - You must add this fingerprint to your website's `assetlinks.json` file (hosted at `https://orderviachat.com/.well-known/assetlinks.json`).
-    *   *Let me know if you need help creating this file.*
+3.  **Digital Asset Links (CRITICAL)**:
+    - **Scenario A: You have the original keystore**: If you used the original `android.keystore` file that created the live app, you are done!
+    - **Scenario B: You created a new keystore**:
+        - Play Console (or the build output) will show you a **SHA-256 fingerprint**.
+        - You MUST compare this with the one currently on your site: `https://orderviachat.com/.well-known/assetlinks.json`
+        - If they follow **Match**, great!
+        - If they **Do Not Match**, you must update the `assetlinks.json` file on your host/Supabase with the NEW fingerprint. **The app will not work without this.**
