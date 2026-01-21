@@ -1,0 +1,37 @@
+{
+  "packageId": "com.orderviachat.demo",
+  "host": "orderviachat.com",
+  "name": "Pizza Demo Store",
+  "launcherName": "Pizza Demo",
+  "display": "standalone",
+  "themeColor": "#e11d48",
+  "navigationColor": "#e11d48",
+  "backgroundColor": "#ffffff",
+  "startUrl": "/store/demo",
+  "iconUrl": "https://orderviachat.com/icons/android-chrome-512x512.png",
+  "maskableIconUrl": "https://orderviachat.com/icons/android-chrome-512x512.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "generatorApp": "bubblewrap-cli",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": false
+    },
+    "locationDelegation": {
+      "enabled": false
+    },
+    "core": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableNotifications": true,
+  "webManifestUrl": "https://orderviachat.com/manifest.json"
+}
