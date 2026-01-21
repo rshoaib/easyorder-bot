@@ -299,15 +299,21 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string): Promise<void> {
+        const updateData: any = {
+            owner_phone: ownerPhone,
+            instagram_url: instagramUrl,
+            facebook_url: facebookUrl,
+            meta_pixel_id: metaPixelId
+        };
+
+        if (currency) {
+            updateData.currency = currency;
+        }
+
         const { error } = await supabase
             .from('tenants')
-            .update({
-                owner_phone: ownerPhone,
-                instagram_url: instagramUrl,
-                facebook_url: facebookUrl,
-                meta_pixel_id: metaPixelId
-            })
+            .update(updateData)
             .eq('id', id);
 
         if (error) throw new Error(error.message);

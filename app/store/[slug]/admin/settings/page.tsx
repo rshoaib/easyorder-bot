@@ -1,5 +1,5 @@
 import { getTenantRepository } from "@/lib/repository";
-import { ArrowLeft, Save, Instagram, Facebook, Phone } from "lucide-react";
+import { ArrowLeft, Save, Instagram, Facebook, Phone, Banknote } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -22,6 +22,7 @@ async function updateSettings(formData: FormData) {
     const instagram = formData.get('instagram') as string;
     const facebook = formData.get('facebook') as string;
     const metaPixelId = formData.get('metaPixelId') as string;
+    const currency = formData.get('currency') as string;
 
     if (!id || !slug) return;
     
@@ -30,7 +31,7 @@ async function updateSettings(formData: FormData) {
         return; // Or throw error, but silent return is safer for now to avoid crashing if UI bypass happens
     }
 
-    await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId);
+    await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency);
     revalidatePath(`/store/${slug}`);
     revalidatePath(`/store/${slug}/admin/settings`);
 }
@@ -66,6 +67,28 @@ export default async function SettingsPage({ params }: Props) {
                 <form action={updateSettings} className="p-6 space-y-6">
                     <input type="hidden" name="id" value={tenant.id} />
                     <input type="hidden" name="slug" value={slug} />
+
+                    {/* Owner Phone */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                             <Banknote size={16} className="text-gray-600" /> Store Currency
+                        </label>
+                        <select 
+                            name="currency" 
+                            defaultValue={tenant.currency || 'USD'} 
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium bg-white"
+                        >
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="INR">INR (₹)</option>
+                            <option value="AED">AED (dh)</option>
+                            <option value="SAR">SAR (﷼)</option>
+                        </select>
+                        <p className="text-xs text-gray-500 mt-2">
+                            This symbol will be shown next to all your prices.
+                        </p>
+                    </div>
 
                     {/* Owner Phone */}
                     <div>

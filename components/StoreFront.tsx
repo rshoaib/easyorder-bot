@@ -157,6 +157,8 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
               <ImageWithFallback
                 src={product.image}
                 alt={product.name}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className={`product-image ${!product.isAvailable ? 'grayscale opacity-70' : ''}`}
               />
                {!product.isAvailable && (

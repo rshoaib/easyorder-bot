@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getTenantRepository } from "@/lib/repository";
-import { ArrowRight, CheckCircle2, ShoppingBag, Truck, Smartphone, Star } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShoppingBag, Truck, Smartphone, Star, Phone, Mail } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +29,17 @@ export default async function Home() {
             <span className="tracking-tight">OrderViaChat</span>
           </div>
           <div className="flex gap-4 items-center">
+             <div className="hidden lg:flex flex-col items-end mr-4 border-r border-slate-200 pr-6">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                    <Phone size={12} className="text-indigo-600" /> +92 333 4205009
+                </div>
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                    <Phone size={12} className="text-indigo-600" /> +92 322 4609117
+                </div>
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                    <Mail size={12} className="text-indigo-600" /> segmentibi@gmail.com
+                </div>
+             </div>
              <Link href="/store/demo" className="hidden md:block text-slate-600 font-medium hover:text-indigo-600 transition-colors">
                 View Demo
              </Link>
@@ -78,7 +89,7 @@ export default async function Home() {
                             <CheckCircle2 size={16} className="text-green-400" /> No credit card
                         </div>
                         <div className="flex items-center gap-2">
-                            <CheckCircle2 size={16} className="text-green-400" /> Free forever plan
+                            <CheckCircle2 size={16} className="text-green-400" /> Free for a limited time
                         </div>
                     </div>
                 </div>
@@ -218,6 +229,7 @@ export default async function Home() {
                    <PricingFeature text="Digital Menu & QR Code" />
                    <PricingFeature text="WhatsApp Integration" />
                    <PricingFeature text="Basic Analytics" />
+                   <PricingFeature text="Multi-Currency Support" />
                 </ul>
              </div>
 
