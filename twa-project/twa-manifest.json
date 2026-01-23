@@ -1,0 +1,53 @@
+{
+  "packageId": "com.orderviachat.twa",
+  "host": "orderviachat.com",
+  "name": "Pizza Demo Store",
+  "launcherName": "Pizza Demo",
+  "display": "standalone",
+  "themeColor": "#E11D48",
+  "themeColorDark": "#000000",
+  "navigationColor": "#E11D48",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#FFFFFF",
+  "enableNotifications": true,
+  "startUrl": "/store/demo",
+  "iconUrl": "https://orderviachat.com/icons/android-chrome-512x512.png",
+  "maskableIconUrl": "https://orderviachat.com/icons/android-chrome-512x512.png",
+  "splashScreenFadeOutDuration": 0,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 2,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://orderviachat.com/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": false
+    },
+    "locationDelegation": {
+      "enabled": false
+    },
+    "core": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "minSdkVersion": 21,
+  "orientation": "default",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "displayOverride": [],
+  "appVersion": "1.0.0"
+}

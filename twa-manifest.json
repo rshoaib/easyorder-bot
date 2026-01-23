@@ -33,5 +33,6 @@
     "enabled": false
   },
   "enableNotifications": true,
+  "splashScreenFadeOutDuration": 0,
   "webManifestUrl": "https://orderviachat.com/manifest.json"
 }

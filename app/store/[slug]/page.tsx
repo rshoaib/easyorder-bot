@@ -9,6 +9,29 @@ interface Props {
     }
 }
 
+export async function generateMetadata({ params }: Props) {
+    const { slug } = await params;
+    const repo = getTenantRepository();
+    const tenant = await repo.getTenantBySlug(slug);
+
+    if (!tenant) {
+        return {
+            title: 'Store Not Found',
+            description: 'The requested store could not be found.'
+        };
+    }
+
+    return {
+        title: `${tenant.name} | Order Online`,
+        description: `Order from ${tenant.name} on WhatsApp. View menu and prices.`,
+        openGraph: {
+            title: `${tenant.name} | Order Online`,
+            description: `Order from ${tenant.name} on WhatsApp. View menu and prices.`,
+            type: 'website',
+        },
+    };
+}
+
 export default async function StorePage({ params }: Props) {
     const { slug } = await params;
     
