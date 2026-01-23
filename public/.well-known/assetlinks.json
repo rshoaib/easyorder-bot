@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "com.orderviachat.twa",
       "sha256_cert_fingerprints": [
-        "49:D8:FE:1C:DA:5A:EB:1F:C3:07:89:3B:7B:5D:F0:2F:B0:11:BE:A2:61:2E:CB:8F:94:45:A6:80:E6:04:AE:1D"
+        "49:D8:FE:1C:DA:5A:EB:1F:C3:07:89:3B:7B:5D:F0:2F:B0:11:BE:A2:61:2E:CB:8F:94:45:A6:80:E6:04:AE:1D",
+        "86:32:7C:D4:7E:15:31:0C:94:A4:70:B2:FF:75:A2:CA:CD:49:37:DF:C8:F2:21:73:64:00:3A:00:3D:83:92:27"
       ]
     }
   }
