@@ -1,45 +1,37 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { updateSession } from '@/utils/supabase/middleware';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+    const { supabaseResponse, user } = await updateSession(request);
     const url = request.nextUrl;
     const hostname = request.headers.get('host')!;
 
-    // 1. Admin Protection (Existing)
+    // 1. Admin Protection (Supabase Auth)
     if (url.pathname.startsWith('/admin')) {
-        if (url.pathname === '/admin/login') {
-            return NextResponse.next();
-        }
-        const authenticated = request.cookies.get('admin_authenticated');
-        if (!authenticated) {
-            return NextResponse.redirect(new URL('/admin/login', request.url));
+        // Exclude login page from protection to avoid loop if we ever put it under /admin (though currently /login)
+        if (url.pathname !== '/admin/login' && !user) {
+            return NextResponse.redirect(new URL('/login', request.url));
         }
     }
 
     // 2. Custom Domain Handling
-    // Define the domains that constitute "our app" and should NOT be treated as custom domains.
-    // Replace 'easyorder-bot.vercel.app' with your actual Vercel domain.
-    // Also include localhost for dev.
-    // 2. Check for Custom Domain
     let currentDomain = hostname.replace('.localhost:3000', '');
+    const isVercelDomain = currentDomain.includes('vercel.app') || currentDomain.includes('orderviachat.com') || currentDomain.includes('localhost');
 
-    // Replace with your VERCEL domain (or the new production domain)
-    const isVercelDomain = currentDomain.includes('vercel.app') || currentDomain.includes('orderviachat.com');
-
-    // If it's a custom domain (e.g. menu.mypizza.com)
-    if (!isVercelDomain && !currentDomain.includes('localhost')) {
-        // It's a custom domain! (e.g. menu.pizza.com)
-        // We rewrite it to a special route that handles domain lookup.
-        // We pass the hostname as the dynamic route param.
-
-        // Preserve the path (e.g. /cart, /item/123)
-        // Rewrite: menu.pizza.com/foo -> /custom-domain/menu.pizza.com/foo
-
-        // Note: we must encode the domain to be safe, but usually fine.
-        return NextResponse.rewrite(new URL(`/custom-domain/${hostname}${url.pathname}`, request.url));
+    // If it's a custom domain
+    if (!isVercelDomain) {
+        // Rewrite Logic
+        const response = NextResponse.rewrite(new URL(`/custom-domain/${hostname}${url.pathname}`, request.url));
+        // Important: Carry over auth cookies manually
+        supabaseResponse.cookies.getAll().forEach(cookie => {
+            response.cookies.set(cookie.name, cookie.value, cookie);
+        });
+        return response;
     }
 
-    return NextResponse.next();
+    // Normal response with auth cookies
+    return supabaseResponse;
 }
 
 export const config = {

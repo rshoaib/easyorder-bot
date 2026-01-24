@@ -17,6 +17,7 @@ export interface Tenant {
     instagramUrl?: string;
     facebookUrl?: string;
     metaPixelId?: string;
+    userId?: string; // Links to Supabase Auth User
 }
 
 export interface Order {

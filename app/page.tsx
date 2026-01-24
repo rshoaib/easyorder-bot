@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getTenantRepository } from "@/lib/repository";
-import { ArrowRight, CheckCircle2, ShoppingBag, Truck, Smartphone, Star, Phone, Mail } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShoppingBag, Truck, Smartphone, Star, Phone, Mail, Share2, MessageCircle } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -120,6 +120,62 @@ export default async function Home() {
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-24 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold text-slate-900 mb-4">How It Works</h2>
+                <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+                    Get your store running in less than 5 minutes. No technical skills required.
+                </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-12 relative">
+                {/* Connecting Line (Desktop) */}
+                <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-slate-200 -z-10"></div>
+
+                {/* Step 1 */}
+                <div className="relative text-center group">
+                    <div className="w-24 h-24 bg-white rounded-3xl border-2 border-slate-100 shadow-xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:border-indigo-100 transition-all duration-300">
+                        <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+                            <span className="font-bold text-xl">1</span>
+                        </div>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">Create Menu</h3>
+                    <p className="text-slate-500 leading-relaxed px-4">
+                        Sign up for free and add your products. customize your store's look to match your brand.
+                    </p>
+                </div>
+
+                {/* Step 2 */}
+                <div className="relative text-center group">
+                    <div className="w-24 h-24 bg-white rounded-3xl border-2 border-slate-100 shadow-xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:border-purple-100 transition-all duration-300">
+                        <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center">
+                            <Share2 size={24} />
+                        </div>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">Share Link</h3>
+                    <p className="text-slate-500 leading-relaxed px-4">
+                        Post your unique store link on Instagram, Facebook, or send it directly to customers.
+                    </p>
+                </div>
+
+                {/* Step 3 */}
+                <div className="relative text-center group">
+                    <div className="w-24 h-24 bg-white rounded-3xl border-2 border-slate-100 shadow-xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:border-green-100 transition-all duration-300">
+                        <div className="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center">
+                            <MessageCircle size={24} />
+                        </div>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">Get WhatsApp Orders</h3>
+                    <p className="text-slate-500 leading-relaxed px-4">
+                        Customers place orders and you receive a perfectly formatted WhatsApp message.
+                    </p>
                 </div>
             </div>
         </div>

@@ -175,7 +175,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             customDomain: data.custom_domain,
             instagramUrl: data.instagram_url,
             facebookUrl: data.facebook_url,
-            metaPixelId: data.meta_pixel_id
+            metaPixelId: data.meta_pixel_id,
+            userId: data.user_id
         };
     }
 
@@ -219,7 +220,8 @@ export class SupabaseTenantRepository implements TenantRepository {
                 status: tenant.status,
                 stripe_customer_id: tenant.stripeCustomerId,
                 password: tenant.password,
-                language: tenant.language || 'en'
+                language: tenant.language || 'en',
+                user_id: tenant.userId
             })
             .select()
             .single();

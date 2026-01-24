@@ -1,6 +1,8 @@
 import { getTenantRepository } from "@/lib/repository";
 import Link from "next/link";
 import { ExternalLink, LayoutDashboard, Menu, Settings, Tag, QrCode } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
   children,
@@ -14,6 +16,36 @@ export default async function AdminLayout({
   const tenant = await repo.getTenantBySlug(slug);
 
   if (!tenant) return <div>Store not found</div>;
+
+  // Supabase Auth Check
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+      redirect(`/login?next=/store/${slug}/admin`);
+  }
+
+  // Check Ownership
+  if (tenant.userId && tenant.userId !== user.id) {
+       return (
+          <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+              <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md text-center">
+                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
+                      <Settings size={32} />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
+                  <p className="text-gray-500 mb-6">You do not have permission to manage this store.</p>
+                  <Link href="/admin">
+                      <button className="bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition-colors">
+                          Go to Dashboard
+                      </button>
+                  </Link>
+              </div>
+          </div>
+       );
+  }
+
+
 
   return (
     <div className="min-h-screen bg-gray-50 pb-28">

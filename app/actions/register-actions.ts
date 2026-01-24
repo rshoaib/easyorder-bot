@@ -1,17 +1,24 @@
 'use server';
 
 import { getTenantRepository } from "@/lib/repository";
-// import { stripe } from "@/lib/stripe"; // Removed
-// import { redirect } from "next/navigation"; // Removed
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export async function registerTenant(formData: FormData) {
+    const supabase = await createClient(); // Await the async createClient
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: "You must be logged in to create a store." };
+    }
+
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
     const ownerPhone = formData.get('ownerPhone') as string;
+    // Email is taken from the authenticated user
+    const email = user.email!;
 
-    if (!name || !slug || !email || !password || !ownerPhone) {
+    if (!name || !slug || !ownerPhone) {
         return { error: "All fields are required" };
     }
 
@@ -24,28 +31,25 @@ export async function registerTenant(formData: FormData) {
     }
 
     try {
-        // 1. Create Tenant in DB (Pending Payment)
+        // Create Tenant in DB (Active immediately)
         const tenant = await repo.createTenant({
             name,
             slug,
             email,
-            password, // In a real app, HASH THIS PASSWORD!
-            status: 'pending_payment',
-            currency: 'USD', // Default
-            themeColor: '#2563eb', // Default Blue
+            password: '', // No longer managed here
+            status: 'active', // FREE TIER IS ACTIVE
+            currency: 'USD',
+            themeColor: '#2563eb',
             ownerPhone,
-            language: 'en'
+            language: 'en',
+            userId: user.id
         });
 
-        // 2. Stripe Removed for Manual Payment Workflow
-        // We now just return success, and the frontend will show payment instructions.
-
         // Send Welcome Email (Fire and forget)
-        // Dynamic import to avoid build issues if email lib has dependencies not used here
         const { sendWelcomeEmail } = await import('@/lib/email');
         sendWelcomeEmail(email, name, slug).catch(console.error);
 
-        return { success: true, pending: true, tenantId: tenant.id };
+        return { success: true, tenantId: tenant.id, slug };
 
     } catch (error: any) {
         console.error("Registration Error:", error);
