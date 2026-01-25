@@ -31,12 +31,6 @@ export default async function Home() {
           <div className="flex gap-4 items-center">
              <div className="hidden lg:flex flex-col items-end mr-4 border-r border-slate-200 pr-6">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                    <Phone size={12} className="text-indigo-600" /> +92 333 4205009
-                </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                    <Phone size={12} className="text-indigo-600" /> +92 322 4609117
-                </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
                     <Mail size={12} className="text-indigo-600" /> segmentibi@gmail.com
                 </div>
              </div>
