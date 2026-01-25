@@ -89,8 +89,14 @@ export class SupabaseOrderRepository implements OrderRepository {
 }
 
 export class SupabaseProductRepository implements ProductRepository {
+    private client: SupabaseClient;
+
+    constructor(client: SupabaseClient | null = null) {
+        this.client = client || supabase;
+    }
+
     async getProducts(tenantId: string): Promise<Product[]> {
-        const { data, error } = await supabase
+        const { data, error } = await this.client
             .from('products')
             .select('*')
             .eq('tenant_id', tenantId);
@@ -107,7 +113,7 @@ export class SupabaseProductRepository implements ProductRepository {
     }
 
     async addProduct(product: Product): Promise<void> {
-        const { error } = await supabase
+        const { error } = await this.client
             .from('products')
             .insert({
                 id: product.id,
@@ -126,7 +132,7 @@ export class SupabaseProductRepository implements ProductRepository {
     }
 
     async deleteProduct(id: string): Promise<void> {
-        const { error } = await supabase
+        const { error } = await this.client
             .from('products')
             .delete()
             .eq('id', id);
@@ -137,7 +143,7 @@ export class SupabaseProductRepository implements ProductRepository {
     }
 
     async toggleAvailability(id: string, isAvailable: boolean): Promise<void> {
-        const { error } = await supabase
+        const { error } = await this.client
             .from('products')
             .update({ is_available: isAvailable })
             .eq('id', id);
@@ -149,10 +155,17 @@ export class SupabaseProductRepository implements ProductRepository {
 }
 
 import { Tenant, TenantRepository } from './types';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export class SupabaseTenantRepository implements TenantRepository {
+    private client: SupabaseClient;
+
+    constructor(client: SupabaseClient | null = null) {
+        this.client = client || supabase;
+    }
+
     async getTenantBySlug(slug: string): Promise<Tenant | null> {
-        const { data, error } = await supabase
+        const { data, error } = await this.client
             .from('tenants')
             .select('*')
             .eq('slug', slug)
@@ -181,7 +194,7 @@ export class SupabaseTenantRepository implements TenantRepository {
     }
 
     async getAllTenants(): Promise<Tenant[]> {
-        const { data, error } = await supabase
+        const { data, error } = await this.client
             .from('tenants')
             .select('*')
             .order('created_at', { ascending: false });
@@ -208,7 +221,7 @@ export class SupabaseTenantRepository implements TenantRepository {
     }
 
     async createTenant(tenant: Omit<Tenant, 'id'>): Promise<Tenant> {
-        const { data, error } = await supabase
+        const { data, error } = await this.client
             .from('tenants')
             .insert({
                 name: tenant.name,
@@ -245,7 +258,7 @@ export class SupabaseTenantRepository implements TenantRepository {
     }
 
     async updateTenantLanguage(id: string, language: string): Promise<void> {
-        const { error } = await supabase
+        const { error } = await this.client
             .from('tenants')
             .update({ language })
             .eq('id', id);
@@ -254,7 +267,7 @@ export class SupabaseTenantRepository implements TenantRepository {
     }
 
     async updateTenantDomain(id: string, domain: string): Promise<void> {
-        const { error } = await supabase
+        const { error } = await this.client
             .from('tenants')
             .update({ custom_domain: domain })
             .eq('id', id);
@@ -263,7 +276,7 @@ export class SupabaseTenantRepository implements TenantRepository {
     }
 
     async getTenantByDomain(domain: string): Promise<Tenant | null> {
-        const { data, error } = await supabase
+        const { data, error } = await this.client
             .from('tenants')
             .select('*')
             .eq('custom_domain', domain)
@@ -293,7 +306,7 @@ export class SupabaseTenantRepository implements TenantRepository {
             updateData.stripe_customer_id = stripeCustomerId;
         }
 
-        const { error } = await supabase
+        const { error } = await this.client
             .from('tenants')
             .update(updateData)
             .eq('id', id);
@@ -301,7 +314,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string): Promise<void> {
         const updateData: any = {
             owner_phone: ownerPhone,
             instagram_url: instagramUrl,
@@ -313,7 +326,15 @@ export class SupabaseTenantRepository implements TenantRepository {
             updateData.currency = currency;
         }
 
-        const { error } = await supabase
+        if (themeColor) {
+            updateData.theme_color = themeColor;
+        }
+
+        if (logoUrl) {
+            updateData.logo_url = logoUrl;
+        }
+
+        const { error } = await this.client
             .from('tenants')
             .update(updateData)
             .eq('id', id);
@@ -322,7 +343,7 @@ export class SupabaseTenantRepository implements TenantRepository {
     }
 
     async getTenantById(id: string): Promise<Tenant | null> {
-        const { data, error } = await supabase
+        const { data, error } = await this.client
             .from('tenants')
             .select('*')
             .eq('id', id)
@@ -356,7 +377,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (billingData.lemonsqueezy_variant_id) updateData.lemonsqueezy_variant_id = billingData.lemonsqueezy_variant_id;
         if (billingData.subscription_status) updateData.subscription_status = billingData.subscription_status;
 
-        const { error } = await supabase
+        const { error } = await this.client
             .from('tenants')
             .update(updateData)
             .eq('id', id);

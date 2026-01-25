@@ -36,6 +36,8 @@ async function updateSettings(formData: FormData) {
     revalidatePath(`/store/${slug}/admin/settings`);
 }
 
+import BrandingSettings from "./BrandingSettings";
+
 export default async function SettingsPage({ params }: Props) {
     const { slug } = await params;
     const repo = getTenantRepository();
@@ -57,6 +59,13 @@ export default async function SettingsPage({ params }: Props) {
                     <p className="text-gray-500">Manage your store profile and links</p>
                 </div>
             </div>
+
+            <BrandingSettings 
+                tenantId={tenant.id} 
+                slug={slug} 
+                initialThemeColor={tenant.themeColor} 
+                initialLogoUrl={tenant.logoUrl} 
+            />
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="p-6 border-b border-gray-100 bg-gray-50">

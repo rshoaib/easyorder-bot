@@ -1,4 +1,5 @@
-import { getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
+import OnboardingWizard from "@/components/admin/OnboardingWizard";
+import { getProductRepository, getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
 import { Order } from "@/lib/repository/types";
 import Link from "next/link";
 import { LanguageSelector } from "@/components/admin/LanguageSelector";
@@ -9,15 +10,15 @@ import StatusSelector from '@/components/admin/StatusSelector';
 export const dynamic = 'force-dynamic';
 
 interface Props {
-    params: {
+    params: Promise<{
         slug: string;
-    }
+    }>
 }
 
 async function getOrders(slug: string) {
   const tenantRepo = getTenantRepository();
   const tenant = await tenantRepo.getTenantBySlug(slug);
-  if (!tenant) return { orders: [], tenant: null, analytics: null };
+  if (!tenant) return { orders: [], tenant: null, analytics: null, productCount: 0 };
   
   const repo = getOrderRepository();
   const orders = await repo.getOrders(tenant.id);
@@ -25,24 +26,33 @@ async function getOrders(slug: string) {
   const analyticsRepo = getAnalyticsRepository();
   const analytics = await analyticsRepo.getSummary(tenant.id);
 
+  const productRepo = getProductRepository();
+  const products = await productRepo.getProducts(tenant.id);
+
   // Ensure strict date sorting desc
   const sortedOrders = orders.slice().sort((a: Order, b: Order) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  return { orders: sortedOrders, tenant, analytics };
+  
+  return { orders: sortedOrders, tenant, analytics, productCount: products.length };
 }
 
 export default async function AdminPage({ params }: Props) {
   const { slug } = await params;
-  const { orders, tenant, analytics } = await getOrders(slug);
+  const { orders, tenant, analytics, productCount } = await getOrders(slug);
 
   if (!tenant) return <div className="p-10">Store not found</div>;
 
   return (
     <main className="container pt-6 pb-10" style={{ maxWidth: '900px' }}>
-      {/* Header Section (Replaced by Layout) */}
+      {/* Header Section */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-gray-500 text-sm">Welcome back to {tenant.name}</p>
       </div>
+
+      {productCount === 0 && (
+          <OnboardingWizard slug={slug} />
+      )}
+
 
       {/* Analytics Cards */}
       {analytics && (

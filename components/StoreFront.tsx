@@ -29,28 +29,40 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
     <main className="container"> 
       {/* Header */}
       <header className="header-wrapper flex items-center justify-between">
-        <div>
-                <h1 className="text-xl font-bold">{tenant.name}</h1>
-                <div className="flex gap-2">
+        <div className="flex items-start gap-3">
+            {tenant.logoUrl && (
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-100 shadow-sm shrink-0">
+                    <ImageWithFallback 
+                        src={tenant.logoUrl} 
+                        alt={tenant.name} 
+                        fill 
+                        className="object-cover"
+                    />
+                </div>
+            )}
+            <div>
+                <h1 className="text-xl font-bold leading-tight">{tenant.name}</h1>
+                <div className="flex gap-2 mt-1">
                     {tenant.instagramUrl && (
-                        <a href={tenant.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        <a href={tenant.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                         </a>
                     )}
                     {tenant.facebookUrl && (
-                        <a href={tenant.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        <a href={tenant.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                         </a>
                     )}
                 </div>
-            <p className="text-gray-500 font-medium">{dict.poweredBy}</p>
+                <p className="text-xs text-gray-500 font-medium mt-0.5">{dict.poweredBy}</p>
+            </div>
         </div>
         <div className="cart-btn-wrapper">
           <Link href={`${tenant.slug}/cart`}>
             <button className="cart-btn">
               <ShoppingBag size={22} />
               {itemCount > 0 && (
-                <span className="cart-badge animate-in zoom-in duration-300">
+                <span className="cart-badge animate-in zoom-in duration-300" style={{ backgroundColor: tenant.themeColor || '#000' }}>
                   {itemCount}
                 </span>
               )}
@@ -75,7 +87,8 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
           <button
             key={cat}
             onClick={() => setCategory(cat)}
-            className={`category-pill ${category === cat ? "active" : ""}`}
+            className={`category-pill ${category === cat ? "active text-white shadow-md shadow-indigo-500/20" : ""}`}
+            style={category === cat ? { backgroundColor: tenant.themeColor || '#000', borderColor: tenant.themeColor || '#000' } : {}}
           >
             {cat}
           </button>
@@ -110,7 +123,10 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
                           <span className="text-xs text-gray-400 font-medium">{itemCount} items</span>
                           <span className="font-bold text-lg leading-none">{tenant.currency}{total.toFixed(2)}</span>
                       </div>
-                      <div className="flex items-center gap-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-bold">
+                      <div 
+                        className="flex items-center gap-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-bold"
+                        style={{ color: tenant.themeColor || '#000' }}
+                      >
                           View Cart <ShoppingBag size={16} />
                       </div>
                   </div>

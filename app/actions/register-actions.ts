@@ -22,7 +22,7 @@ export async function registerTenant(formData: FormData) {
         return { error: "All fields are required" };
     }
 
-    const repo = getTenantRepository();
+    const repo = getTenantRepository(supabase);
 
     // Check if slug exists
     const existing = await repo.getTenantBySlug(slug);
