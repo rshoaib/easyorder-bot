@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: Props) {
             title: `${tenant.name} | Order Online`,
             description: `Order from ${tenant.name} on WhatsApp. View menu and prices.`,
             type: 'website',
+            images: tenant.logoUrl ? [{ url: tenant.logoUrl }] : [],
         },
     };
 }
@@ -35,8 +36,6 @@ export async function generateMetadata({ params }: Props) {
 export default async function StorePage({ params }: Props) {
     const { slug } = await params;
     
-
-
     const tenantRepo = getTenantRepository();
     const tenant = await tenantRepo.getTenantBySlug(slug);
 
@@ -52,12 +51,14 @@ export default async function StorePage({ params }: Props) {
     const repo = getProductRepository();
     const products = await repo.getProducts(tenant.id);
 
-    // We can pass tenant details to StoreFront for branding if we want later (name, theme color)
+    // Prioritize logo, then first product, then empty
+    const schemaImage = tenant.logoUrl || (products.length > 0 ? products[0].image : "");
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Restaurant",
         "name": tenant.name,
-        "image": products.length > 0 ? products[0].image : "", // Fallback to first product image
+        "image": schemaImage,
         "@id": `https://${process.env.VERCEL_URL || 'orderviachat.com'}/store/${slug}`,
         "url": `https://${process.env.VERCEL_URL || 'orderviachat.com'}/store/${slug}`,
         "telephone": tenant.ownerPhone || "",
