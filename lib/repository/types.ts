@@ -19,6 +19,7 @@ export interface Tenant {
     metaPixelId?: string;
     logoUrl?: string; // New: Branding Logo
     userId?: string; // Links to Supabase Auth User
+    isOpen?: boolean; // Store Open/Closed Status
 }
 
 export interface Order {
@@ -104,7 +105,7 @@ export interface TenantRepository {
     updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void>;
     updateTenantLanguage(id: string, language: string): Promise<void>;
     updateTenantDomain(id: string, domain: string): Promise<void>;
-    updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string): Promise<void>;
+    updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean): Promise<void>;
     getTenantByDomain(domain: string): Promise<Tenant | null>;
     getTenantById(id: string): Promise<Tenant | null>;
     updateTenantBilling(id: string, billingData: { lemonsqueezy_customer_id?: string; lemonsqueezy_subscription_id?: string; lemonsqueezy_variant_id?: string; subscription_status?: string }): Promise<void>;

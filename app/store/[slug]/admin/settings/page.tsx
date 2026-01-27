@@ -23,6 +23,11 @@ async function updateSettings(formData: FormData) {
     const facebook = formData.get('facebook') as string;
     const metaPixelId = formData.get('metaPixelId') as string;
     const currency = formData.get('currency') as string;
+    
+    // Checkbox is "true" if checked, null if unchecked
+    // But we need to be careful: if the user unchecks it, it won't be in formData at all.
+    // So we assume checked if present.
+    const isOpen = formData.get('isOpen') === 'true';
 
     if (!id || !slug) return;
     
@@ -31,7 +36,7 @@ async function updateSettings(formData: FormData) {
         return; // Or throw error, but silent return is safer for now to avoid crashing if UI bypass happens
     }
 
-    await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency);
+    await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen);
     revalidatePath(`/store/${slug}`);
     revalidatePath(`/store/${slug}/admin/settings`);
 }
@@ -140,6 +145,28 @@ export default async function SettingsPage({ params }: Props) {
                             placeholder="https://facebook.com/your-store"
                             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium" 
                         />
+                    </div>
+
+                    <div className="pt-4 border-t border-gray-100"></div>
+
+                    {/* Store Status */}
+                    <div className="space-y-4">
+                         <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="font-bold text-gray-900">Store Status</h2>
+                                <p className="text-sm text-gray-500">Close your store when you're busy.</p>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    name="isOpen" 
+                                    defaultChecked={tenant.isOpen !== false} 
+                                    value="true"
+                                    className="sr-only peer" 
+                                />
+                                <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-600"></div>
+                            </label>
+                         </div>
                     </div>
 
                     <div className="pt-4 border-t border-gray-100"></div>

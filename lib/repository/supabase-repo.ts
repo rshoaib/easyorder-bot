@@ -189,7 +189,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             instagramUrl: data.instagram_url,
             facebookUrl: data.facebook_url,
             metaPixelId: data.meta_pixel_id,
-            userId: data.user_id
+            userId: data.user_id,
+            isOpen: data.is_open ?? true // Default to true
         };
     }
 
@@ -314,13 +315,17 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean): Promise<void> {
         const updateData: any = {
             owner_phone: ownerPhone,
             instagram_url: instagramUrl,
             facebook_url: facebookUrl,
             meta_pixel_id: metaPixelId
         };
+
+        if (isOpen !== undefined) {
+            updateData.is_open = isOpen;
+        }
 
         if (currency) {
             updateData.currency = currency;
