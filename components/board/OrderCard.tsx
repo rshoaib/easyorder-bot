@@ -100,12 +100,20 @@ export default function OrderCard({ order, slug }: Props) {
 
           {order.status === 'preparing' && (
               <button 
-                 onClick={() => handleStatusUpdate('ready')}
+                 onClick={async () => {
+                    // 1. Open WhatsApp Notification
+                    const msg = `Hi ${order.customer.name.split(' ')[0]}! Your order #${order.id.slice(-4)} is ready! 🎁`;
+                    const phone = order.customer.phone.replace(/[^\d]/g, '');
+                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+
+                    // 2. Update Status (Wait a bit so they don't lose the UI immediately)
+                    setTimeout(() => handleStatusUpdate('ready'), 1000);
+                 }}
                  disabled={loading}
                  className="col-span-2 btn-primary bg-green-600 hover:bg-green-700 border-none text-white py-4 text-lg flex items-center justify-center gap-2"
               >
                   <CheckCircle2 size={24} />
-                  {loading ? 'Updating...' : 'Mark Complete'}
+                  {loading ? 'Updating...' : 'Notify & Complete'}
               </button>
           )}
        </div>
