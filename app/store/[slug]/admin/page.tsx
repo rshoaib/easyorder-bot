@@ -1,4 +1,7 @@
 import OnboardingWizard from "@/components/admin/OnboardingWizard";
+import StoreStatusToggle from "@/components/admin/StoreStatusToggle";
+import { Download, Cloud } from 'lucide-react';
+
 import { getProductRepository, getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
 import { Order } from "@/lib/repository/types";
 import Link from "next/link";
@@ -128,6 +131,7 @@ export default async function AdminPage({ params }: Props) {
                         Order Board
                     </button>
                  </Link>
+                 <StoreStatusToggle tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} />
                  <Link href={`/store/${slug}/admin/settings`}>
                     <button className="flex items-center justify-center p-2 bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 rounded-lg transition-colors" title="Store Settings">
                         <Settings size={18} />
@@ -156,6 +160,11 @@ export default async function AdminPage({ params }: Props) {
                 <tr key={order.id} className="hover:bg-gray-50 transition-colors group">
                   <td className="py-4 px-6 font-mono text-sm font-medium text-gray-900">
                       <span className="text-gray-400">#</span>{order.id.replace('ORD-', '')}
+                      {order.items.some((i: any) => i.type === 'digital') && (
+                          <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded mt-1 w-fit">
+                              <Cloud size={10} /> Digital
+                          </div>
+                      )}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-600">
                     <div className="font-medium text-gray-900">{new Date(order.date).toLocaleDateString()}</div>
