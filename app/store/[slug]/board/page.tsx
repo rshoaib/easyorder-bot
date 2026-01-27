@@ -1,5 +1,5 @@
 import { getOrderRepository, getTenantRepository } from "@/lib/repository";
-import KitchenBoard from "@/components/kitchen/KitchenBoard";
+import OrderBoard from "@/components/board/OrderBoard";
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +9,7 @@ interface Props {
     }
 }
 
-export default async function KitchenPage({ params }: Props) {
+export default async function OrderBoardPage({ params }: Props) {
     const { slug } = await params;
     
     // Auth Check (Same as admin)
@@ -26,8 +26,8 @@ export default async function KitchenPage({ params }: Props) {
     // Filter for active orders only
     const activeOrders = allOrders
         .filter(o => ['pending', 'preparing'].includes(o.status))
-        // Oldest first for kitchen (FIFO)
+        // Oldest first (FIFO)
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    return <KitchenBoard orders={activeOrders} slug={slug} />;
+    return <OrderBoard orders={activeOrders} slug={slug} />;
 }

@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // 2. Custom Domain Handling
-    let currentDomain = hostname.replace('.localhost:3000', '');
+    const currentDomain = hostname.replace('.localhost:3000', '');
     const isVercelDomain = currentDomain.includes('vercel.app') || currentDomain.includes('orderviachat.com') || currentDomain.includes('localhost');
 
     // If it's a custom domain

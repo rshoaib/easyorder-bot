@@ -1,7 +1,7 @@
 'use client';
 
 import { Order } from "@/lib/repository/types";
-import KitchenOrderCard from "./KitchenOrderCard";
+import OrderCard from "./OrderCard";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
@@ -11,7 +11,7 @@ interface Props {
     slug: string;
 }
 
-export default function KitchenBoard({ orders, slug }: Props) {
+export default function OrderBoard({ orders, slug }: Props) {
     const router = useRouter();
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export default function KitchenBoard({ orders, slug }: Props) {
         <div className="min-h-screen bg-gray-50 p-6">
             <header className="flex justify-between items-center mb-8 print:hidden">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900">Kitchen Display</h1>
+                    <h1 className="text-3xl font-extrabold text-gray-900">Active Orders</h1>
                     <p className="text-gray-500">Live feed for {slug}</p>
                 </div>
                 <div className="flex items-center gap-4">
@@ -56,7 +56,7 @@ export default function KitchenBoard({ orders, slug }: Props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {/* Prioritize Preparing, then Pending */}
                     {[...preparingOrders, ...pendingOrders].map(order => (
-                        <KitchenOrderCard key={order.id} order={order} slug={slug} />
+                        <OrderCard key={order.id} order={order} slug={slug} />
                     ))}
                 </div>
             )}

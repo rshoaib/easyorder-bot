@@ -76,7 +76,7 @@ function PricingContent() {
             </div>
 
             <ul className="mt-6 space-y-4">
-                {['Unlimited Orders', 'Kitchen Display System', 'Custom Domain Support', 'Priority Support'].map((feature) => (
+                {['Unlimited Orders', 'Digital Order Board', 'Custom Domain Support', 'Priority Support'].map((feature) => (
                     <li key={feature} className="flex items-start">
                         <Check className="flex-shrink-0 h-5 w-5 text-green-500" />
                         <span className="ml-3 text-sm text-gray-700">{feature}</span>

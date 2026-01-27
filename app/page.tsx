@@ -9,12 +9,12 @@ export default async function Home() {
   // const tenants = await repo.getAllTenants();
   
   const featuredPartners = [
-    { id: 'd1', name: 'Burger & Beans', slug: 'demo', category: 'Fast Food', color: 'bg-orange-50 text-orange-600' },
-    { id: 'd2', name: 'Sushi Zen', slug: 'demo', category: 'Japanese', color: 'bg-rose-50 text-rose-600' },
-    { id: 'd3', name: 'Green Bowl', slug: 'demo', category: 'Healthy', color: 'bg-green-50 text-green-600' },
-    { id: 'd4', name: 'La Dolce Vita', slug: 'demo', category: 'Italian', color: 'bg-yellow-50 text-yellow-600' },
+    { id: 'd1', name: 'Sunny Threadz', slug: 'demo', category: 'Fashion', color: 'bg-orange-50 text-orange-600' },
+    { id: 'd2', name: 'Crafty Box', slug: 'demo', category: 'Handmade', color: 'bg-rose-50 text-rose-600' },
+    { id: 'd3', name: 'Green Bowl', slug: 'demo', category: 'Food', color: 'bg-green-50 text-green-600' },
+    { id: 'd4', name: 'Digital Planners', slug: 'demo', category: 'Digital', color: 'bg-yellow-50 text-yellow-600' },
     { id: 'd5', name: 'Coffee House', slug: 'demo', category: 'Cafe', color: 'bg-stone-50 text-stone-600' },
-    { id: 'd6', name: 'Fire Wok', slug: 'demo', category: 'Asian', color: 'bg-red-50 text-red-600' },
+    { id: 'd6', name: 'Luxe Scents', slug: 'demo', category: 'Beauty', color: 'bg-indigo-50 text-indigo-600' },
   ];
 
   return (
@@ -140,9 +140,9 @@ export default async function Home() {
                             <span className="font-bold text-xl">1</span>
                         </div>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">Create Menu</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">Add Products</h3>
                     <p className="text-slate-500 leading-relaxed px-4">
-                        Sign up for free and add your products. customize your store's look to match your brand.
+                        Sign up for free and upload your products. Customize your store's look to match your brand.
                     </p>
                 </div>
 
@@ -192,7 +192,7 @@ export default async function Home() {
                         <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
                             <Smartphone size={24} />
                         </div>
-                        <h3 className="text-2xl font-bold text-slate-900 mb-3">Stunning Mobile Menu</h3>
+                        <h3 className="text-2xl font-bold text-slate-900 mb-3">Stunning Mobile Storefront</h3>
                         <p className="text-slate-500">
                              Give your customers an app-like experience. Load products instantly, add variants, and calculate totals automatically.
                         </p>
@@ -221,20 +221,20 @@ export default async function Home() {
                 
                  {/* Feature 3: Kitchen (Wide) */}
                  <div className="md:col-span-12 bg-indigo-50 rounded-[2rem] p-8 md:p-12 border border-indigo-100 flex flex-col md:flex-row items-center gap-12 group hover:bg-indigo-100/50 transition-colors duration-500">
-                    <div className="flex-1 space-y-6">
+                     <div className="flex-1 space-y-6">
                         <div className="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center">
                             <ShoppingBag size={24} />
                         </div>
-                        <h3 className="text-3xl font-bold text-slate-900">Kitchen Display System</h3>
+                        <h3 className="text-3xl font-bold text-slate-900">Digital Order Board</h3>
                         <p className="text-slate-600 text-lg leading-relaxed">
-                            No more paper tickets. Orders pop up instantly on your kitchen tablet. Mark them as "Preparing" or "Ready" with a tap, and we'll automatically notify the customer.
+                            No more lost DMs. Orders appear instantly on your centralized board. Track what needs to be packed, made, or delivered with a simple touch.
                         </p>
                         <ul className="space-y-3">
                              <li className="flex items-center gap-3 text-slate-700 font-medium">
-                                <CheckCircle2 size={20} className="text-indigo-600" /> Syncs across all devices
+                                <CheckCircle2 size={20} className="text-indigo-600" /> Perfect for Packing & Shipping
                              </li>
                              <li className="flex items-center gap-3 text-slate-700 font-medium">
-                                <CheckCircle2 size={20} className="text-indigo-600" /> Sound alerts for new orders
+                                <CheckCircle2 size={20} className="text-indigo-600" /> Simple Trello-like Order Status
                              </li>
                         </ul>
                     </div>

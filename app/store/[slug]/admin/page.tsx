@@ -108,7 +108,7 @@ export default async function AdminPage({ params }: Props) {
                  <Link href={`/store/${slug}/admin/menu`}>
                     <button className="flex items-center gap-2 btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100 whitespace-nowrap px-3 py-2 rounded-lg text-sm font-medium transition-colors">
                         <Menu size={16} /> {/* Add Icon for consistency */}
-                        Menu Manager
+                        Product Catalog
                     </button>
                  </Link>
                  <Link href={`/store/${slug}/admin/promos`}>
@@ -123,9 +123,9 @@ export default async function AdminPage({ params }: Props) {
                         Refresh
                     </button>
                  </Link>
-                 <Link href={`/store/${slug}/kitchen`} target="_blank">
+                 <Link href={`/store/${slug}/board`} target="_blank">
                     <button className="flex items-center gap-2 bg-orange-50 text-orange-600 border border-orange-100 hover:bg-orange-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap">
-                        Kitchen
+                        Order Board
                     </button>
                  </Link>
                  <Link href={`/store/${slug}/admin/settings`}>

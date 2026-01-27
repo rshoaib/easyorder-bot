@@ -66,7 +66,7 @@ export default async function AdminLayout({
                     <LayoutDashboard size={16} /> Dashboard
                 </Link>
                 <Link href={`/store/${slug}/admin/menu`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <Menu size={16} /> Menu
+                    <Menu size={16} /> Products
                 </Link>
                 <Link href={`/store/${slug}/admin/promos`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
                     <Tag size={16} /> Promos

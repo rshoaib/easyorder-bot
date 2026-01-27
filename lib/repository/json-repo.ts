@@ -48,7 +48,7 @@ export class JsonOrderRepository implements OrderRepository {
         const filePath = this.getFilePath();
         try {
             const fileData = await fs.readFile(filePath, 'utf8');
-            let orders: Order[] = JSON.parse(fileData);
+            const orders: Order[] = JSON.parse(fileData);
 
             const orderIndex = orders.findIndex(o => o.id === id);
             if (orderIndex !== -1) {
@@ -104,7 +104,7 @@ export class JsonProductRepository implements ProductRepository {
         const filePath = this.getFilePath();
         try {
             const fileData = await fs.readFile(filePath, 'utf8');
-            let products: Product[] = JSON.parse(fileData);
+            const products: Product[] = JSON.parse(fileData);
 
             const productIndex = products.findIndex(p => p.id === id);
             if (productIndex !== -1) {
