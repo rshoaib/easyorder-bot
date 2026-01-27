@@ -87,57 +87,53 @@ export default async function AdminPage({ params }: Props) {
       {/* Domain Settings */}
       <DomainSettings slug={slug} currentDomain={tenant.customDomain} />
 
-      {/* Controls */}
-      {/* Controls */}
-      <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
-         <h2 className="text-lg font-bold flex items-center gap-2">
-            Recent Orders 
-            <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs box-border">{orders.length}</span>
-            {/* Mobile Refresh Button */}
-            <Link href={`/store/${slug}/admin`} className="md:hidden ml-auto">
-                <button className="p-2 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200">
-                    <RefreshCw size={16} />
-                </button>
-            </Link>
-         </h2>
-         
-         <div className="flex flex-wrap items-center gap-2">
-             <div className="w-full md:w-auto mb-2 md:mb-0">
-                 <LanguageSelector slug={slug} currentLanguage={tenant.language} />
-             </div>
-             
-             {/* Quick Actions Toolbar */}
-             <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+      {/* Main Action Bar */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <div className="flex flex-wrap items-center gap-2">
+               <Link href={`/store/${slug}/board`} target="_blank">
+                  <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm">
+                      Order Board
+                  </button>
+               </Link>
+               <StoreStatusToggle tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
                  <Link href={`/store/${slug}/admin/menu`}>
-                    <button className="flex items-center gap-2 btn-secondary bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100 whitespace-nowrap px-3 py-2 rounded-lg text-sm font-medium transition-colors">
-                        <Menu size={16} /> {/* Add Icon for consistency */}
+                    <button className="flex items-center gap-2 bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm">
+                        <Menu size={16} />
                         Product Catalog
                     </button>
                  </Link>
                  <Link href={`/store/${slug}/admin/promos`}>
-                    <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap">
+                    <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm">
                         <Tag size={16} />
                         Promos
                     </button>
                  </Link>
-                 <Link href={`/store/${slug}/admin`}>
-                    <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors whitespace-nowrap" title="Check for new orders">
-                        <RefreshCw size={16} />
-                        Refresh
-                    </button>
-                 </Link>
-                 <Link href={`/store/${slug}/board`} target="_blank">
-                    <button className="flex items-center gap-2 bg-orange-50 text-orange-600 border border-orange-100 hover:bg-orange-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap">
-                        Order Board
-                    </button>
-                 </Link>
-                 <StoreStatusToggle tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} />
                  <Link href={`/store/${slug}/admin/settings`}>
-                    <button className="flex items-center justify-center p-2 bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 rounded-lg transition-colors" title="Store Settings">
-                        <Settings size={18} />
+                    <button className="flex items-center gap-2 pl-3 pr-4 py-2.5 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 rounded-xl transition-colors shadow-sm text-sm font-medium" title="Store Settings">
+                        <Settings size={18} /> Settings
                     </button>
                  </Link>
-             </div>
+          </div>
+      </div>
+
+      {/* Recent Orders Header */}
+      <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-4 gap-4">
+         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+            Recent Orders 
+            <span className="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full text-xs font-bold border border-gray-200">{orders.length}</span>
+         </h2>
+         
+         <div className="flex items-center gap-3">
+             <LanguageSelector slug={slug} currentLanguage={tenant.language} />
+             <Link href={`/store/${slug}/admin`}>
+                <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:text-indigo-600 hover:border-indigo-200 transition-colors" title="Refresh list">
+                    <RefreshCw size={16} />
+                    <span className="hidden md:inline">Refresh</span>
+                </button>
+             </Link>
          </div>
       </div>
 
