@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
 
         // DEV: Fallback for demo store testing
         if (!whatsappNumber && slug === 'demo') {
-            whatsappNumber = '15550000000'; // Dummy US number for testing
+            whatsappNumber = '923224609117'; // User provided test number
         }
 
         // Clean number
