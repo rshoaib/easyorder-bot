@@ -92,6 +92,12 @@ export async function POST(req: NextRequest) {
         // Let's assume the user MUST set it up.
 
         let whatsappNumber = tenant.ownerPhone;
+
+        // DEV: Fallback for demo store testing
+        if (!whatsappNumber && slug === 'demo') {
+            whatsappNumber = '15550000000'; // Dummy US number for testing
+        }
+
         // Clean number
         if (whatsappNumber) {
             whatsappNumber = whatsappNumber.replace(/[^\d]/g, '');
