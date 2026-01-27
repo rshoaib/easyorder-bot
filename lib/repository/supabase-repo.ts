@@ -108,7 +108,8 @@ export class SupabaseProductRepository implements ProductRepository {
         return data.map((d: any) => ({
             ...d,
             tenantId: d.tenant_id,
-            isAvailable: d.is_available // Map from DB column
+            isAvailable: d.is_available, // Map from DB column
+            type: d.type || 'physical'
         })) as Product[];
     }
 
@@ -123,7 +124,8 @@ export class SupabaseProductRepository implements ProductRepository {
                 image: product.image,
                 description: product.description,
                 tenant_id: product.tenantId,
-                is_available: true
+                is_available: true,
+                type: product.type
             });
 
         if (error) {

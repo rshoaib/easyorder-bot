@@ -58,6 +58,7 @@ export interface Product {
     image: string;
     description: string;
     isAvailable: boolean;
+    type: 'physical' | 'digital';
 }
 
 export interface ProductRepository {

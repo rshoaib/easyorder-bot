@@ -20,6 +20,8 @@ export async function createProduct(formData: FormData, tenantId: string, slug: 
     const category = formData.get('category') as string;
     const description = formData.get('description') as string;
     const image = formData.get('image') as string || ''; // Simplified image handling (url string)
+    // Default to 'physical' if not specified (e.g. old form)
+    const type = (formData.get('type') as 'physical' | 'digital') || 'physical';
 
     const repo = getProductRepository();
 
@@ -38,7 +40,8 @@ export async function createProduct(formData: FormData, tenantId: string, slug: 
         category,
         description,
         image,
-        isAvailable: true
+        isAvailable: true,
+        type
     };
 
     await repo.addProduct(product);

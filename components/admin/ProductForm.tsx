@@ -37,6 +37,15 @@ export default function ProductForm({ tenantId, slug }: { tenantId: string, slug
                         <option>Desserts</option>
                         <option>Drinks</option>
                         <option>Sides</option>
+                        <option value="Digital">Digital Products</option>
+                    </select>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700">Product Type</label>
+                    <select name="type" className="w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="physical">Physical (Requires Shipping/Pickup)</option>
+                        <option value="digital">Digital (Email Delivery)</option>
                     </select>
                 </div>
 

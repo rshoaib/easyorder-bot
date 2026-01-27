@@ -204,9 +204,11 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
         );
     }
 
+    const isDigitalOnly = items.length > 0 && items.every(i => (i as any).type === 'digital');
+
     return (
         <main className="container pt-6 pb-24 max-w-lg mx-auto">
-             {/* Header */}
+             {/* ... Header and Banners code same as before ... */}
              <div className="flex items-center gap-4 mb-6">
                 <Link href={`/store/${slug}`} className="p-2 hover:bg-gray-100 rounded-full">
                     <ArrowLeft size={20} />
@@ -246,7 +248,10 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                                     <Trash2 size={16} />
                                 </button>
                             </div>
-                            <div className="text-sm text-gray-500 mb-2">${item.price.toFixed(2)}</div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <div className="text-sm text-gray-500">${item.price.toFixed(2)}</div>
+                                {(item as any).type === 'digital' && <span className="text-[10px] uppercase font-bold bg-indigo-100 text-indigo-700 px-2 rounded-sm">Digital</span>}
+                            </div>
                             <div className="flex items-center gap-3">
                                 <button 
                                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -272,7 +277,8 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                         <span className="text-gray-500">Subtotal</span>
                         <span className="font-medium">${total.toFixed(2)}</span>
                     </div>
-                    {deliveryFee > 0 && (
+                    {/* Hide delivery fee for digital only */}
+                    {!isDigitalOnly && deliveryFee > 0 && (
                         <div className="flex justify-between text-sm">
                             <span className="text-gray-500">Delivery Fee</span>
                             <span className="font-medium">${deliveryFee.toFixed(2)}</span>
@@ -288,13 +294,13 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                 
                 <div className="border-t border-gray-100 my-2 pt-2 flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span>${Math.max(0, total + deliveryFee - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0)).toFixed(2)}</span>
+                    <span>${Math.max(0, total + (isDigitalOnly ? 0 : deliveryFee) - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0)).toFixed(2)}</span>
                 </div>
             </div>
 
             {/* Checkout Form */}
             <form onSubmit={handleSubmit} className={`space-y-4 ${!isOpen ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
-                <h2 className="font-bold text-lg">Delivery Details</h2>
+                <h2 className="font-bold text-lg">Your Details</h2>
                 
                 <div>
                     <label className="form-label">Full Name</label>
@@ -316,7 +322,6 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                         placeholder="+1234567890"
                         value={customer.phone}
                         onChange={e => {
-                            // Enforce starting with +
                             let val = e.target.value;
                             if(!val.startsWith('+')) val = '+' + val.replace(/^\+/, '');
                             setCustomer({...customer, phone: val})
@@ -324,31 +329,46 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                     />
                 </div>
 
-                <div>
-                    <label className="form-label">Delivery Address</label>
-                    <div className="flex gap-2">
-                        <textarea 
-                            required={isOpen}
-                            className="form-input flex-1"
-                            rows={2}
-                            placeholder="Street, City, Building..."
-                            value={customer.address}
-                            onChange={e => setCustomer({...customer, address: e.target.value})}
-                        />
-                         <button 
-                            type="button"
-                            onClick={handleLocationClick}
-                            disabled={locationStatus === 'loading'}
-                            className={`px-3 rounded-xl border border-gray-200 flex flex-col items-center justify-center text-xs gap-1 transition-colors ${
-                                locationStatus === 'success' ? 'bg-green-50 text-green-600 border-green-200' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                            }`}
-                            title="Share Current Location"
-                        >
-                            <MapPin size={18} />
-                            {locationStatus === 'loading' ? '...' : locationStatus === 'success' ? 'Shared' : 'GPS'}
-                        </button>
+                {/* Hide Address for Digital Only */}
+                {!isDigitalOnly ? (
+                    <div>
+                        <label className="form-label">Delivery Address</label>
+                        <div className="flex gap-2">
+                            <textarea 
+                                required={isOpen}
+                                className="form-input flex-1"
+                                rows={2}
+                                placeholder="Street, City, Building..."
+                                value={customer.address}
+                                onChange={e => setCustomer({...customer, address: e.target.value})}
+                            />
+                             <button 
+                                type="button"
+                                onClick={handleLocationClick}
+                                disabled={locationStatus === 'loading'}
+                                className={`px-3 rounded-xl border border-gray-200 flex flex-col items-center justify-center text-xs gap-1 transition-colors ${
+                                    locationStatus === 'success' ? 'bg-green-50 text-green-600 border-green-200' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                }`}
+                                title="Share Current Location"
+                            >
+                                <MapPin size={18} />
+                                {locationStatus === 'loading' ? '...' : locationStatus === 'success' ? 'Shared' : 'GPS'}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <div>
+                         <label className="form-label">Email Address (For Delivery)</label>
+                         <input 
+                            required={isOpen}
+                            type="email"
+                            className="form-input"
+                            placeholder="you@example.com"
+                            onChange={e => setCustomer({...customer, address: e.target.value})} // Using address field for email hack to save schema changes for now
+                         />
+                         <p className="text-xs text-gray-500 mt-1">We will send your files to this email.</p>
+                    </div>
+                )}
 
                 <div>
                     <label className="form-label mb-2 block">Payment Method</label>
