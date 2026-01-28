@@ -47,7 +47,8 @@ export async function seedStore(slug: string, type: PresetType) {
                 price: item.price,
                 image: item.image,
                 category: item.category,
-                isAvailable: true
+                isAvailable: true,
+                type: 'physical'
             });
         }
 
