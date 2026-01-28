@@ -23,7 +23,8 @@ export async function addProduct(slug: string, formData: FormData) {
         image: formData.get('image') as string,
         description: formData.get('description') as string || '',
         tenantId: tenant.id,
-        isAvailable: true
+        isAvailable: true,
+        type: 'physical'
     };
 
     await repo.addProduct(product);
@@ -51,7 +52,8 @@ export async function importProducts(slug: string, products: Omit<Product, 'id' 
         const product: Product = {
             ...p,
             id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
-            tenantId: tenant.id
+            tenantId: tenant.id,
+            type: 'physical'
         };
         await repo.addProduct(product);
     }
