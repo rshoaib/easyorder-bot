@@ -194,7 +194,7 @@ export default async function Home() {
                         </div>
                         <h3 className="text-2xl font-bold text-slate-900 mb-3">Stunning Mobile Storefront</h3>
                         <p className="text-slate-500">
-                             Give your customers an app-like experience. Load products instantly, add variants, and calculate totals automatically.
+                             Give your customers an app-like experience. <span className="text-indigo-600 font-bold">Instant Search</span> lets them find cravings in milliseconds.
                         </p>
                     </div>
                     <div className="relative h-[300px] md:h-[400px] bg-white rounded-t-3xl shadow-lg border border-slate-100 translate-y-8 group-hover:translate-y-4 transition-transform duration-500">
@@ -219,28 +219,28 @@ export default async function Home() {
                      </div>
                 </div>
                 
-                 {/* Feature 3: Kitchen (Wide) */}
+                 {/* Feature 3: Social Marketing (Wide) */}
                  <div className="md:col-span-12 bg-indigo-50 rounded-[2rem] p-8 md:p-12 border border-indigo-100 flex flex-col md:flex-row items-center gap-12 group hover:bg-indigo-100/50 transition-colors duration-500">
                      <div className="flex-1 space-y-6">
                         <div className="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center">
-                            <ShoppingBag size={24} />
+                            <Share2 size={24} />
                         </div>
-                        <h3 className="text-3xl font-bold text-slate-900">Digital Order Board</h3>
+                        <h3 className="text-3xl font-bold text-slate-900">One-Click Marketing</h3>
                         <p className="text-slate-600 text-lg leading-relaxed">
-                            No more lost DMs. Orders appear instantly on your centralized board. Track what needs to be packed, made, or delivered with a simple touch.
+                            Stop struggling with design tools. Generate professional, branded <strong>Instagram Stories</strong> instantly from your dashboard.
                         </p>
                         <ul className="space-y-3">
                              <li className="flex items-center gap-3 text-slate-700 font-medium">
-                                <CheckCircle2 size={20} className="text-indigo-600" /> Perfect for Packing & Shipping
+                                <CheckCircle2 size={20} className="text-indigo-600" /> Auto-generates QR Code & Link
                              </li>
                              <li className="flex items-center gap-3 text-slate-700 font-medium">
-                                <CheckCircle2 size={20} className="text-indigo-600" /> Simple Trello-like Order Status
+                                <CheckCircle2 size={20} className="text-indigo-600" /> Perfect 9:16 Aspect Ratio
                              </li>
                         </ul>
                     </div>
                      <div className="flex-1 w-full max-w-2xl">
                         <div className="relative rounded-xl overflow-hidden shadow-2xl border-4 border-white group-hover:rotate-1 transition-transform duration-500">
-                             <img src="/images/showcase-kitchen.png" className="w-full h-auto" />
+                             <img src="/images/showcase-social.png" className="w-full h-auto" />
                         </div>
                      </div>
                  </div>
