@@ -1,6 +1,6 @@
 import { getTenantRepository } from "@/lib/repository";
 import Link from "next/link";
-import { ExternalLink, LayoutDashboard, Menu, Settings, Tag, QrCode } from "lucide-react";
+import { ExternalLink, LayoutDashboard, Menu, Settings, Tag, QrCode, ShoppingBag } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -64,6 +64,9 @@ export default async function AdminLayout({
             <div className="hidden lg:flex items-center gap-1">
                 <Link href={`/store/${slug}/admin`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
                     <LayoutDashboard size={16} /> Dashboard
+                </Link>
+                <Link href={`/store/${slug}/admin/orders`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
+                    <ShoppingBag size={16} /> Orders
                 </Link>
                 <Link href={`/store/${slug}/admin/menu`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
                     <Menu size={16} /> Products

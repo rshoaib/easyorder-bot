@@ -2,7 +2,8 @@
 
 import { use, useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Printer, Download, Copy, Check, ExternalLink } from 'lucide-react';
+import { Printer, Download, Copy, Check, ExternalLink, Smartphone } from 'lucide-react';
+import StoryPreview from '@/components/admin/StoryPreview';
 
 interface Props {
     params: Promise<{
@@ -16,6 +17,8 @@ export default function SharePage({ params }: Props) {
     
     const [storeUrl, setStoreUrl] = useState('');
     const [storeName, setStoreName] = useState('');
+    const [themeColor, setThemeColor] = useState('#10b981');
+    const [activeTab, setActiveTab] = useState<'qr' | 'social'>('qr');
     const [copied, setCopied] = useState(false);
 
     useEffect(() => {
@@ -102,100 +105,126 @@ export default function SharePage({ params }: Props) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Preview Card */}
-                <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center print:shadow-none print:border-none print:p-0 print:w-full">
-                    <div className="mb-6 print:mb-4">
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">{storeName || slug}</h2>
-                        <p className="text-gray-500 text-sm">Scan to order on WhatsApp</p>
-                    </div>
+            {/* Tabs */}
+            <div className="flex gap-2 mb-8 border-b border-gray-200">
+                <button 
+                    onClick={() => setActiveTab('qr')}
+                    className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === 'qr' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                >
+                    Standard QR Code
+                </button>
+                <button 
+                    onClick={() => setActiveTab('social')}
+                    className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'social' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                >
+                    <Smartphone size={16} /> Social Media Story
+                </button>
+            </div>
 
-                    <div className="bg-white p-4 rounded-xl border-2 border-gray-900 mb-6 print:mb-4">
-                        <QRCodeSVG 
-                            id="qr-code-svg"
-                            value={storeUrl} 
-                            size={256}
-                            level="H"            
-                            includeMargin={true}
-                        />
-                    </div>
+            {activeTab === 'qr' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Standard QR Code Content (Existing) */}
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center print:shadow-none print:border-none print:p-0 print:w-full">
+                        <div className="mb-6 print:mb-4">
+                            <h2 className="text-xl font-bold text-gray-900 mb-2">{storeName || slug}</h2>
+                            <p className="text-gray-500 text-sm">Scan to order on WhatsApp</p>
+                        </div>
 
-                    <div className="flex items-center gap-2 text-sm text-gray-600 font-mono bg-gray-50 px-3 py-1.5 rounded-lg mb-6 print:hidden">
-                        {storeUrl}
-                        <button onClick={handleCopy} className="hover:text-indigo-600 transition-colors">
-                            {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
-                        </button>
-                    </div>
+                        <div className="bg-white p-4 rounded-xl border-2 border-gray-900 mb-6 print:mb-4">
+                            <QRCodeSVG 
+                                id="qr-code-svg"
+                                value={storeUrl} 
+                                size={256}
+                                level="H"            
+                                includeMargin={true}
+                            />
+                        </div>
 
-                     {/* Print-only footer */}
-                    <div className="hidden print:block text-center mt-4">
-                        <p className="text-sm text-gray-500">Powered by OrderViaChat</p>
-                    </div>
-                </div>
-
-                {/* Actions Panel (Hidden when printing) */}
-                <div className="space-y-6 print:hidden">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h3 className="font-semibold text-gray-900 mb-4">Quick Actions</h3>
-                        
-                        <div className="space-y-3">
-                            <button 
-                                onClick={handlePrint}
-                                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg group-hover:bg-indigo-200 transition-colors">
-                                        <Printer size={20} />
-                                    </div>
-                                    <div className="text-left">
-                                        <div className="font-semibold text-gray-900">Print QR Code</div>
-                                        <div className="text-xs text-gray-500">Perfect for stickers and packaging</div>
-                                    </div>
-                                </div>
+                        <div className="flex items-center gap-2 text-sm text-gray-600 font-mono bg-gray-50 px-3 py-1.5 rounded-lg mb-6 print:hidden">
+                            {storeUrl}
+                            <button onClick={handleCopy} className="hover:text-indigo-600 transition-colors">
+                                {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
                             </button>
+                        </div>
 
-                            <button 
-                                onClick={handleDownload}
-                                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-green-100 text-green-600 rounded-lg group-hover:bg-green-200 transition-colors">
-                                        <Download size={20} />
-                                    </div>
-                                    <div className="text-left">
-                                        <div className="font-semibold text-gray-900">Download SVG</div>
-                                        <div className="text-xs text-gray-500">High quality vector format</div>
-                                    </div>
-                                </div>
-                            </button>
-
-                            <a 
-                                href={storeUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-orange-100 text-orange-600 rounded-lg group-hover:bg-orange-200 transition-colors">
-                                        <ExternalLink size={20} />
-                                    </div>
-                                    <div className="text-left">
-                                        <div className="font-semibold text-gray-900">Open Store</div>
-                                        <div className="text-xs text-gray-500">Test the link yourself</div>
-                                    </div>
-                                </div>
-                            </a>
+                        {/* Print-only footer */}
+                        <div className="hidden print:block text-center mt-4">
+                            <p className="text-sm text-gray-500">Powered by OrderViaChat</p>
                         </div>
                     </div>
 
-                    <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
-                        <h3 className="font-semibold text-blue-900 mb-2">Marketing Tip</h3>
-                        <p className="text-sm text-blue-700 leading-relaxed">
-                            Print this QR code and stick it on every delivery box. Add a call to action like <strong>"Scan to verify order"</strong> or <strong>"Get 10% off next order"</strong> to encourage customers to use your direct channel.
-                        </p>
+                    {/* Actions Panel (Hidden when printing) */}
+                    <div className="space-y-6 print:hidden">
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h3 className="font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                            
+                            <div className="space-y-3">
+                                <button 
+                                    onClick={handlePrint}
+                                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg group-hover:bg-indigo-200 transition-colors">
+                                            <Printer size={20} />
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-semibold text-gray-900">Print QR Code</div>
+                                            <div className="text-xs text-gray-500">Perfect for stickers and packaging</div>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button 
+                                    onClick={handleDownload}
+                                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-green-100 text-green-600 rounded-lg group-hover:bg-green-200 transition-colors">
+                                            <Download size={20} />
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-semibold text-gray-900">Download SVG</div>
+                                            <div className="text-xs text-gray-500">High quality vector format</div>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <a 
+                                    href={storeUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-orange-100 text-orange-600 rounded-lg group-hover:bg-orange-200 transition-colors">
+                                            <ExternalLink size={20} />
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-semibold text-gray-900">Open Store</div>
+                                            <div className="text-xs text-gray-500">Test the link yourself</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                            <h3 className="font-semibold text-blue-900 mb-2">Marketing Tip</h3>
+                            <p className="text-sm text-blue-700 leading-relaxed">
+                                Print this QR code and stick it on every delivery box. Add a call to action like <strong>"Scan to verify order"</strong> or <strong>"Get 10% off next order"</strong> to encourage customers to use your direct channel.
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <div className="flex flex-col items-center">
+                    <StoryPreview 
+                        storeName={storeName || slug} 
+                        storeUrl={storeUrl} 
+                        themeColor={themeColor}
+                    />
+                </div>
+            )}
 
             <style jsx global>{`
                 @media print {

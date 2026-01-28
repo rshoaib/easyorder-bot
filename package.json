@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.90.0",
     "@types/jspdf": "^2.0.0",
     "axios": "^1.13.2",
+    "html-to-image": "^1.11.13",
     "jspdf": "^4.0.0",
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^0.562.0",
