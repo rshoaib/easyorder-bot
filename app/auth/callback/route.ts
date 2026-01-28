@@ -21,6 +21,10 @@ export async function GET(request: Request) {
             } else {
                 return NextResponse.redirect(`${origin}${next}`)
             }
+        } else {
+            console.error('Auth Callback Error:', error);
+            console.error('Auth Code:', code ? 'Present' : 'Missing');
+            console.error('Origin:', origin);
         }
     }
 

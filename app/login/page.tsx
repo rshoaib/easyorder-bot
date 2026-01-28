@@ -30,6 +30,7 @@ function LoginForm() {
             });
             if (error) throw error;
         } catch (err: any) {
+            console.error('Login Error:', err);
             setError(err.message);
             setLoading(false);
         }
