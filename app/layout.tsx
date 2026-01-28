@@ -7,8 +7,10 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'),
   title: "OrderViaChat | Shop Local",
-  description: "Order fresh items directly via WhatsApp",
+  description: "Order fresh items directly via WhatsApp. The best free WhatsApp ordering system for small businesses.",
+  keywords: ["WhatsApp Ordering", "Digital Menu", "Online Store Builder", "No Commission Food Delivery", "Instagram Menu"],
   manifest: "/manifest.json",
 };
 
