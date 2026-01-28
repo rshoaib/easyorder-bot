@@ -16,14 +16,18 @@ interface StoreFrontProps {
 
 export default function StoreFront({ initialProducts, tenant }: StoreFrontProps) {
   const [category, setCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const { itemCount, total } = useCart();
   const dict = getDictionary(tenant.language as any);
 
   const products = initialProducts;
   const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
-  const filteredProducts = category === "All" 
-    ? products 
-    : products.filter((p) => p.category === category);
+  
+  const filteredProducts = products.filter((p) => {
+      const matchesCategory = category === "All" || p.category === category;
+      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+  });
 
   return (
     <main className="container"> 
@@ -78,6 +82,8 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
             type="text" 
             placeholder={dict.searchPlaceholder}
             className="search-input" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
