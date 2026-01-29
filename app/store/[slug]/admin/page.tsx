@@ -1,4 +1,5 @@
 import OnboardingWizard from "@/components/admin/OnboardingWizard";
+import QuickStartGuide from "@/components/admin/QuickStartGuide";
 import StoreStatusToggle from "@/components/admin/StoreStatusToggle";
 import { Download, Cloud } from 'lucide-react';
 
@@ -55,6 +56,8 @@ export default async function AdminPage({ params }: Props) {
       {productCount === 0 && (
           <OnboardingWizard slug={slug} />
       )}
+
+      <QuickStartGuide tenant={tenant} productCount={productCount} slug={slug} />
 
 
       {/* Analytics Cards */}
