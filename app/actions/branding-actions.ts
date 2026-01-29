@@ -5,6 +5,8 @@ import { uploadTenantLogo } from "@/lib/storage";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
+import { verifyTenantOwnership } from "@/lib/auth/security";
+
 export async function updateBranding(formData: FormData) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -15,6 +17,14 @@ export async function updateBranding(formData: FormData) {
 
     const tenantId = formData.get('tenantId') as string;
     const slug = formData.get('slug') as string;
+
+    // Security Check: Verify ownership
+    try {
+        await verifyTenantOwnership(slug);
+    } catch (e) {
+        return { error: "Unauthorized" };
+    }
+
     const themeColor = formData.get('themeColor') as string;
     const logoFile = formData.get('logo') as File;
 

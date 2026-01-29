@@ -2,27 +2,36 @@
 
 import { PRESET_MENUS, PresetType } from "@/lib/presets";
 import { seedStore } from "@/app/actions/onboarding-actions";
+import { generateMenu } from "@/app/actions/ai-actions";
 import { useState, useTransition } from "react";
-import { Loader2, Sparkles, CheckCircle2 } from "lucide-react";
+import { Loader2, Sparkles, CheckCircle2, Wand2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function OnboardingWizard({ slug }: { slug: string }) {
     const [selectedType, setSelectedType] = useState<PresetType | null>(null);
+    const [customPrompt, setCustomPrompt] = useState("");
+    const [mode, setMode] = useState<'preset' | 'ai'>('preset');
+    
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
     const handleSeed = () => {
-        if (!selectedType) return;
+        if (mode === 'preset' && !selectedType) return;
+        if (mode === 'ai' && !customPrompt.trim()) return;
         
         startTransition(async () => {
-            const res = await seedStore(slug, selectedType);
+            let res: any;
+            if (mode === 'ai') {
+                res = await generateMenu(slug, customPrompt);
+            } else {
+                res = await seedStore(slug, selectedType!);
+            }
+
             if (res.success) {
-                // Refresh to show products
                 router.refresh();
-                // Maybe reload page entirely to ensure state sync?
                 window.location.reload(); 
             } else {
-                alert(res.error);
+                alert(res.message || res.error || "Failed");
             }
         });
     };
@@ -42,6 +51,25 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
                     </p>
                 </div>
 
+
+
+                {/* Tabs */}
+                <div className="flex justify-center gap-4 mb-8">
+                    <button 
+                        onClick={() => setMode('preset')}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${mode === 'preset' ? 'bg-indigo-100 text-indigo-700' : 'text-slate-500 hover:bg-slate-50'}`}
+                    >
+                        <CheckCircle2 size={18} /> Templates
+                    </button>
+                    <button 
+                         onClick={() => setMode('ai')}
+                         className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${mode === 'ai' ? 'bg-purple-100 text-purple-700' : 'text-slate-500 hover:bg-slate-50'}`}
+                    >
+                        <Wand2 size={18} /> AI Magic Generator
+                    </button>
+                </div>
+
+                {mode === 'preset' ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     {Object.entries(PRESET_MENUS).map(([key, value]) => {
                         const isSelected = selectedType === key;
@@ -72,11 +100,30 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
                         );
                     })}
                 </div>
+                ) : (
+                    <div className="max-w-xl mx-auto mb-8">
+                        <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-6 rounded-2xl border border-purple-100">
+                             <label className="block text-sm font-bold text-slate-700 mb-2">
+                                Describe your business
+                            </label>
+                            <textarea 
+                                value={customPrompt}
+                                onChange={(e) => setCustomPrompt(e.target.value)}
+                                placeholder="e.g. A cozy vegan bakery in Seattle called 'Flour Power' serving gluten-free donuts and oat milk lattes."
+                                className="w-full p-4 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[120px]"
+                            />
+                            <div className="mt-2 text-xs text-slate-500 flex items-center gap-1">
+                                <Sparkles size={12} className="text-purple-500" />
+                                We'll generate 8 menu items based on this description.
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex justify-center">
                     <button
                         onClick={handleSeed}
-                        disabled={!selectedType || isPending}
+                        disabled={(mode === 'preset' && !selectedType) || (mode === 'ai' && !customPrompt) || isPending}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-12 rounded-xl transition-all shadow-lg shadow-indigo-200 disabled:opacity-50 disabled:shadow-none flex items-center gap-2"
                     >
                         {isPending ? <Loader2 className="animate-spin" /> : "Generate Menu"}

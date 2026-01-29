@@ -5,7 +5,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Product } from '@/lib/repository/types'; // Import Product interface
 
+
+import { verifyTenantOwnership } from "@/lib/auth/security";
+
 export async function toggleProductAvailability(id: string, currentState: boolean, slug: string) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
     const repo = getProductRepository();
     // Security: In a real app we should verify the user owns the tenant of this product!
     await repo.toggleAvailability(id, !currentState);
@@ -15,6 +21,9 @@ export async function toggleProductAvailability(id: string, currentState: boolea
 }
 
 export async function createProduct(formData: FormData, tenantId: string, slug: string) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
     const name = formData.get('name') as string;
     const price = parseFloat(formData.get('price') as string);
     const category = formData.get('category') as string;

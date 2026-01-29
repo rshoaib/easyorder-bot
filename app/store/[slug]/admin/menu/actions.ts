@@ -4,7 +4,12 @@ import { getProductRepository, getTenantRepository } from "@/lib/repository";
 import { Product } from "@/lib/repository/types";
 import { revalidatePath } from "next/cache";
 
+import { verifyTenantOwnership } from "@/lib/auth/security";
+
 export async function addProduct(slug: string, formData: FormData) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
     if (!slug) throw new Error("Slug is required");
 
     const tenantRepo = getTenantRepository();
@@ -33,6 +38,9 @@ export async function addProduct(slug: string, formData: FormData) {
 }
 
 export async function deleteProduct(slug: string, id: string) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
     const repo = getProductRepository();
     // We should ideally verify the product belongs to the tenant here, but repo.deleteProduct uses ID.
     // Assuming IDs are unique globally or we trust the admin authentication which is scoped.
@@ -42,6 +50,9 @@ export async function deleteProduct(slug: string, id: string) {
 }
 
 export async function importProducts(slug: string, products: Omit<Product, 'id' | 'tenantId'>[]) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
     const tenantRepo = getTenantRepository();
     const tenant = await tenantRepo.getTenantBySlug(slug);
     if (!tenant) throw new Error("Tenant not found");

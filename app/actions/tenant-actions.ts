@@ -3,7 +3,12 @@
 import { getTenantRepository } from "@/lib/repository";
 import { revalidatePath } from "next/cache";
 
+import { verifyTenantOwnership } from "@/lib/auth/security";
+
 export async function toggleStoreStatus(tenantId: string, slug: string, isOpen: boolean) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
     const repo = getTenantRepository();
     // In real app, verify user permission here
 
