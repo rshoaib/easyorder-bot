@@ -97,6 +97,13 @@ export default async function AdminLayout({
       <div className="hidden"></div>
 
       {children}
+
+      <div className="container mx-auto px-4 py-8 text-center text-sm text-gray-400">
+        <p>Need help or customization?</p>
+        <a href="mailto:support@orderviachat.com" className="text-indigo-500 hover:text-indigo-600 font-medium">
+          Contact Support
+        </a>
+      </div>
     </div>
   );
 }
