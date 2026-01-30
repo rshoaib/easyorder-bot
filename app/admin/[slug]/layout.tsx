@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { getTenantRepository } from "@/lib/repository";
 
+import { getPreset } from "@/lib/presets";
+
 export default async function AdminLayout({
     children,
     params,
@@ -37,6 +39,8 @@ export default async function AdminLayout({
         return <div className="p-8">Store not found</div>;
     }
 
+    const preset = getPreset(tenant.storeType);
+    
     // In a real app, strict ownership check:
     // if (tenant.userId !== user.id) { redirect('/'); } 
     // For this demo/assistant context, we might be lenient or the data model might not strictly enforce it yet.
@@ -60,8 +64,9 @@ export default async function AdminLayout({
 
                 <nav className="flex-1 p-4 space-y-2">
                     <NavLink href={`/admin/${slug}`} icon={<LayoutDashboard size={20} />} label="Overview" />
-                    <NavLink href={`/admin/${slug}/orders`} icon={<UtensilsCrossed size={20} />} label="Orders (Kitchen)" />
+                    <NavLink href={`/admin/${slug}/orders`} icon={<UtensilsCrossed size={20} />} label={`Orders (${preset.kitchenLabel})`} />
                     <NavLink href={`/admin/${slug}/menu`} icon={<Menu size={20} />} label="Menu Management" />
+
                     <NavLink href={`/admin/${slug}/settings`} icon={<Settings size={20} />} label="Settings" />
                 </nav>
 

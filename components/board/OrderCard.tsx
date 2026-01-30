@@ -5,13 +5,17 @@ import { updateOrderStatus } from "@/app/actions/order-actions";
 import { Clock, CheckCircle2, Printer, ArrowRight, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 
+import { getPreset } from "@/lib/presets";
+
 interface Props {
   order: Order;
   slug: string;
+  storeType: string;
 }
 
-export default function OrderCard({ order, slug }: Props) {
+export default function OrderCard({ order, slug, storeType }: Props) {
   const [loading, setLoading] = useState(false);
+  const preset = getPreset(storeType);
 
   const handleStatusUpdate = async (status: 'preparing' | 'ready') => {
     setLoading(true);
@@ -94,7 +98,7 @@ export default function OrderCard({ order, slug }: Props) {
                 className="col-span-2 btn-primary bg-blue-600 hover:bg-blue-700 border-none text-white py-4 text-lg flex items-center justify-center gap-2"
               >
                   <Play size={20} />
-                  {loading ? 'Updating...' : 'Start Processing'}
+                  {loading ? 'Updating...' : preset.processBtn}
               </button>
           )}
 
@@ -113,7 +117,7 @@ export default function OrderCard({ order, slug }: Props) {
                  className="col-span-2 btn-primary bg-green-600 hover:bg-green-700 border-none text-white py-4 text-lg flex items-center justify-center gap-2"
               >
                   <CheckCircle2 size={24} />
-                  {loading ? 'Updating...' : 'Notify & Complete'}
+                  {loading ? 'Updating...' : preset.completeBtn}
               </button>
           )}
        </div>

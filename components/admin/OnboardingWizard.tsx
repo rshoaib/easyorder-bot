@@ -45,7 +45,7 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
                     <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <Sparkles size={32} />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Let's set up your menu!</h2>
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Let's set up your store!</h2>
                     <p className="text-slate-500">
                         Choose a starting template below, and we'll add some sample items for you. You can edit or delete them later.
                     </p>
@@ -109,12 +109,12 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
                             <textarea 
                                 value={customPrompt}
                                 onChange={(e) => setCustomPrompt(e.target.value)}
-                                placeholder="e.g. A cozy vegan bakery in Seattle called 'Flour Power' serving gluten-free donuts and oat milk lattes."
+                                placeholder="e.g. A minimalist boutique in Austin selling handmade jewelry and soy candles, named 'Lumina'."
                                 className="w-full p-4 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[120px]"
                             />
                             <div className="mt-2 text-xs text-slate-500 flex items-center gap-1">
                                 <Sparkles size={12} className="text-purple-500" />
-                                We'll generate 8 menu items based on this description.
+                                We'll generate 8 catalog items based on this description.
                             </div>
                         </div>
                     </div>
@@ -126,7 +126,7 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
                         disabled={(mode === 'preset' && !selectedType) || (mode === 'ai' && !customPrompt) || isPending}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-12 rounded-xl transition-all shadow-lg shadow-indigo-200 disabled:opacity-50 disabled:shadow-none flex items-center gap-2"
                     >
-                        {isPending ? <Loader2 className="animate-spin" /> : "Generate Menu"}
+                        {isPending ? <Loader2 className="animate-spin" /> : "Generate Catalog"}
                     </button>
                 </div>
             </div>

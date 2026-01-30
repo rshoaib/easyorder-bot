@@ -5,14 +5,17 @@ import OrderCard from "./OrderCard";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
+import { getPreset } from "@/lib/presets";
 
 interface Props {
     orders: Order[];
     slug: string;
+    storeType: string;
 }
 
-export default function OrderBoard({ orders, slug }: Props) {
+export default function OrderBoard({ orders, slug, storeType }: Props) {
     const router = useRouter();
+    const preset = getPreset(storeType);
 
     useEffect(() => {
         // Poll for new orders every 30 seconds
@@ -30,8 +33,8 @@ export default function OrderBoard({ orders, slug }: Props) {
         <div className="min-h-screen bg-gray-50 p-6">
             <header className="flex justify-between items-center mb-8 print:hidden">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900">Active Orders</h1>
-                    <p className="text-gray-500">Live feed for {slug}</p>
+                    <h1 className="text-3xl font-extrabold text-gray-900">Live {preset.ordersLabel}</h1>
+                    <p className="text-gray-500">Incoming stream for {slug}</p>
                 </div>
                 <div className="flex items-center gap-4">
                      <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full text-sm font-medium shadow-sm border border-gray-100">
@@ -56,7 +59,7 @@ export default function OrderBoard({ orders, slug }: Props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {/* Prioritize Preparing, then Pending */}
                     {[...preparingOrders, ...pendingOrders].map(order => (
-                        <OrderCard key={order.id} order={order} slug={slug} />
+                        <OrderCard key={order.id} order={order} slug={slug} storeType={storeType} />
                     ))}
                 </div>
             )}

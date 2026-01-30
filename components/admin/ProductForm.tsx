@@ -7,10 +7,28 @@ import { useFormStatus } from "react-dom";
 
 import { uploadProductImage } from "@/lib/storage";
 import { useState } from "react";
+import { getPreset } from "@/lib/presets";
 
-export default function ProductForm({ tenantId, slug }: { tenantId: string, slug: string }) {
+interface Props {
+    tenantId: string;
+    slug: string;
+    storeType?: string;
+}
+
+export default function ProductForm({ tenantId, slug, storeType }: Props) {
     const [uploading, setUploading] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
+    
+    // Determine labels based on store type
+    // We can extend presets.ts or just handle simple logic here
+    const type = storeType || 'restaurant';
+    
+    const ingredientsLabel = {
+        restaurant: 'Ingredients',
+        retail: 'Specifications / Details',
+        service: 'Service Details',
+        digital: 'File / Access Details'
+    }[type] || 'Ingredients';
 
     async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length === 0) return;
@@ -76,8 +94,8 @@ export default function ProductForm({ tenantId, slug }: { tenantId: string, slug
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Description</label>
-                    <textarea name="description" rows={3} placeholder="Describe your delicious product..." className="w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" />
+                    <label className="text-sm font-medium text-slate-700">{ingredientsLabel}</label>
+                    <textarea name="description" rows={3} placeholder={type === 'restaurant' ? "Describe your delicious product..." : "Provide details..."} className="w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" />
                 </div>
 
                 <div className="space-y-2">

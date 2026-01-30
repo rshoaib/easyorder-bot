@@ -20,6 +20,7 @@ export interface Tenant {
     logoUrl?: string; // New: Branding Logo
     userId?: string; // Links to Supabase Auth User
     isOpen?: boolean; // Store Open/Closed Status
+    storeType?: 'restaurant' | 'retail' | 'service' | 'digital';
 }
 
 export interface Order {

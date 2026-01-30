@@ -23,6 +23,7 @@ async function updateSettings(formData: FormData) {
     const facebook = formData.get('facebook') as string;
     const metaPixelId = formData.get('metaPixelId') as string;
     const currency = formData.get('currency') as string;
+    const storeType = formData.get('storeType') as string;
     
     // Checkbox is "true" if checked, null if unchecked
     // But we need to be careful: if the user unchecks it, it won't be in formData at all.
@@ -36,7 +37,7 @@ async function updateSettings(formData: FormData) {
         return; // Or throw error, but silent return is safer for now to avoid crashing if UI bypass happens
     }
 
-    await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen);
+    await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType);
     revalidatePath(`/store/${slug}`);
     revalidatePath(`/store/${slug}/admin/settings`);
 }
@@ -82,7 +83,27 @@ export default async function SettingsPage({ params }: Props) {
                     <input type="hidden" name="id" value={tenant.id} />
                     <input type="hidden" name="slug" value={slug} />
 
-                    {/* Owner Phone */}
+                    {/* Store Type - NEW */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                             <span className="text-xl">🏪</span> Store Type (Preset)
+                        </label>
+                        <select 
+                            name="storeType" 
+                            defaultValue={tenant.storeType || 'restaurant'} 
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium bg-white"
+                        >
+                            <option value="restaurant">Restaurant (Food & Drinks)</option>
+                            <option value="retail">Retail (Physical Goods)</option>
+                            <option value="service">Service (Bookings/Appointments)</option>
+                            <option value="digital">Digital Products (Downloads)</option>
+                        </select>
+                        <p className="text-xs text-gray-500 mt-2">
+                            This changes the terminology used in your admin panel (e.g. "Kitchen" vs "Fulfillment").
+                        </p>
+                    </div>
+
+                    {/* Currency */}
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                              <Banknote size={16} className="text-gray-600" /> Store Currency

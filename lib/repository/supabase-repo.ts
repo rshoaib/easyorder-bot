@@ -192,7 +192,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             facebookUrl: data.facebook_url,
             metaPixelId: data.meta_pixel_id,
             userId: data.user_id,
-            isOpen: data.is_open ?? true // Default to true
+            isOpen: data.is_open ?? true, // Default to true
+            storeType: data.store_type || 'restaurant'
         };
     }
 
@@ -219,7 +220,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             customDomain: row.custom_domain,
             instagramUrl: row.instagram_url,
             facebookUrl: row.facebook_url,
-            metaPixelId: row.meta_pixel_id
+            metaPixelId: row.meta_pixel_id,
+            storeType: row.store_type || 'restaurant'
         }));
     }
 
@@ -317,7 +319,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string): Promise<void> {
         const updateData: any = {
             owner_phone: ownerPhone,
             instagram_url: instagramUrl,
@@ -339,6 +341,10 @@ export class SupabaseTenantRepository implements TenantRepository {
 
         if (logoUrl) {
             updateData.logo_url = logoUrl;
+        }
+
+        if (storeType) {
+            updateData.store_type = storeType;
         }
 
         const { error } = await this.client
@@ -373,7 +379,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             customDomain: data.custom_domain,
             instagramUrl: data.instagram_url,
             facebookUrl: data.facebook_url,
-            metaPixelId: data.meta_pixel_id
+            metaPixelId: data.meta_pixel_id,
+            storeType: data.store_type || 'restaurant'
         };
     }
 
