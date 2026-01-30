@@ -235,7 +235,7 @@ export const blogPosts: BlogPost[] = [
                  <a href="/store/journey-cafe" class="text-indigo-600 underline font-bold">Visit Demo Store</a>
             </div>
         `
-    }
+    },
     {
         slug: "sell-digital-products-whatsapp",
         title: "How to Sell Lightroom Presets & eBooks on WhatsApp",
