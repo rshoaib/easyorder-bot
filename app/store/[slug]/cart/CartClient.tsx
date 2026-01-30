@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import axios from 'axios';
 import { validatePromoCode } from "@/app/actions/promo-actions";
+import { sendGAEvent } from '@next/third-parties/google';
 
 // Helper to calc discount
 function calculateDiscount(subtotal: number, promo: any) {
@@ -160,6 +161,19 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
             });
 
             if (response.data.success) {
+                // Google Analytics Conversion Tracking
+                sendGAEvent('event', 'purchase', {
+                    transaction_id: response.data.orderId || Date.now().toString(),
+                    value: finalTotal,
+                    currency: 'USD',
+                    items: items.map(item => ({
+                        item_id: item.id,
+                        item_name: item.name,
+                        price: item.price,
+                        quantity: item.quantity
+                    }))
+                });
+
                 clearCart();
                 
                 if (response.data.whatsappNumber) {
