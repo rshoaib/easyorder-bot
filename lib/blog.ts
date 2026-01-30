@@ -236,6 +236,78 @@ export const blogPosts: BlogPost[] = [
             </div>
         `
     }
+    {
+        slug: "sell-digital-products-whatsapp",
+        title: "How to Sell Lightroom Presets & eBooks on WhatsApp",
+        excerpt: "Selling digital files? Don't pay Gumroad fees. Use WhatsApp to verify payments and build personal connections.",
+        date: "2026-02-01",
+        author: "Riz",
+        category: "Digital",
+        coverImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">Creators are moving away from faceless platforms. Selling directly via WhatsApp allows you to build a community, not just a customer list.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The "Personal Touch" Strategy</h2>
+            <p class="mb-4 text-lg">When someone buys your eBook or Preset, sending it personally via chat adds high value. It allows you to ask: <em>"Let me know if you need help installing it!"</em></p>
+            
+            <div class="my-10 bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-indigo-900 mb-2">Why WhatsApp?</h3>
+                <p class="text-indigo-700">Open rates on WhatsApp are <strong>98%</strong>. Email is only 20%. If you launch a new product, you want to be in their chat list, not their spam folder.</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">How to Setup Your Digital Store</h2>
+            <ol class="list-decimal pl-6 mb-6 space-y-4 text-lg">
+                <li>
+                    <strong>Set Store Type to 'Digital':</strong> 
+                    <p class="text-sm text-slate-500 mt-1">Go to Settings and select "Digital Products". This changes your button labels to "Download" and "Send Files".</p>
+                </li>
+                <li>
+                    <strong>Upload Your Cover Art:</strong> 
+                    <p class="text-sm text-slate-500 mt-1">Make sure your product images look premium. Use our Social Asset Generator to create launch posts.</p>
+                </li>
+            </ol>
+
+            <div class="my-8 rounded-xl overflow-hidden shadow-lg border border-slate-200">
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop" alt="Digital Product Dashboard" class="w-full h-auto" />
+                <div class="bg-slate-50 p-3 text-center text-sm text-slate-500">Manage your digital assets easily</div>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Fulfillment Workflow</h2>
+            <p class="mb-4 text-lg">1. Customer places order.<br>2. You receive WhatsApp alert.<br>3. You reply with the file or Dropbox link.<br>4. You ask related question to start conversation.</p>
+        `
+    },
+    {
+        slug: "start-instagram-thrift-store",
+        title: "Start Your Instagram Thrift Store in 5 Minutes",
+        excerpt: "Stop fighting in the comments section with 'Sold/Nil'. Automate your thrift drops with a proper store link.",
+        date: "2026-02-02",
+        author: "Fashion Team",
+        category: "Retail",
+        coverImage: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">The hardest part of a Thrift Drop? Managing the chaos of DM requests. <em>"Is this available?"</em> <em>"Can I measure the pit-to-pit?"</em></p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The "Drop" Model</h2>
+            <p class="mb-4 text-lg">Instead of posting 50 Stories and tracking replies manually:</p>
+            
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-lg">
+                <li>Upload all 50 items to your OrderViaChat store.</li>
+                <li>Set the store to <strong>Retail Mode</strong>.</li>
+                <li>Post ONE link in your Story: <em>"Drop is Live! Link in bio."</em></li>
+            </ul>
+
+            <div class="my-8 rounded-xl overflow-hidden shadow-lg border border-slate-200">
+                <img src="https://images.unsplash.com/photo-1555529771-835f59fc5efe?q=80&w=1000&auto=format&fit=crop" alt="Clothing Rack" class="w-full h-auto" />
+                <div class="bg-slate-50 p-3 text-center text-sm text-slate-500">Organize your inventory instantly</div>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Why It Works</h2>
+            <p class="mb-4 text-lg"><strong>Scarcity.</strong> When customers see items disappearing from the site in real-time, they buy faster. No waiting for you to reply to a DM.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Using the Marketing Tools</h2>
+            <p class="mb-6 text-lg">Use our new <strong>Store QR Code</strong> generator. Print it on a sticker and put it on every package you ship. Turn one-time buyers into repeat customers.</p>
+        `
+    }
 ];
 
 export async function getPost(slug: string): Promise<BlogPost | undefined> {
