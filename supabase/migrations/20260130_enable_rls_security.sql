@@ -51,3 +51,21 @@ USING (
     SELECT user_id FROM tenants WHERE id = promo_codes.tenant_id
   )
 );
+
+-- Enable RLS on Tenants (CRITICAL FIX)
+ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Public can view active tenants (Storefront access)
+CREATE POLICY "Public can view active tenants" 
+ON tenants FOR SELECT 
+USING (true);
+
+-- Policy: Owners can update their own tenant settings
+CREATE POLICY "Owners can update their own tenant" 
+ON tenants FOR UPDATE
+USING (auth.uid() = user_id);
+
+-- Policy: Owners can verify their own tenant
+CREATE POLICY "Owners can view their own tenant" 
+ON tenants FOR SELECT 
+USING (auth.uid() = user_id);
