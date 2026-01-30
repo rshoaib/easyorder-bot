@@ -116,6 +116,125 @@ export const blogPosts: BlogPost[] = [
                 <a href="/register" class="inline-block bg-white text-indigo-600 px-8 py-4 rounded-full font-bold hover:scale-105 transition-all shadow-lg">Create your free store &rarr;</a>
             </div>
         `
+    },
+    {
+        slug: "stop-paying-commission-fees",
+        title: "Stop Paying 30% Commissions to Delivery Apps",
+        excerpt: " Delivery apps are eating your profits. Here is how to take back control with your own direct ordering system.",
+        date: "2026-01-29",
+        author: "OrderViaChat Team",
+        category: "Profitability",
+        coverImage: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">If you sell $1000 of food on a delivery app, you might only keep $700. For small businesses operating on thin margins, that 30% cut is the difference between survival and success.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The "Convenience" Trap</h2>
+            <p class="mb-4 text-lg">Apps promise exposure, but they charge for it. They also own <strong>your customer data</strong>. You don't know who ordered, so you can't market to them again.</p>
+            
+            <div class="my-10 bg-red-50 border-l-4 border-red-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-red-900 mb-2">The Real Cost</h3>
+                <p class="text-red-700">Commission Fees + Marketing Fees + Service Fees = <strong>Bleeding Profits</strong>.</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Direct Ordering Alternative</h2>
+            <p class="mb-4 text-lg">With <strong>OrderViaChat</strong>, you get your own branded store link. You pay <strong>0% commission</strong> on orders.</p>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-lg">
+                <li>Keep 100% of your sales.</li>
+                <li>Own your customer relationships.</li>
+                <li>Build your own brand, not the app's brand.</li>
+            </ul>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">How to Switch Customers Over?</h2>
+            <p class="mb-4 text-lg">It's easier than you think:</p>
+            <ol class="list-decimal pl-6 mb-6 space-y-2 text-lg">
+                <li>Put a simplified "Direct Order" menu in your bag staples.</li>
+                <li>Offer a "10% OFF" coupon for their next direct order (you still save money vs. commission!).</li>
+                <li>Share your OrderViaChat link on Instagram and WhatsApp.</li>
+            </ol>
+            
+            <div class="bg-indigo-900 text-white p-8 rounded-2xl mt-12 text-center">
+                <h3 class="text-2xl font-bold mb-4">Calculate Your Savings</h3>
+                <p class="mb-6">Switching just 10 customers a day to direct ordering can save you over <strong>$1000/month</strong>.</p>
+                <a href="/register" class="inline-block bg-white text-indigo-900 px-6 py-3 rounded-full font-bold hover:bg-indigo-50 transition-colors">Start Saving Today</a>
+            </div>
+        `
+    },
+    {
+        slug: "build-menu-seconds-ai-generator",
+        title: "Build Your Online Menu in 10 Seconds with AI",
+        excerpt: "Dreading the setup process? Our new AI Magic Generator creates your entire store from a single sentence.",
+        date: "2026-01-30",
+        author: "Tech Team",
+        category: "Product Update",
+        coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">"I don't have time to type out 50 items." We heard you. That's why we built the <strong>AI Menu Generator</strong>.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">How it Works</h2>
+            <p class="mb-4 text-lg">It's really simple:</p>
+            <ol class="list-decimal pl-6 mb-6 space-y-2 text-lg">
+                <li>Sign up for a new store.</li>
+                <li>Type what you sell (e.g., "Vegan Bakery in Austin").</li>
+                <li><strong>Magic happens.</strong></li>
+            </ol>
+            
+            <div class="my-8 rounded-xl overflow-hidden shadow-lg border border-slate-200">
+                <!-- Placeholder for GIF/Video in future -->
+                <div class="bg-slate-100 p-12 text-center font-mono text-slate-400">
+                    [AI Generating Menu...]
+                </div>
+                <div class="bg-indigo-50 p-4 text-center text-sm text-indigo-700 font-bold">
+                    🚀 Generates Items, Descriptions, and Prices instantly.
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Why Use AI?</h2>
+            <p class="mb-4 text-lg">It's not just about speed. The AI writes <strong>mouth-watering descriptions</strong> that sell better than "Burger - $10".</p>
+            <p class="mb-4 text-lg"><em>"Juicy grass-fed beef patty topped with melted cheddar, crisp lettuce, and our secret sauce on a toasted brioche bun."</em> - The AI writes this for you.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Try it Free</h2>
+            <p class="mb-6 text-lg">You don't need to be tech-savvy. If you can text, you can build a store. </p>
+            
+             <a href="/register" class="block w-full text-center bg-indigo-600 text-white px-6 py-4 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
+                Try the AI Generator Now &rarr;
+            </a>
+        `
+    },
+    {
+        slug: "why-cafe-needs-qr-menu",
+        title: "Why Your Coffee Shop Needs a QR Menu",
+        excerpt: "Physical menus are expensive, dirty, and hard to update. Switch to a dynamic QR code system today.",
+        date: "2026-01-30",
+        author: "Riz",
+        category: "Marketing",
+        coverImage: "https://images.unsplash.com/photo-1595079676614-789e02a46b2f?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">The paper menu is dying. It's time to embrace the <strong>QR Code Revolution</strong>.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">1. Instant Updates</h2>
+            <p class="mb-4 text-lg">Ran out of Avocados? With a paper menu, you have to tell every waiter or use an ugly marker. With a digital QR menu, you just toggle it "Off" in your dashboard. Boom. Done.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">2. It's Cleaner</h2>
+            <p class="mb-4 text-lg">Post-2020, nobody likes touching a sticky laminated menu. A QR code on the table is contactless and hygienic.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">3. Faster Ordering</h2>
+            <p class="mb-4 text-lg">Customers can browse photos of your food instantly on their phone. Visuals increase appetite and order size.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Get Your Free QR Code</h2>
+            <p class="mb-4 text-lg">Our <strong>Marketing Hub</strong> now lets you generate a high-quality QR code for your store in one click.</p>
+            <ul class="list-disc pl-6 mb-8 space-y-2 text-lg">
+                <li>Log in to your Admin Dashboard.</li>
+                <li>Go to <strong>Marketing</strong>.</li>
+                <li>Download your Code.</li>
+                <li>Print it and stick it on your tables!</li>
+            </ul>
+            
+            <div class="border-2 border-dashed border-indigo-200 bg-indigo-50 p-8 rounded-2xl text-center">
+                 <h3 class="font-bold text-indigo-900 mb-2">Need a demo?</h3>
+                 <p class="mb-4 text-indigo-700">See how it works at our Journey Cafe.</p>
+                 <a href="/store/journey-cafe" class="text-indigo-600 underline font-bold">Visit Demo Store</a>
+            </div>
+        `
     }
 ];
 
