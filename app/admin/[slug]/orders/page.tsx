@@ -13,7 +13,7 @@ export default async function OrdersPage({ params }: { params: { slug: string } 
 
     return (
         <div className="max-w-7xl mx-auto">
-            <OrderBoard orders={orders} slug={slug} />
+            <OrderBoard orders={orders} slug={slug} storeType={tenant.storeType || 'restaurant'} />
         </div>
     );
 }
