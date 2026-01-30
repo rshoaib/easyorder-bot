@@ -8,7 +8,7 @@ import { Order } from "@/lib/repository/types";
 import Link from "next/link";
 import { LanguageSelector } from "@/components/admin/LanguageSelector";
 import { DomainSettings } from "@/components/admin/DomainSettings";
-import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag, Settings, Menu } from 'lucide-react';
+import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag, Settings, Menu, Share2 } from 'lucide-react';
 import StatusSelector from '@/components/admin/StatusSelector';
 
 export const dynamic = 'force-dynamic';
@@ -112,6 +112,12 @@ export default async function AdminPage({ params }: Props) {
                     <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm">
                         <Tag size={16} />
                         Promos
+                    </button>
+                 </Link>
+                 <Link href={`/store/${slug}/admin/marketing`}>
+                    <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm">
+                        <Share2 size={16} />
+                        Marketing
                     </button>
                  </Link>
                  <Link href={`/store/${slug}/admin/settings`}>
