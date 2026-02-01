@@ -307,6 +307,86 @@ export const blogPosts: BlogPost[] = [
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Using the Marketing Tools</h2>
             <p class="mb-6 text-lg">Use our new <strong>Store QR Code</strong> generator. Print it on a sticker and put it on every package you ship. Turn one-time buyers into repeat customers.</p>
         `
+    },
+    {
+        slug: "automate-service-appointments-whatsapp",
+        title: "The End of 'Are You Free at 5?' - Automating Appointments",
+        excerpt: "Tired of playing phone tag? Use WhatsApp to let clients book services directly, without the back-and-forth.",
+        date: "2026-02-03",
+        author: "Riz",
+        category: "Service",
+        coverImage: "https://images.unsplash.com/photo-1521590832896-bc17251e32dc?q=80&w=2600&auto=format&fit=crop", // Barber/Service image
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">If you are a barber, tutor, or nail tech, you know the pain. You are in the middle of work, and your phone buzzes: <em>"Hey, do you have a slot for tomorrow?"</em></p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Disruption Cost</h2>
+            <p class="mb-4 text-lg">Every time you stop to reply, you lose focus. If you don't reply fast enough, they go somewhere else. It's a lose-lose.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Turn Procedures into Products</h2>
+            <p class="mb-4 text-lg">With OrderViaChat's <strong>Service Mode</strong>, you treat your time slots like products on a shelf.</p>
+            
+            <div class="my-10 bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-indigo-900 mb-2">How it Setup</h3>
+                <ul class="list-disc pl-6 space-y-2 text-indigo-700">
+                    <li><strong>Product Name:</strong> "Haircut (1 Hour)"</li>
+                    <li><strong>Variants:</strong> "Morning Slot", "Evening Slot"</li>
+                    <li><strong>Price:</strong> $30</li>
+                </ul>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The New Flow</h2>
+            <ol class="list-decimal pl-6 mb-8 space-y-3 text-lg">
+                <li>Client clicks your link.</li>
+                <li>They select "Haircut" and choose "Afternoon".</li>
+                <li>They hit "Book on WhatsApp".</li>
+            </ol>
+            
+            <p class="mb-6 text-lg">You receive a message: <strong>"New Booking: Haircut (Afternoon) - $30"</strong>. All you have to do is reply with a thumbs up 👍. Done.</p>
+
+            <div class="bg-indigo-900 text-white p-8 rounded-2xl mt-12 text-center">
+                <h3 class="text-2xl font-bold mb-4">Reclaim Your Time</h3>
+                <p class="mb-6">Stop being a receptionist. Be a professional.</p>
+                <a href="/register" class="inline-block bg-white text-indigo-900 px-6 py-3 rounded-full font-bold hover:bg-indigo-50 transition-colors">Create Service Store</a>
+            </div>
+        `
+    },
+    {
+        slug: "whatsapp-vs-website-conversion-rate",
+        title: "WhatsApp vs. Website: Why Chat Converts 5x Better",
+        excerpt: "Traditional websites are lonely. WhatsApp is personal. Data shows why moving to chat-commerce skyrockets sales.",
+        date: "2026-02-03",
+        author: "Data Team",
+        category: "Growth",
+        coverImage: "https://images.unsplash.com/photo-1611605698335-8b15f5c2db0e?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">The average E-commerce conversion rate is <strong>2%</strong>. That means for every 100 visitors, 98 leave without buying. Why?</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Trust Issues</h2>
+            <p class="mb-4 text-lg">On a website, customers wonder: <em>"Is this legit? Will it arrive?"</em> There is no one to ask. It feels risky.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The WhatsApp Advantage</h2>
+            <p class="mb-4 text-lg">When a customer clicks "Order on WhatsApp", they are starting a <strong>conversation</strong>, not just a transaction.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 my-10">
+                <div class="bg-green-50 p-6 rounded-2xl border border-green-100">
+                    <h3 class="text-2xl font-bold text-green-800 mb-2">98%</h3>
+                    <p class="text-green-700 font-medium">Open Rate</p>
+                    <p class="text-sm text-green-600 mt-2">Everyone checks WhatsApp. Emails get ignored.</p>
+                </div>
+                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                    <h3 class="text-2xl font-bold text-blue-800 mb-2">10-15%</h3>
+                    <p class="text-blue-700 font-medium">Conversion Rate</p>
+                    <p class="text-sm text-blue-600 mt-2">Chat-based sales convert 5x higher than cart-based sales.</p>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The "Micro-Commitment" Psychology</h2>
+            <p class="mb-4 text-lg">Clicking "Send" on WhatsApp doesn't feel like "spending money" yet—it feels like "asking a question". This lowers the barrier to entry.</p>
+            <p class="mb-4 text-lg">Once they are talking to you, your chances of closing the sale explode.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Retargeting is Free</h2>
+            <p class="mb-6 text-lg">With a website, if they leave, you have to pay Facebook Ads to find them again. With WhatsApp, <strong>you have their number</strong>. You can save it and post a Status update next week for free.</p>
+        `
     }
 ];
 
