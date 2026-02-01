@@ -207,7 +207,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-30",
         author: "Riz",
         category: "Marketing",
-        coverImage: "https://images.unsplash.com/photo-1595079676614-789e02a46b2f?q=80&w=2600&auto=format&fit=crop",
+        coverImage: "https://images.unsplash.com/photo-1599351431202-0e6713407779?q=80&w=2600&auto=format&fit=crop",
         content: `
             <p class="mb-6 text-xl text-slate-600 leading-relaxed">The paper menu is dying. It's time to embrace the <strong>QR Code Revolution</strong>.</p>
             
