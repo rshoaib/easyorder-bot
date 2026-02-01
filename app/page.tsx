@@ -351,6 +351,7 @@ export default async function Home() {
               <ul className="space-y-4 text-sm">
                  <li className="hover:text-white cursor-pointer transition-colors">Features</li>
                  <li className="hover:text-white cursor-pointer transition-colors">Pricing</li>
+                 <li className="hover:text-white cursor-pointer transition-colors"><Link href="/blog">Blog</Link></li>
                  <li className="hover:text-white cursor-pointer transition-colors">Showcase</li>
               </ul>
            </div>
