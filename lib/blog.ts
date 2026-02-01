@@ -297,7 +297,7 @@ export const blogPosts: BlogPost[] = [
             </ul>
 
             <div class="my-8 rounded-xl overflow-hidden shadow-lg border border-slate-200">
-                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop" alt="Clothing Rack" class="w-full h-auto" />
+                <img src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=1000&auto=format&fit=crop" alt="Clothing Rack" class="w-full h-auto" />
                 <div class="bg-slate-50 p-3 text-center text-sm text-slate-500">Organize your inventory instantly</div>
             </div>
 
@@ -315,7 +315,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-02-03",
         author: "Riz",
         category: "Service",
-        coverImage: "https://images.unsplash.com/photo-1599351431202-0e6713407779?q=80&w=2600&auto=format&fit=crop", // Barber/Service image
+        coverImage: "https://images.unsplash.com/photo-1493217465235-252dd9c0d632?q=80&w=2600&auto=format&fit=crop", // Barber/Service image
         content: `
             <p class="mb-6 text-xl text-slate-600 leading-relaxed">If you are a barber, tutor, or nail tech, you know the pain. You are in the middle of work, and your phone buzzes: <em>"Hey, do you have a slot for tomorrow?"</em></p>
             
