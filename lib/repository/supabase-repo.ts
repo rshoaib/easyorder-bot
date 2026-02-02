@@ -3,9 +3,15 @@ import { Order, OrderRepository, Product, ProductRepository, OrderStatus } from 
 import { supabase } from '../supabase';
 
 export class SupabaseOrderRepository implements OrderRepository {
+    private client: SupabaseClient;
+
+    constructor(client: SupabaseClient | null = null) {
+        this.client = client || supabase;
+    }
+
     async saveOrder(order: Order): Promise<void> {
         // Flatten structure for SQL
-        const { error } = await supabase
+        const { error } = await this.client
             .from('orders')
             .insert({
                 id: order.id,
@@ -28,7 +34,7 @@ export class SupabaseOrderRepository implements OrderRepository {
     }
 
     async getOrders(tenantId: string): Promise<Order[]> {
-        const { data, error } = await supabase
+        const { data, error } = await this.client
             .from('orders')
             .select('*')
             .eq('tenant_id', tenantId)
@@ -403,9 +409,15 @@ export class SupabaseTenantRepository implements TenantRepository {
 import { AnalyticsRepository, AnalyticsSummary } from './types';
 
 export class SupabaseAnalyticsRepository implements AnalyticsRepository {
+    private client: SupabaseClient;
+
+    constructor(client: SupabaseClient | null = null) {
+        this.client = client || supabase;
+    }
+
     async getSummary(tenantId: string): Promise<AnalyticsSummary> {
         // Total Orders
-        const { count, error: countError } = await supabase
+        const { count, error: countError } = await this.client
             .from('orders')
             .select('*', { count: 'exact', head: true })
             .eq('tenant_id', tenantId);
@@ -414,7 +426,7 @@ export class SupabaseAnalyticsRepository implements AnalyticsRepository {
 
         // Revenue Calculation (This is heavy for client-side if many orders, but okay for MVP)
         // Ideally, we would use a Supabase Database Function (RPC) for this aggregation.
-        const { data: revenueData, error: revenueError } = await supabase
+        const { data: revenueData, error: revenueError } = await this.client
             .from('orders')
             .select('total, date')
             .eq('tenant_id', tenantId);

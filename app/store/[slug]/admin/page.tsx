@@ -1,3 +1,4 @@
+import { createClient } from "@/utils/supabase/server";
 import OnboardingWizard from "@/components/admin/OnboardingWizard";
 import QuickStartGuide from "@/components/admin/QuickStartGuide";
 import StoreStatusToggle from "@/components/admin/StoreStatusToggle";
@@ -20,17 +21,18 @@ interface Props {
 }
 
 async function getOrders(slug: string) {
-  const tenantRepo = getTenantRepository();
+  const supabase = await createClient();
+  const tenantRepo = getTenantRepository(supabase);
   const tenant = await tenantRepo.getTenantBySlug(slug);
   if (!tenant) return { orders: [], tenant: null, analytics: null, productCount: 0 };
   
-  const repo = getOrderRepository();
+  const repo = getOrderRepository(supabase);
   const orders = await repo.getOrders(tenant.id);
   
-  const analyticsRepo = getAnalyticsRepository();
+  const analyticsRepo = getAnalyticsRepository(supabase);
   const analytics = await analyticsRepo.getSummary(tenant.id);
 
-  const productRepo = getProductRepository();
+  const productRepo = getProductRepository(supabase);
   const products = await productRepo.getProducts(tenant.id);
 
   // Ensure strict date sorting desc
