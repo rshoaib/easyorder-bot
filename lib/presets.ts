@@ -50,7 +50,7 @@ export function getPreset(type?: string): PresetConfig {
     return STORE_PRESETS[key] || STORE_PRESETS.restaurant;
 }
 
-export type PresetType = 'pizza' | 'coffee' | 'burger' | 'clothing';
+export type PresetType = 'pizza' | 'coffee' | 'burger' | 'clothing' | 'barber' | 'ebook';
 
 export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; products: any[] }> = {
     pizza: {
@@ -83,6 +83,22 @@ export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; pro
         products: [
             { name: "Summer Dress", price: 45, category: "Women", description: "Floral pattern, lightweight.", image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=500" },
             { name: "Denim Jacket", price: 60, category: "Outerwear", description: "Classic blue denim.", image: "https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?auto=format&fit=crop&w=500" }
+        ]
+    },
+    barber: {
+        label: "Barber / Salon",
+        icon: "✂️",
+        products: [
+            { name: "Haircut (1 Hour)", price: 30, category: "Services", description: "Standard cut & style.", image: "https://images.unsplash.com/photo-1599351431202-0e6713407779?auto=format&fit=crop&w=500", type: "service" },
+            { name: "Beard Trim", price: 15, category: "Services", description: "Shape up and trim.", image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=500", type: "service" }
+        ]
+    },
+    ebook: {
+        label: "Digital Store",
+        icon: "📱",
+        products: [
+            { name: "Lightroom Presets Pack", price: 19, category: "Downloads", description: "10 Pro filters for your photos.", image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=500", type: "digital" },
+            { name: "Photography Guide (PDF)", price: 9, category: "E-Books", description: "Learn to shoot like a pro.", image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=500", type: "digital" }
         ]
     }
 };
