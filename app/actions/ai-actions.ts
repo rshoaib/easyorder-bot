@@ -42,31 +42,46 @@ export async function generateMenu(slug: string, businessDescription: string) {
         const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
         const prompt = `
-            You are a menu engineering expert. Create a list of 8 diverse and appealing menu items for a business described as: "${businessDescription}".
+            You are a menu engineering expert.
+            1. Analyze this business description: "${businessDescription}"
+            2. Classify it into one of these types: "restaurant", "retail", "service", "digital".
+            3. Create a list of 8 diverse and appealing items for this business.
             
-            Return ONLY a valid JSON array of objects. Do not include markdown formatting like \`\`\`json.
-            Each object should have:
-            - name: string (creative name)
-            - description: string (appetizing, under 120 chars)
-            - price: number (realistic price in USD, just the number)
-            - category: string (e.g. "Mains", "Drinks", "Dessert")
-            
-            Example: [{"name": "Classic Burger", "description": "Juicy beef patty...", "price": 12.5, "category": "Mains"}]
+            Return ONLY a valid JSON object with this structure:
+            {
+              "storeType": "restaurant" | "retail" | "service" | "digital",
+              "items": [
+                {
+                  "name": "string",
+                  "description": "string (under 120 chars)",
+                  "price": number,
+                  "category": "string"
+                }
+              ]
+            }
         `;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
+        // Clean up markdown code blocks if present
         const text = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
 
-        const menuItems = JSON.parse(text);
+        const data = JSON.parse(text);
 
-        if (!Array.isArray(menuItems) || menuItems.length === 0) {
+        if (!data.items || !Array.isArray(data.items)) {
             throw new Error("Invalid AI response format");
         }
 
-        const productRepo = getProductRepository();
+        const inferredType = data.storeType || 'restaurant';
+        // Map store type to product type
+        let productType: 'physical' | 'digital' | 'service' = 'physical';
+        if (inferredType === 'service') productType = 'service';
+        if (inferredType === 'digital') productType = 'digital';
 
-        for (const item of menuItems) {
+        const productRepo = getProductRepository();
+        const tenantRepo = getTenantRepository();
+
+        for (const item of data.items) {
             await productRepo.addProduct({
                 id: crypto.randomUUID(),
                 tenantId: tenant.id,
@@ -76,17 +91,31 @@ export async function generateMenu(slug: string, businessDescription: string) {
                 category: item.category,
                 image: '', // Placeholder
                 isAvailable: true,
-                type: 'physical'
+                type: productType
             });
         }
+
+        // Update Tenant Store Type
+        await tenantRepo.updateTenantSettings(
+            tenant.id,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            inferredType
+        );
 
         revalidatePath(`/store/${slug}/menu`);
         revalidatePath(`/store/${slug}/admin`);
 
-        return { success: true, count: menuItems.length };
+        return { success: true, count: data.items.length, type: inferredType };
 
     } catch (error: any) {
         console.error('Error generating menu:', error);
-        return { success: false, message: error.message || 'Failed to generate menu.' };
+        return { success: false, message: error instanceof Error ? error.message : 'Failed to generate menu.' };
     }
 }

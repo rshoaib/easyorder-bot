@@ -52,10 +52,11 @@ export function getPreset(type?: string): PresetConfig {
 
 export type PresetType = 'pizza' | 'coffee' | 'burger' | 'clothing' | 'barber' | 'ebook';
 
-export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; products: any[] }> = {
+export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; storeType: StoreType; products: any[] }> = {
     pizza: {
         label: "Pizza Place",
         icon: "🍕",
+        storeType: "restaurant",
         products: [
             { name: "Mega Cheese", price: 12, category: "Pizza", description: "Mozzarella overload.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500" },
             { name: "Pepperoni Feast", price: 14, category: "Pizza", description: "Classic spicy pepperoni.", image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=500" }
@@ -64,6 +65,7 @@ export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; pro
     coffee: {
         label: "Coffee Shop",
         icon: "☕",
+        storeType: "restaurant",
         products: [
             { name: "Latte", price: 4.5, category: "Coffee", description: "Smooth espresso with steamed milk.", image: "https://images.unsplash.com/photo-1570968992077-02b28c5c1632?auto=format&fit=crop&w=500" },
             { name: "Croissant", price: 3.5, category: "Bakery", description: "Buttery and flaky.", image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=500" }
@@ -72,6 +74,7 @@ export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; pro
     burger: {
         label: "Burger Joint",
         icon: "🍔",
+        storeType: "restaurant",
         products: [
             { name: "Classic Cheeseburger", price: 10, category: "Burgers", description: "Beef patty with cheddar.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500" },
             { name: "Fries", price: 4, category: "Sides", description: "Crispy salted fries.", image: "https://images.unsplash.com/photo-1573080496987-a2267f10a625?auto=format&fit=crop&w=500" }
@@ -80,6 +83,7 @@ export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; pro
     clothing: {
         label: "Fashion Store",
         icon: "👗",
+        storeType: "retail",
         products: [
             { name: "Summer Dress", price: 45, category: "Women", description: "Floral pattern, lightweight.", image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=500" },
             { name: "Denim Jacket", price: 60, category: "Outerwear", description: "Classic blue denim.", image: "https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?auto=format&fit=crop&w=500" }
@@ -88,6 +92,7 @@ export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; pro
     barber: {
         label: "Barber / Salon",
         icon: "✂️",
+        storeType: "service",
         products: [
             { name: "Haircut (1 Hour)", price: 30, category: "Services", description: "Standard cut & style.", image: "https://images.unsplash.com/photo-1599351431202-0e6713407779?auto=format&fit=crop&w=500", type: "service" },
             { name: "Beard Trim", price: 15, category: "Services", description: "Shape up and trim.", image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=500", type: "service" }
@@ -96,6 +101,7 @@ export const PRESET_MENUS: Record<PresetType, { label: string; icon: string; pro
     ebook: {
         label: "Digital Store",
         icon: "📱",
+        storeType: "digital",
         products: [
             { name: "Lightroom Presets Pack", price: 19, category: "Downloads", description: "10 Pro filters for your photos.", image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=500", type: "digital" },
             { name: "Photography Guide (PDF)", price: 9, category: "E-Books", description: "Learn to shoot like a pro.", image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=500", type: "digital" }

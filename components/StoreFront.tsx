@@ -205,7 +205,11 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
             
             <div>
                  <h3 className="font-bold text-sm mb-1 line-clamp-1">{product.name}</h3>
-                 <p className="text-xs text-gray-500 uppercase tracking-wide line-clamp-1">{product.category}</p>
+                 <div className="flex items-center gap-2 mb-1">
+                     <p className="text-xs text-gray-500 uppercase tracking-wide line-clamp-1">{product.category}</p>
+                     {product.type === 'service' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">SERVICE</span>}
+                     {product.type === 'digital' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">DIGITAL</span>}
+                 </div>
                  <div className="mt-2 text-lg font-bold">
                     {tenant.currency}{Number(product.price).toFixed(2)}
                  </div>
