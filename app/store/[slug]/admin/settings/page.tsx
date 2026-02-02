@@ -43,6 +43,7 @@ async function updateSettings(formData: FormData) {
 }
 
 import BrandingSettings from "./BrandingSettings";
+import DeleteStoreButton from "@/components/admin/DeleteStoreButton";
 
 export default async function SettingsPage({ params }: Props) {
     const { slug } = await params;
@@ -219,6 +220,17 @@ export default async function SettingsPage({ params }: Props) {
                         </button>
                     </div>
                 </form>
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-gray-200">
+                <h3 className="text-sm font-bold text-red-600 mb-2 uppercase tracking-wider">Danger Zone</h3>
+                <div className="bg-red-50 border border-red-100 rounded-xl p-6 flex items-center justify-between">
+                    <div>
+                        <h4 className="font-bold text-red-900">Delete this store</h4>
+                        <p className="text-sm text-red-700 mt-1">Once you delete a store, there is no going back. Please be certain.</p>
+                    </div>
+                    <DeleteStoreButton slug={slug} tenantId={tenant.id} />
+                </div>
             </div>
         </main>
     );

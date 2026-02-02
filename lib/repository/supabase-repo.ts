@@ -180,6 +180,7 @@ export class SupabaseTenantRepository implements TenantRepository {
             .single();
 
         if (error || !data) return null;
+        if (data.status === 'disabled') return null;
 
         return {
             id: data.id,
@@ -207,6 +208,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         const { data, error } = await this.client
             .from('tenants')
             .select('*')
+            .neq('status', 'disabled')
             .order('created_at', { ascending: false });
 
         if (error) return [];
@@ -294,6 +296,7 @@ export class SupabaseTenantRepository implements TenantRepository {
             .single();
 
         if (error || !data) return null;
+        if (data.status === 'disabled') return null;
 
         return {
             id: data.id,
@@ -400,6 +403,22 @@ export class SupabaseTenantRepository implements TenantRepository {
         const { error } = await this.client
             .from('tenants')
             .update(updateData)
+            .eq('id', id);
+
+        if (error) throw new Error(error.message);
+    }
+
+    async deleteTenant(id: string): Promise<void> {
+        // Soft delete: set status to disabled and rename slug to free it up
+        const { data: tenant } = await this.client.from('tenants').select('slug').eq('id', id).single();
+        const newSlug = `${tenant?.slug || 'deleted'}-deleted-${Date.now()}`;
+
+        const { error } = await this.client
+            .from('tenants')
+            .update({
+                status: 'disabled',
+                slug: newSlug
+            })
             .eq('id', id);
 
         if (error) throw new Error(error.message);

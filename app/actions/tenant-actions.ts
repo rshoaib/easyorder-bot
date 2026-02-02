@@ -2,6 +2,7 @@
 
 import { getTenantRepository } from "@/lib/repository";
 import { revalidatePath } from "next/cache";
+import { createClient } from "@/utils/supabase/server";
 
 import { verifyTenantOwnership } from "@/lib/auth/security";
 
@@ -28,9 +29,25 @@ export async function toggleStoreStatus(tenantId: string, slug: string, isOpen: 
         isOpen
     );
 
-    revalidatePath(`/store/${slug}`);
-    revalidatePath(`/store/${slug}/admin`);
     revalidatePath(`/store/${slug}/admin/settings`);
 
     return { success: true };
+}
+
+export async function deleteStore(slug: string, tenantId: string) {
+    try {
+        // Security Check
+        await verifyTenantOwnership(slug);
+
+        const supabase = await createClient();
+        const repo = getTenantRepository(supabase);
+        await repo.deleteTenant(tenantId);
+
+        return { success: true };
+    } catch (error: any) {
+        console.error("DELETE STORE ERROR:", error);
+        // Return error to client if we update the component to handle it, 
+        // but for now this helps debugging in server logs.
+        throw error;
+    }
 }

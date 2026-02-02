@@ -5,7 +5,30 @@ import { Building2, Plus, ExternalLink, Lock } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+
 export default async function SuperAdminPage() {
+    // 1. Check for Master Password Cookie
+    const cookiesInfo = await cookies();
+    const hasSuperAuth = cookiesInfo.get('super_auth')?.value === 'true';
+
+    if (hasSuperAuth) {
+        // Authorized via Master Password
+    } else {
+        // 2. Fallback: Check Supabase Auth (for future use or if they are logged in as owner)
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        const SUPER_ADMIN_EMAIL = "segmentibi@gmail.com";
+        const isAuthorizedEmail = user && user.email === SUPER_ADMIN_EMAIL;
+
+        if (!isAuthorizedEmail) {
+            redirect("/super-admin/login");
+        }
+    }
+
     const repo = getTenantRepository();
     const tenants = await repo.getAllTenants();
 
