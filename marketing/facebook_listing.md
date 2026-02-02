@@ -35,3 +35,10 @@ Stop paying high commissions to delivery apps. Launch your own professional orde
 - Admin Dashboard: `public/images/showcase-admin.png`
 - Kitchen Display: `public/images/showcase-kitchen.png`
 
+## How to List This
+1. Go to [Facebook Marketplace](https://www.facebook.com/marketplace/create/item).
+2. Upload the images from your `public/images` folder.
+3. Copy/Paste the Title, Price (0), and Description above.
+4. Set location to your city.
+5. Publish!
+

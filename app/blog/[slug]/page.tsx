@@ -2,7 +2,8 @@
 import Link from 'next/link';
 import { getPost, getAllPosts } from '@/lib/blog';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Calendar, User, ShoppingBag, Facebook, Twitter, Linkedin, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar, User, ShoppingBag } from 'lucide-react';
+import ShareButtons from '@/components/blog/ShareButtons';
 import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
@@ -90,12 +91,7 @@ export default async function BlogPost({ params }: Props) {
                             <div className="font-bold text-slate-900">{post.author}</div>
                             <div className="text-xs text-slate-500">Editor</div>
                         </div>
-                        <div className="flex gap-2">
-                             <button className="p-2 text-slate-400 hover:text-blue-600 transition-colors"><Facebook size={18} /></button>
-                             <button className="p-2 text-slate-400 hover:text-sky-500 transition-colors"><Twitter size={18} /></button>
-                             <button className="p-2 text-slate-400 hover:text-blue-700 transition-colors"><Linkedin size={18} /></button>
-                             <button className="p-2 text-slate-400 hover:text-slate-600 transition-colors"><Share2 size={18} /></button>
-                        </div>
+                        <ShareButtons title={post.title} slug={post.slug} />
                     </div>
                 </header>
 
