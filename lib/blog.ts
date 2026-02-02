@@ -387,6 +387,102 @@ export const blogPosts: BlogPost[] = [
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Retargeting is Free</h2>
             <p class="mb-6 text-lg">With a website, if they leave, you have to pay Facebook Ads to find them again. With WhatsApp, <strong>you have their number</strong>. You can save it and post a Status update next week for free.</p>
         `
+    },
+    {
+        slug: "zero-commission-manifesto",
+        title: "The Zero-Commission Manifesto: Why Restaurants Need to Rebel",
+        excerpt: "Delivery apps are taking 30% of your hard-earned money. It is time to create your own ordering channel.",
+        date: "2026-02-04",
+        author: "Riz",
+        category: "Profitability",
+        coverImage: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">Imagine a partner who takes 30% of your revenue, owns all your customer data, and can shut you down overnight. That's not a partner; that's a boss. And if you rely solely on apps like UberEats or DoorDash, you have a boss you never hired.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Mathematics of Survival</h2>
+            <p class="mb-4 text-lg">Let's do the math on a $50 order:</p>
+            <ul class="list-disc pl-6 mb-8 space-y-2 text-lg">
+                <li><strong>Food Cost (30%):</strong> $15</li>
+                <li><strong>Labor & Rent (30%):</strong> $15</li>
+                <li><strong>Delivery App Fee (30%):</strong> $15</li>
+                <li><strong>Your Profit:</strong> $5</li>
+            </ul>
+            <p class="mb-6 text-lg">You do all the cooking, cleaning, and risk-taking for $5. The app connects a driver and takes $15. <strong>This model is broken.</strong></p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Direct Ordering Revolution</h2>
+            <p class="mb-4 text-lg">OrderViaChat allows you to process that same $50 order with <strong>0% commission</strong>.</p>
+            <div class="my-10 bg-green-50 border-l-4 border-green-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-green-900 mb-2">The New Math</h3>
+                <p class="text-green-700">Food Cost ($15) + Labor ($15) + <strong>OrderViaChat ($0)</strong> = <strong>$20 Profit</strong>.</p>
+                <p class="text-green-800 font-bold mt-2">That is 4x the profit on the same order.</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">It's Not Just About Money</h2>
+            <p class="mb-4 text-lg">It's about data. When someone orders on an app, you get an order number. When they order directly, you get a name, a phone number, and a relationship.</p>
+            <p class="mb-6 text-lg">Start building your own kingdom today, not someone else's.</p>
+        `
+    },
+    {
+        slug: "from-dm-to-dollar-instagram-sales",
+        title: "From DM to Dollar: Converting Instagram Chats into Sales",
+        excerpt: "Stop losing sales in the DMs. Learn how to streamline your Instagram ordering process.",
+        date: "2026-02-05",
+        author: "Growth Team",
+        category: "Marketing",
+        coverImage: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?q=80&w=2574&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">"Price?" "Available?" "Shipping?" If your DMs look like this, you are working too hard for too little money. Every back-and-forth message is a chance for the customer to get distracted and leave.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Friction Killer</h2>
+            <p class="mb-4 text-lg">Friction kills sales. The harder it is to buy, the fewer people will buy. Asking a customer to generic "Bank Transfer" and send a screenshot is <strong>high friction</strong>.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Automated Flow</h2>
+            <p class="mb-4 text-lg">Here is the "OrderViaChat" workflow used by top Instagram sellers:</p>
+            <ol class="list-decimal pl-6 mb-8 space-y-3 text-lg">
+                <li><strong>Link in Bio:</strong> Customer clicks your OrderViaChat link.</li>
+                <li><strong>Visual Menu:</strong> They tap the products they want (no typing!).</li>
+                <li><strong>Add to Cart:</strong> They see the exact total including delivery.</li>
+                <li><strong>One-Tap Order:</strong> They hit send, and you get a formatted WhatsApp message.</li>
+            </ol>
+
+            <div class="my-10 bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-indigo-900 mb-2">The Result</h3>
+                <p class="text-indigo-700">You reply with ONE message: <em>"Thanks! Here is the payment link."</em> You just saved 10 minutes of chatting.</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Action Plan</h2>
+            <p class="mb-6 text-lg">Go to your Instagram Bio right now. If it doesn't have a direct ordering link, you are leaving money on the table. Create your store in 60 seconds and fix it.</p>
+        `
+    },
+    {
+        slug: "10-second-store-ai",
+        title: "The 10-Second Store: How AI Builds Your Business",
+        excerpt: "See how our new AI Generator builds a fully stocked online store from just one sentence.",
+        date: "2026-02-06",
+        author: "Tech Team",
+        category: "Technology",
+        coverImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2565&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">The number one reason people don't start their business? "Technical Overwhelm." Building a website sounds scary. But what if you could just <strong>describe</strong> your business and have it built for you?</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Meet the Magician</h2>
+            <p class="mb-4 text-lg">We integrated robust AI to remove the setup headers. You don't need to upload images. You don't need to write descriptions. You don't need to set prices.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Real Example</h2>
+            <p class="mb-4 text-lg">We typed: <em>"A cozy bakery in Brooklyn selling sourdough and croissants."</em></p>
+            <p class="mb-4 text-lg"><strong>In 8 seconds, the AI:</strong></p>
+            <ul class="list-disc pl-6 mb-8 space-y-2 text-lg">
+                <li>Created a store named "Brooklyn Crust".</li>
+                <li>Added products like "Artisan Sourdough ($8)" and "Almond Croissant ($5)".</li>
+                <li>Wrote descriptions like "Fermented for 48 hours for that perfect tang."</li>
+            </ul>
+
+            <div class="bg-indigo-900 text-white p-8 rounded-2xl mt-12 text-center">
+                <h3 class="text-2xl font-bold mb-4">Don't Believe Us?</h3>
+                <p class="mb-6">Try it yourself. It is free and takes literally seconds.</p>
+                <a href="/register" class="inline-block bg-white text-indigo-900 px-6 py-3 rounded-full font-bold hover:bg-indigo-50 transition-colors">Generate My Store</a>
+            </div>
+        `
     }
 ];
 
