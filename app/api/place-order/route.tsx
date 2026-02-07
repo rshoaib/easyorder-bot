@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTenantRepository, getOrderRepository, getProductRepository } from '@/lib/repository';
 import { Order, Product } from '@/lib/repository/types';
+import { Resend } from 'resend';
+import { OrderReceiptEmail } from '@/components/email/OrderReceiptEmail';
 
 export async function POST(req: NextRequest) {
     try {
@@ -86,6 +88,37 @@ export async function POST(req: NextRequest) {
             `*Total:* $${finalTotal.toFixed(2)}\n` +
             `*Payment:* ${paymentMethod}\n` +
             (customer.locationLink ? `\n*Location:* ${customer.locationLink}` : '');
+
+        // --- Send Email Receipt ---
+        if (customer.email && process.env.RESEND_API_KEY) {
+            try {
+                const resend = new Resend(process.env.RESEND_API_KEY);
+                // In dev, usually only sending to verified email is allowed. 
+                // We'll try to send to customer, but log if it fails.
+                await resend.emails.send({
+                    from: 'EasyOrder <orders@resend.dev>', // Default Resend testing domain
+                    to: customer.email,
+                    subject: `Order Receipt #${orderId} - ${tenant.name}`,
+                    react: (
+                        <OrderReceiptEmail
+                            orderId={orderId}
+                            customerName={customer.name}
+                            items={validatedItems.map((i: any) => ({ name: i.name, quantity: parseInt(i.quantity), price: i.price }))}
+                            total={finalTotal}
+                            date={order.date}
+                            storeName={tenant.name}
+                        />
+                    )
+                });
+                console.log(`Email receipt sent to ${customer.email}`);
+            } catch (emailError) {
+                console.error('Failed to send email receipt:', emailError);
+                // Don't fail the request, just log it
+            }
+        }
+        // --------------------------
+
+        // Generate WhatsApp Link
 
         // Generate WhatsApp Link
         // Use tenant.ownerPhone if available, otherwise fallback (or error?)
