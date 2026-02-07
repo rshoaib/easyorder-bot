@@ -10,6 +10,9 @@ import axios from 'axios';
 import { validatePromoCode } from "@/app/actions/promo-actions";
 import { sendGAEvent } from '@next/third-parties/google';
 import { PromoCode } from "@/lib/repository/types";
+import { toast } from "sonner";
+import { runFireworks } from "@/components/ui/Confetti";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Helper to calc discount
 function calculateDiscount(subtotal: number, promo: Pick<PromoCode, 'discountType' | 'value'>) {
@@ -81,7 +84,7 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
     const handleLocationClick = () => {
         setLocationStatus('loading');
         if (!navigator.geolocation) {
-            alert("Geolocation is not supported by your browser");
+            toast.error("Geolocation is not supported by your browser");
             setLocationStatus('error');
             return;
         }
@@ -131,7 +134,7 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                 setLocationStatus('success');
             },
             () => {
-                alert("Unable to retrieve your location");
+                toast.error("Unable to retrieve your location");
                 setLocationStatus('error');
                 setCustomer(prev => ({
                      ...prev,
@@ -145,7 +148,7 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
         e.preventDefault();
         
         if (!isOpen) {
-            alert("Sorry, the store is currently closed.");
+            toast.error("Sorry, the store is currently closed.");
             return;
         }
 
@@ -178,7 +181,8 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                 clearCart();
                 
                 if (response.data.whatsappNumber) {
-                     alert("Order placed! Redirecting to WhatsApp to send your order...");
+                     toast.success("Order placed!", { description: "Redirecting to WhatsApp..." });
+                     runFireworks();
                      const url = `https://wa.me/${response.data.whatsappNumber}?text=${response.data.message}`;
                      
                      // Try to prevent popup blocker issues by opening in same tab if possible or new tab
@@ -188,15 +192,18 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                      // Redirect back to store after a moment
                      setTimeout(() => {
                         window.location.href = `/store/${slug}`;
-                     }, 1000);
+                     }, 2000);
                 } else {
-                     alert("Order placed successfully!"); // Simple feedback
-                     router.push(`/store/${slug}`);
+                     toast.success("Order placed successfully!");
+                     runFireworks();
+                     setTimeout(() => {
+                        router.push(`/store/${slug}`);
+                     }, 2000);
                 }
             }
         } catch (error) {
             console.error(error);
-            alert('Failed to place order. Please try again.');
+            toast.error('Failed to place order. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -248,8 +255,17 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
 
             {/* Cart Items */}
             <div className="space-y-4 mb-8">
+                <AnimatePresence mode="popLayout">
                 {items.map((item) => (
-                    <div key={item.id} className="flex gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                    <motion.div 
+                        layout
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, x: -20 }}
+                        transition={{ duration: 0.2 }}
+                        key={item.id} 
+                        className="flex gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm"
+                    >
                          <div className="h-20 w-20 rounded-lg overflow-hidden bg-gray-50 relative flex-shrink-0">
                              <ImageWithFallback src={item.image} alt={item.name} fill className="object-cover" />
                         </div>
@@ -279,8 +295,9 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                                 >+</button>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
+                </AnimatePresence>
             </div>
 
             {/* Order Summary */}

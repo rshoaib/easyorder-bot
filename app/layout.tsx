@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from 'sonner';
 import { CartProvider } from "@/context/CartContext";
 import { GoogleAnalytics } from '@next/third-parties/google';
 
@@ -32,6 +33,7 @@ export default function RootLayout({
           {children}
         </CartProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );
