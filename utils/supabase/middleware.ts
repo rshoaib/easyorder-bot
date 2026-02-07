@@ -35,5 +35,26 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser()
 
+    // DEVELOPMENT BYPASS
+    // If in development and we have a special cookie, mock the user
+    if (process.env.NODE_ENV === 'development' && !user) {
+        const devCookie = request.cookies.get('supabase-dev-token');
+        if (devCookie && devCookie.value === 'dev-bypass') {
+            return {
+                supabaseResponse,
+                user: {
+                    id: 'dev-user-id',
+                    email: 'testuser@gmail.com',
+                    role: 'authenticated',
+                    aud: 'authenticated',
+                    app_metadata: { provider: 'email' },
+                    user_metadata: {},
+                    created_at: new Date().toISOString(),
+                    email_confirmed_at: new Date().toISOString(), // Confirmed!
+                } as any
+            }
+        }
+    }
+
     return { supabaseResponse, user }
 }
