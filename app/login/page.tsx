@@ -58,7 +58,20 @@ function LoginForm() {
                     },
                 });
                 if (error) throw error;
-                setMessage("Check your email for the confirmation link!");
+                // Attempt to sign in immediately (works if "Allow unverified logins" is enabled or "Confirm email" is disabled)
+                const { error: signInError } = await supabase.auth.signInWithPassword({
+                    email,
+                    password,
+                });
+
+                if (!signInError) {
+                    // Success! Redirect to onboarding
+                    router.push(next);
+                    router.refresh();
+                } else {
+                    // Fallback to email confirmation message
+                    setMessage("Check your email for the confirmation link!");
+                }
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
