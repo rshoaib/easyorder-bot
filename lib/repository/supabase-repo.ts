@@ -115,7 +115,8 @@ export class SupabaseProductRepository implements ProductRepository {
             ...d,
             tenantId: d.tenant_id,
             isAvailable: d.is_available, // Map from DB column
-            type: d.type || 'physical'
+            type: d.type || 'physical',
+            digitalFileUrl: d.digital_file_url
         })) as Product[];
     }
 
@@ -131,7 +132,8 @@ export class SupabaseProductRepository implements ProductRepository {
                 description: product.description,
                 tenant_id: product.tenantId,
                 is_available: true,
-                type: product.type
+                type: product.type,
+                digital_file_url: product.digitalFileUrl
             });
 
         if (error) {

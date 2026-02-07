@@ -45,7 +45,8 @@ export async function POST(req: NextRequest) {
             validatedItems.push({
                 ...item,
                 price: price, // Enforce server price
-                name: product.name // Enforce server name
+                name: product.name, // Enforce server name
+                digitalFileUrl: product.digitalFileUrl
             });
         }
 
@@ -103,7 +104,7 @@ export async function POST(req: NextRequest) {
                         <OrderReceiptEmail
                             orderId={orderId}
                             customerName={customer.name}
-                            items={validatedItems.map((i: any) => ({ name: i.name, quantity: parseInt(i.quantity), price: i.price }))}
+                            items={validatedItems.map((i: any) => ({ name: i.name, quantity: parseInt(i.quantity), price: i.price, digitalFileUrl: i.digitalFileUrl }))}
                             total={finalTotal}
                             date={order.date}
                             storeName={tenant.name}

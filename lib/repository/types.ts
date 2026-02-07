@@ -61,6 +61,7 @@ export interface Product {
     description: string;
     isAvailable: boolean;
     type: 'physical' | 'digital' | 'service';
+    digitalFileUrl?: string; // New: URL for digital downloads
 }
 
 export interface ProductRepository {

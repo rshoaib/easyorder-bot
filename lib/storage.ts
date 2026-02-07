@@ -44,3 +44,27 @@ export async function uploadTenantLogo(file: File, tenantId: string, client: Sup
 
     return data.publicUrl;
 }
+
+export async function uploadDigitalFile(file: File, tenantId: string): Promise<string | null> {
+    const fileExt = file.name.split('.').pop();
+    // Obscure the filename for MVP security
+    const randomHash = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const fileName = `${tenantId}/${randomHash}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    // Ensure you create a 'digital-products' public bucket in Supabase console
+    const { error } = await supabase.storage
+        .from('digital-products')
+        .upload(filePath, file);
+
+    if (error) {
+        console.error('Error uploading digital file:', error);
+        return null; // Fail gracefully
+    }
+
+    const { data } = supabase.storage
+        .from('digital-products')
+        .getPublicUrl(filePath);
+
+    return data.publicUrl;
+}

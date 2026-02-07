@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { uploadProductImage } from '@/lib/storage';
+import { uploadProductImage, uploadDigitalFile } from '@/lib/storage';
 import { addProduct } from './actions';
 import { Plus, Loader2, Upload } from 'lucide-react';
 import Image from 'next/image';
@@ -19,6 +19,8 @@ export default function AddProductForm({ slug, tenantId }: Props) {
     const [isGenerating, setIsGenerating] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
     const [description, setDescription] = useState('');
+    const [productType, setProductType] = useState<'physical' | 'digital' | 'service'>('physical');
+    const [digitalFileName, setDigitalFileName] = useState<string | null>(null);
 
     async function handleAIGenerate() {
         // Get current name/category from form inputs by ID since we don't control them with state for simplicity
@@ -53,7 +55,9 @@ export default function AddProductForm({ slug, tenantId }: Props) {
         try {
             const file = formData.get('imageFile') as File;
             let imageUrl = formData.get('image') as string;
-
+            const submitData = new FormData();
+            
+            // If a file was selected, upload it
             // If a file was selected, upload it
             if (file && file.size > 0) {
                 const uploadedUrl = await uploadProductImage(file, tenantId);
@@ -62,17 +66,33 @@ export default function AddProductForm({ slug, tenantId }: Props) {
                 }
             }
 
-            const submitData = new FormData();
+            // Handle Digital File Upload
+            if (productType === 'digital') {
+                const digitalFile = formData.get('digitalFile') as File;
+                if (digitalFile && digitalFile.size > 0) {
+                     const digitalUrl = await uploadDigitalFile(digitalFile, tenantId);
+                     if (digitalUrl) {
+                        submitData.set('digitalFileUrl', digitalUrl);
+                     }
+                }
+            }
+
+
+
             submitData.set('name', formData.get('name') as string);
             submitData.set('price', formData.get('price') as string);
             submitData.set('category', formData.get('category') as string);
             submitData.set('description', description || (formData.get('description') as string)); // Use state if available
             submitData.set('image', imageUrl);
+            submitData.set('type', productType);
 
             await addProduct(slug, submitData);
             
             setPreview(null);
+            setPreview(null);
             setDescription(''); // Reset
+            setDigitalFileName(null);
+            setProductType('physical');
             (document.getElementById('addProductForm') as HTMLFormElement)?.reset();
 
         } catch (error) {
@@ -101,6 +121,36 @@ export default function AddProductForm({ slug, tenantId }: Props) {
                     <label className="form-label">Name</label>
                     <input name="name" required placeholder="e.g. Cheese Burger" className="form-input" />
                 </div>
+
+                <div>
+                    <label className="form-label">Product Type</label>
+                    <div className="flex gap-2">
+                        {(['physical', 'digital', 'service'] as const).map(type => (
+                            <button
+                                key={type}
+                                type="button"
+                                onClick={() => setProductType(type)}
+                                className={`px-4 py-2 rounded-lg text-sm font-bold capitalize transition-all border ${productType === type ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'}`}
+                            >
+                                {type}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {productType === 'digital' && (
+                    <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 animate-in fade-in zoom-in duration-200">
+                        <label className="form-label text-blue-800">Digital File (PDF, ZIP, etc.)</label>
+                        <input 
+                            type="file" 
+                            name="digitalFile" 
+                            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+                            onChange={(e) => setDigitalFileName(e.target.files?.[0]?.name || null)}
+                        />
+                        {digitalFileName && <p className="text-xs text-green-600 mt-2 font-bold">Selected: {digitalFileName}</p>}
+                        <p className="text-xs text-blue-600 mt-2">Customers will receive a download link via email after purchase.</p>
+                    </div>
+                )}
                 <div className="grid grid-cols-2 gap-2">
                     <div>
                         <label className="form-label">Price ($)</label>

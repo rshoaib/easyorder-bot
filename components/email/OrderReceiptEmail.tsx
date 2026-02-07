@@ -7,6 +7,7 @@ interface OrderReceiptEmailProps {
     name: string;
     quantity: number;
     price: number;
+    digitalFileUrl?: string; // New field
   }[];
   total: number;
   date: string;
@@ -43,7 +44,16 @@ export const OrderReceiptEmail: React.FC<OrderReceiptEmailProps> = ({
       <tbody>
         {items.map((item, index) => (
           <tr key={index} style={{ borderBottom: '1px solid #eee' }}>
-            <td style={{ padding: '10px' }}>{item.name}</td>
+            <td style={{ padding: '10px' }}>
+                <div>{item.name}</div>
+                {item.digitalFileUrl && (
+                    <div style={{ marginTop: '4px' }}>
+                        <a href={item.digitalFileUrl} target="_blank" style={{ color: '#4f46e5', fontSize: '12px', textDecoration: 'none', fontWeight: 'bold' }}>
+                            Download File 📥
+                        </a>
+                    </div>
+                )}
+            </td>
             <td style={{ textAlign: 'center', padding: '10px' }}>{item.quantity}</td>
             <td style={{ textAlign: 'right', padding: '10px' }}>${item.price.toFixed(2)}</td>
           </tr>

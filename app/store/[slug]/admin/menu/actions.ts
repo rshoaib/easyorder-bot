@@ -29,7 +29,8 @@ export async function addProduct(slug: string, formData: FormData) {
         description: formData.get('description') as string || '',
         tenantId: tenant.id,
         isAvailable: true,
-        type: 'physical'
+        type: (formData.get('type') as 'physical' | 'digital' | 'service') || 'physical',
+        digitalFileUrl: formData.get('digitalFileUrl') as string || undefined
     };
 
     await repo.addProduct(product);
