@@ -483,6 +483,88 @@ export const blogPosts: BlogPost[] = [
                 <a href="/register" class="inline-block bg-white text-indigo-900 px-6 py-3 rounded-full font-bold hover:bg-indigo-50 transition-colors">Generate My Store</a>
             </div>
         `
+    },
+    {
+        slug: "hidden-cost-paper-menus",
+        title: "The Hidden Cost of Paper Menus: Why Digital is Cheaper",
+        excerpt: "Printing menus is not just outdated; it's expensive. See how much you can save by switching to digital.",
+        date: "2026-02-07",
+        author: "Finance Team",
+        category: "Cost Savings",
+        coverImage: "https://images.unsplash.com/photo-1577114250269-e741c881a20a?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">Every time you change a price or add a dish, you pay a printer. In 2026, a static menu is a liability.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Printing math</h2>
+            <p class="mb-4 text-lg">Let's look at the real costs of maintaining physical menus for a medium-sized cafe:</p>
+            <ul class="list-disc pl-6 mb-8 space-y-2 text-lg">
+                <li><strong>Design Fee:</strong> $50 - $100 per update.</li>
+                <li><strong>Printing (50 copies):</strong> $150+ for quality lamination.</li>
+                <li><strong>Frequency:</strong> 4 times a year (minimum).</li>
+                <li><strong>Total:</strong> $1,000+ annually just to show people what you sell.</li>
+            </ul>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The "Out of Stock" Problem</h2>
+            <p class="mb-4 text-lg">What happens when you run out of Avocados? You can't delete it from a printed menu. You have to explain it to every single customer. This creates:</p>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-lg">
+                <li>Frustrated customers.</li>
+                <li>Wasted staff time.</li>
+                <li>Review complaints ("They didn't have half the menu!").</li>
+            </ul>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Digital Solution</h2>
+            <p class="mb-6 text-lg">With OrderViaChat, updates are free and instant. Change a price in 5 seconds. Hide an item in 2 seconds.</p>
+            
+            <div class="my-8 rounded-xl overflow-hidden shadow-lg border border-slate-200">
+                <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2600&auto=format&fit=crop" alt="Digital Payment" class="w-full h-auto" />
+                <div class="bg-slate-50 p-3 text-center text-sm text-slate-500">Go digital, save money</div>
+            </div>
+
+            <div class="bg-green-50 p-8 rounded-2xl border border-green-200 mt-12 text-center">
+                <h3 class="text-2xl font-bold text-green-900 mb-4">Launch Your Digital Menu Today</h3>
+                <p class="mb-6 text-green-800">It costs $0 to start. Stop feeding your printer.</p>
+                <a href="/register" class="inline-block bg-green-600 text-white px-6 py-3 rounded-full font-bold hover:bg-green-700 transition-colors">Create Free Menu</a>
+            </div>
+        `
+    },
+    {
+        slug: "how-to-upsell-whatsapp",
+        title: "How to Upsell on WhatsApp without Being Annoying",
+        excerpt: "The art of the 'By the way...'. Increase your average order value by 20% with simple chat scripts.",
+        date: "2026-02-08",
+        author: "Sales Team",
+        category: "Sales",
+        coverImage: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">"Do you want fries with that?" is the most profitable sentence in history. You can do the same on WhatsApp, but you have to be smart about it.</p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The Timing is Everything</h2>
+            <p class="mb-4 text-lg">Don't upsell <em>after</em> they paid. Upsell <em>when</em> they order.</p>
+            <p class="mb-4 text-lg"><strong>Bad:</strong> Sending a generic blast to everyone.</p>
+            <p class="mb-4 text-lg"><strong>Good:</strong> Replying to a specific order.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">3 Scripts to Copy-Paste</h2>
+            
+            <div class="space-y-6 my-8">
+                <div class="bg-indigo-50 p-6 rounded-xl border-l-4 border-indigo-500">
+                    <h4 class="font-bold text-indigo-900 mb-2">1. The "Fresh Batch" (For Bakeries)</h4>
+                    <p class="text-slate-700">"Got your order for the cake! Btw, we just pulled fresh cinnamon rolls out of the oven 10 mins ago. Want me to add one to the box?"</p>
+                </div>
+                
+                <div class="bg-indigo-50 p-6 rounded-xl border-l-4 border-indigo-500">
+                    <h4 class="font-bold text-indigo-900 mb-2">2. The "Perfect Pair" (For Fashion)</h4>
+                    <p class="text-slate-700">"That dress is going to look great. We actually have a belt that matches it perfectly (pix below). Should I include it for $15?"</p>
+                </div>
+
+                <div class="bg-indigo-50 p-6 rounded-xl border-l-4 border-indigo-500">
+                    <h4 class="font-bold text-indigo-900 mb-2">3. The "Free Shipping" (Universal)</h4>
+                    <p class="text-slate-700">"Your total is $40. If you add $10 more, you get Free Shipping. Should I add the [Product X] to get you there?"</p>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Why This Works</h2>
+            <p class="mb-6 text-lg">It feels helpful, not salesy. You are solving a problem (getting fresh food, looking good, saving on shipping).</p>
+        `
     }
 ];
 
