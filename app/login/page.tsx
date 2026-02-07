@@ -15,8 +15,9 @@ function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const next = searchParams.get('next') || '/register';
+    const view = searchParams.get('view');
     const supabase = createClient();
-    const [isSignUp, setIsSignUp] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(view === 'signup');
 
     const handleGoogleLogin = async () => {
         setLoading(true);
@@ -82,10 +83,10 @@ function LoginForm() {
                         <Mail size={24} />
                     </div>
                     <h1 className="text-2xl font-bold text-slate-900">
-                        {isSignUp ? 'Create Account' : 'Welcome Back'}
+                        {isSignUp ? 'Create Your Store Account' : 'Welcome Back'}
                     </h1>
                     <p className="text-slate-500 mt-2">
-                        {isSignUp ? 'Get started for free. No credit card required.' : 'Sign in to manage your store.'}
+                        {isSignUp ? 'Join thousands of successful merchants. Start for free.' : 'Sign in to manage your store.'}
                     </p>
                 </div>
 

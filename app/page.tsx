@@ -37,7 +37,7 @@ export default async function Home() {
              <Link href="/store/demo" className="hidden md:block text-slate-600 font-medium hover:text-indigo-600 transition-colors">
                 View Demo
              </Link>
-             <Link href="/register">
+             <Link href="/login?view=signup">
                 <button className="bg-slate-900 text-white px-6 py-3 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-xl shadow-slate-900/20 text-sm">
                     Get Started
                 </button>
@@ -66,7 +66,7 @@ export default async function Home() {
                     </p>
                     
                     <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 animate-fade-in delay-300">
-                        <Link href="/register">
+                        <Link href="/login?view=signup">
                             <button className="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-400 text-white text-lg font-bold py-4 px-8 rounded-2xl shadow-lg shadow-indigo-500/40 transition-all hover:-translate-y-1">
                                 Start Selling Free <ArrowRight className="inline ml-2" />
                             </button>
@@ -268,7 +268,7 @@ export default async function Home() {
                    <span className="text-slate-500">/month</span>
                 </div>
                 
-                <Link href="/register" className="block w-full mb-8">
+                <Link href="/login?view=signup" className="block w-full mb-8">
                     <button className="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold py-4 rounded-xl transition-colors">
                         Start Free Trial
                     </button>
@@ -301,7 +301,7 @@ export default async function Home() {
                    <span className="text-slate-400">/month</span>
                 </div>
                 
-                <Link href="/register" className="block w-full mb-8">
+                <Link href="/login?view=signup" className="block w-full mb-8">
                      <button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-600/30 transition-all">
                         Get Started Now
                     </button>
