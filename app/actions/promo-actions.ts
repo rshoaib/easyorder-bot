@@ -14,7 +14,7 @@ export async function validatePromoCode(code: string, tenantId: string) {
         success: true,
         promo: {
             code: promo.code,
-            type: promo.discountType,
+            discountType: promo.discountType,
             value: promo.value
         }
     };

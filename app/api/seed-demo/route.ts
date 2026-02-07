@@ -141,5 +141,23 @@ export async function GET() {
         return NextResponse.json({ message: "Repopulated demo products", count: demoProducts.length });
     }
 
+    // Ensure at least one digital product exists for testing
+    const hasDigital = products.some(p => p.type === 'digital');
+    if (!hasDigital) {
+        console.log("Seeding digital product...");
+        await productRepo.addProduct({
+            id: 'p_digital_1',
+            tenantId: tenant.id,
+            name: 'Digital Logo Design',
+            category: 'Services',
+            price: 50,
+            image: 'https://images.unsplash.com/photo-1626785774573-4b799314346d?auto=format&fit=crop&w=800&q=80',
+            isAvailable: true,
+            description: 'Custom logo design delivered via email.',
+            type: 'digital'
+        });
+        return NextResponse.json({ message: "Added missing digital product", productCount: products.length + 1 });
+    }
+
     return NextResponse.json({ message: "Demo tenant and products already exist", id: tenant.id, productCount: products.length });
 }

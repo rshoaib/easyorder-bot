@@ -80,6 +80,7 @@ export async function POST(req: NextRequest) {
         const message = `*New Order #${orderId}*\n\n` +
             `*Customer:* ${customer.name}\n` +
             `*Phone:* ${customer.phone}\n` +
+            (customer.email ? `*Email:* ${customer.email}\n` : '') +
             `*Address:* ${customer.address}\n\n` +
             `*Items:*\n${itemsList}\n\n` +
             `*Total:* $${finalTotal.toFixed(2)}\n` +

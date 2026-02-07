@@ -31,6 +31,7 @@ export interface Order {
         name: string;
         phone: string;
         address: string;
+        email?: string; // New: Email for digital delivery
         locationLink?: string;
     };
     items: any[];

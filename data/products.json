@@ -76,5 +76,16 @@
     "description": "",
     "tenantId": "bad37788-3f8c-460b-9acf-586d69963071",
     "isAvailable": true
+  },
+  {
+    "id": "p_digital_1",
+    "tenantId": "9255e8a8-81c7-4e5f-a03c-458e0c8dfd59",
+    "name": "Digital Logo Design",
+    "category": "Services",
+    "price": 50,
+    "image": "https://images.unsplash.com/photo-1626785774573-4b799314346d?auto=format&fit=crop&w=800&q=80",
+    "isAvailable": true,
+    "description": "Custom logo design delivered via email.",
+    "type": "digital"
   }
 ]

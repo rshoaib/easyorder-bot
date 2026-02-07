@@ -9,10 +9,11 @@ import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import axios from 'axios';
 import { validatePromoCode } from "@/app/actions/promo-actions";
 import { sendGAEvent } from '@next/third-parties/google';
+import { PromoCode } from "@/lib/repository/types";
 
 // Helper to calc discount
-function calculateDiscount(subtotal: number, promo: any) {
-    if (promo.type === 'percent') return subtotal * (promo.value / 100);
+function calculateDiscount(subtotal: number, promo: Pick<PromoCode, 'discountType' | 'value'>) {
+    if (promo.discountType === 'percent') return subtotal * (promo.value / 100);
     return promo.value;
 }
 
@@ -66,12 +67,12 @@ interface Props {
 export default function CartClient({ tenantId, slug, isOpen }: Props) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', locationLink: '' });
+    const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', email: '', locationLink: '' });
     const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
     const router = useRouter();
 
     const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-    const [appliedPromo, setAppliedPromo] = useState<any>(null); // { code, type, value }
+    const [appliedPromo, setAppliedPromo] = useState<Pick<PromoCode, 'code' | 'discountType' | 'value'> | null>(null);
 
     // Get Delivery Fee from env (this is client side, so we only see NEXT_PUBLIC)
     const deliveryFee = parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
@@ -378,7 +379,8 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                             type="email"
                             className="form-input"
                             placeholder="you@example.com"
-                            onChange={e => setCustomer({...customer, address: e.target.value})} // Using address field for email hack to save schema changes for now
+                            value={customer.email}
+                            onChange={e => setCustomer({...customer, email: e.target.value})}
                          />
                          <p className="text-xs text-gray-500 mt-1">We will send your files to this email.</p>
                     </div>
