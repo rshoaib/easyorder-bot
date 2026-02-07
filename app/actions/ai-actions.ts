@@ -14,7 +14,7 @@ export async function generateProductDescription(name: string, category: string)
 
     try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         const prompt = `Write a short, appetizing, and professional food menu description (max 2 sentences) for a item named "${name}" which is in the category "${category}". Do not include quotes.`;
 
@@ -39,14 +39,14 @@ export async function generateMenu(slug: string, businessDescription: string) {
         const { tenant } = await verifyTenantOwnership(slug);
 
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
         const prompt = `
             You are a menu engineering expert.
             1. Analyze this business description: "${businessDescription}"
             2. Classify it into one of these types: "restaurant", "retail", "service", "digital".
             3. Create a list of 8 diverse and appealing items for this business.
-            
+            4. For each item, provide a single, specific, visual English keyword or short phrase (max 2 words) to use for an image search (e.g., "pepperoni pizza", "running shoes", "haircut", "ebook cover").
+
             Return ONLY a valid JSON object with this structure:
             {
               "storeType": "restaurant" | "retail" | "service" | "digital",
@@ -55,13 +55,35 @@ export async function generateMenu(slug: string, businessDescription: string) {
                   "name": "string",
                   "description": "string (under 120 chars)",
                   "price": number,
-                  "category": "string"
+                  "category": "string",
+                  "imageKeyword": "string"
                 }
               ]
             }
         `;
 
-        const result = await model.generateContent(prompt);
+        // Try multiple models in order of preference
+        const models = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"];
+        let result = null;
+        let usedModel = "";
+        let lastError = null;
+
+        for (const modelName of models) {
+            try {
+                const model = genAI.getGenerativeModel({ model: modelName });
+                result = await model.generateContent(prompt);
+                usedModel = modelName;
+                break;
+            } catch (e: any) {
+                console.warn(`Model ${modelName} failed:`, e.message);
+                lastError = e;
+            }
+        }
+
+        if (!result) {
+            throw lastError || new Error("All models failed to generate content");
+        }
+
         const response = await result.response;
         // Clean up markdown code blocks if present
         const text = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
@@ -82,6 +104,13 @@ export async function generateMenu(slug: string, businessDescription: string) {
         const tenantRepo = getTenantRepository();
 
         for (const item of data.items) {
+            // Generate a dynamic image URL using the keyword & category
+            // Using LoremFlickr as it's reliable for prototypes. 
+            // Encoding components to ensure valid URLs.
+            const keyword = encodeURIComponent(item.imageKeyword || item.name);
+            const category = encodeURIComponent(item.category || 'food');
+            const imageUrl = `https://loremflickr.com/600/400/${category},${keyword}/all`;
+
             await productRepo.addProduct({
                 id: crypto.randomUUID(),
                 tenantId: tenant.id,
@@ -89,7 +118,7 @@ export async function generateMenu(slug: string, businessDescription: string) {
                 description: item.description,
                 price: Number(item.price),
                 category: item.category,
-                image: '', // Placeholder
+                image: imageUrl,
                 isAvailable: true,
                 type: productType
             });
