@@ -1,6 +1,7 @@
 import { getTenantRepository } from "@/lib/repository";
 import { ArrowLeft, Save, Instagram, Facebook, Phone, Banknote } from "lucide-react";
 import Link from "next/link";
+import ServiceStatus from "@/components/admin/ServiceStatus";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
@@ -53,34 +54,29 @@ export default async function SettingsPage({ params }: Props) {
     if (!tenant) return <div>Store not found</div>;
 
     return (
-        <main className="container pt-6 pb-10" style={{ maxWidth: '600px' }}>
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-8">
+        <main className="container pt-6 pb-10" style={{ maxWidth: '800px' }}>
+            <div className="flex justify-between mb-8 items-center">
+                <div>
+                    <h1 className="text-2xl font-bold mb-1">Store Settings</h1>
+                    <p className="text-gray-500 text-sm">Manage your store profile and preferences</p>
+                </div>
                 <Link href={`/store/${slug}/admin`}>
-                    <button className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600">
-                        <ArrowLeft size={24} />
+                    <button className="btn-secondary">
+                        <ArrowLeft size={16} />
+                        Back to Orders
                     </button>
                 </Link>
-                <div>
-                    <h1 className="text-2xl font-bold">Store Settings</h1>
-                    <p className="text-gray-500">Manage your store profile and links</p>
-                </div>
             </div>
 
-            <BrandingSettings 
-                tenantId={tenant.id} 
-                slug={slug} 
-                initialThemeColor={tenant.themeColor} 
-                initialLogoUrl={tenant.logoUrl} 
-            />
+            <ServiceStatus />
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <form action={updateSettings} className="space-y-6 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="p-6 border-b border-gray-100 bg-gray-50">
                     <h2 className="font-bold text-gray-900">Social Profiles</h2>
                     <p className="text-sm text-gray-500 mt-1">Connect your social media to build trust.</p>
                 </div>
                 
-                <form action={updateSettings} className="p-6 space-y-6">
+                <div className="p-6 space-y-6">
                     <input type="hidden" name="id" value={tenant.id} />
                     <input type="hidden" name="slug" value={slug} />
 
