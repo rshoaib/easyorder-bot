@@ -57,7 +57,13 @@ export async function createProduct(formData: FormData, tenantId: string, slug: 
     await repo.addProduct(product);
 
     // Fire and forget auto-post (don't block UI)
-    handleAutoPost(product, tenantId).catch(err => console.error("Background auto-post failed", err));
+    // Fire and forget auto-post (don't block UI)
+    handleAutoPost(product, tenantId).then(results => {
+        results.forEach(res => {
+            if (res.success) console.log(`Auto-post to ${res.provider} successful: ${res.postId}`);
+            else console.error(`Auto-post to ${res.provider} failed: ${res.error}`);
+        });
+    }).catch(err => console.error("Background auto-post failed", err));
 
     revalidatePath(`/admin/${slug}/menu`);
     revalidatePath(`/store/${slug}`);
