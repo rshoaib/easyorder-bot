@@ -120,6 +120,10 @@ export interface TenantRepository {
     getIntegration(tenantId: string, provider: string): Promise<Integration | null>;
     saveIntegration(integration: Omit<Integration, 'id' | 'createdAt' | 'updatedAt'>): Promise<void>;
     deleteIntegration(tenantId: string, provider: string): Promise<void>;
+
+    // Social Media Analysis
+    saveSocialPost(post: Omit<SocialPost, 'id' | 'createdAt'>): Promise<void>;
+    getSocialPosts(tenantId: string): Promise<SocialPost[]>;
 }
 
 export interface Integration {
@@ -130,6 +134,15 @@ export interface Integration {
     pageId?: string;
     createdAt?: string;
     updatedAt?: string;
+}
+
+export interface SocialPost {
+    id: string;
+    tenantId: string;
+    productId: string;
+    provider: 'facebook' | 'instagram';
+    externalPostId: string;
+    createdAt: string;
 }
 
 

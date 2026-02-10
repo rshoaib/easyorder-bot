@@ -14,6 +14,15 @@ export async function handleAutoPost(product: Product, tenantId: string) {
         console.log("Posting to Facebook...");
         const fbResult = await postToFacebook(product, fbIntegration);
         results.push({ provider: 'facebook', ...fbResult });
+
+        if (fbResult.success && fbResult.postId) {
+            await repo.saveSocialPost({
+                tenantId,
+                productId: product.id,
+                provider: 'facebook',
+                externalPostId: fbResult.postId
+            }).catch(err => console.error("Failed to save FB post ID", err));
+        }
     }
 
     // --- INSTAGRAM POSTING ---
@@ -22,6 +31,15 @@ export async function handleAutoPost(product: Product, tenantId: string) {
         console.log("Posting to Instagram...");
         const igResult = await postToInstagram(product, igIntegration);
         results.push({ provider: 'instagram', ...igResult });
+
+        if (igResult.success && igResult.postId) {
+            await repo.saveSocialPost({
+                tenantId,
+                productId: product.id,
+                provider: 'instagram',
+                externalPostId: igResult.postId
+            }).catch(err => console.error("Failed to save IG post ID", err));
+        }
     }
 
     return results;
@@ -130,6 +148,7 @@ export async function saveIntegration(slug: string, provider: 'facebook' | 'inst
     }
 }
 
+
 export async function deleteIntegration(slug: string, provider: 'facebook' | 'instagram') {
     try {
         // 1. Verify ownership
@@ -140,6 +159,45 @@ export async function deleteIntegration(slug: string, provider: 'facebook' | 'in
         await repo.deleteIntegration(tenant.id, provider);
 
         revalidatePath(`/store/${slug}/admin/integrations`);
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
+
+export async function getPostComments(slug: string, postId: string, provider: 'facebook' | 'instagram') {
+    // 1. Verify ownership
+    const { tenant } = await verifyTenantOwnership(slug);
+
+    const integration = await getIntegration(slug, provider);
+    if (!integration) return { success: false, error: "Integration not found" };
+
+    try {
+        const url = `https://graph.facebook.com/v19.0/${postId}/comments?fields=id,message,created_time,from&access_token=${integration.accessToken}`;
+        const response = await axios.get(url);
+        return { success: true, data: response.data.data };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
+
+export async function replyToComment(slug: string, commentId: string, message: string, provider: 'facebook' | 'instagram') {
+    // 1. Verify ownership
+    const { tenant } = await verifyTenantOwnership(slug);
+
+    const integration = await getIntegration(slug, provider);
+    if (!integration) return { success: false, error: "Integration not found" };
+
+    try {
+        let replyUrl = `https://graph.facebook.com/v19.0/${commentId}/comments`;
+        if (provider === 'instagram') {
+            replyUrl = `https://graph.facebook.com/v19.0/${commentId}/replies`;
+        }
+
+        await axios.post(replyUrl, {
+            message: message,
+            access_token: integration.accessToken
+        });
         return { success: true };
     } catch (error: any) {
         return { success: false, error: error.message };

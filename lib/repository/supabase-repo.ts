@@ -4,7 +4,7 @@ import {
     Tenant, TenantRepository,
     AnalyticsRepository, AnalyticsSummary,
     PromoCode, PromoCodeRepository,
-    Integration
+    Integration, SocialPost
 } from './types';
 import { supabase } from '../supabase';
 
@@ -475,6 +475,39 @@ export class SupabaseTenantRepository implements TenantRepository {
             .eq('provider', provider);
 
         if (error) throw new Error(error.message);
+    }
+
+    async saveSocialPost(post: Omit<SocialPost, 'id' | 'createdAt'>): Promise<void> {
+        const { error } = await this.client
+            .from('social_posts')
+            .insert({
+                tenant_id: post.tenantId,
+                product_id: post.productId,
+                provider: post.provider,
+                external_post_id: post.externalPostId
+            });
+
+        if (error) throw new Error(error.message);
+    }
+
+    async getSocialPosts(tenantId: string): Promise<SocialPost[]> {
+        const { data, error } = await this.client
+            .from('social_posts')
+            .select('*')
+            .eq('tenant_id', tenantId)
+            .order('created_at', { ascending: false })
+            .limit(50); // Limit to recent 50 posts for now
+
+        if (error) return [];
+
+        return data.map((d: any) => ({
+            id: d.id,
+            tenantId: d.tenant_id,
+            productId: d.product_id,
+            provider: d.provider,
+            externalPostId: d.external_post_id,
+            createdAt: d.created_at
+        }));
     }
 }
 

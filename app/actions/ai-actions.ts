@@ -77,7 +77,10 @@ export async function generateMenu(slug: string, businessDescription: string) {
 
         for (const modelName of models) {
             try {
-                const model = genAI.getGenerativeModel({ model: modelName });
+                const model = genAI.getGenerativeModel({
+                    model: modelName,
+                    generationConfig: modelName.includes('1.5') ? { responseMimeType: "application/json" } : undefined
+                });
                 result = await model.generateContent(prompt);
                 usedModel = modelName;
                 break;
@@ -92,12 +95,21 @@ export async function generateMenu(slug: string, businessDescription: string) {
         }
 
         const response = await result.response;
-        // Clean up markdown code blocks if present
-        const text = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
+        let text = response.text();
 
-        const data = JSON.parse(text);
+        // Clean up markdown code blocks if present (for models that might ignore JSON mode or gemini-pro)
+        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error("Failed to parse AI JSON response:", text);
+            throw new Error("AI returned invalid data format.");
+        }
 
         if (!data.items || !Array.isArray(data.items)) {
+            console.error("Invalid data structure:", data);
             throw new Error("Invalid AI response format");
         }
 
@@ -119,7 +131,8 @@ export async function generateMenu(slug: string, businessDescription: string) {
             const imageUrl = `https://loremflickr.com/600/400/${category},${keyword}/all`;
 
             await productRepo.addProduct({
-                id: crypto.randomUUID(),
+                // Use Date.now + random for simple unique ID without crypto dependency requirement
+                id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
                 tenantId: tenant.id,
                 name: item.name,
                 description: item.description,
@@ -153,5 +166,40 @@ export async function generateMenu(slug: string, businessDescription: string) {
     } catch (error: any) {
         console.error('Error generating menu:', error);
         return { success: false, message: error instanceof Error ? error.message : 'Failed to generate menu.' };
+    }
+}
+
+export async function generateCommentReply(comment: string, productName: string, storeContext?: { name: string, type: string }) {
+    if (!apiKey) {
+        return { success: false, message: 'Gemini API Key is not configured.' };
+    }
+
+    try {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+        let context = "";
+        if (storeContext) {
+            context = `You are a helpful customer service AI for "${storeContext.name}", a ${storeContext.type} business.`;
+        } else {
+            context = `You are a helpful customer service AI.`;
+        }
+
+        const prompt = `
+            ${context}
+            Task: Write a short, friendly, and professional reply to this customer comment on our product "${productName}".
+            Comment: "${comment}"
+            Goal: Answer their question if any, thank them, and politely encourage them to order via the link in bio or post.
+            Constraint: Keep it under 200 characters. No hashtags.
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        return { success: true, reply: text.trim() };
+    } catch (error) {
+        console.error('Error generating reply:', error);
+        return { success: false, message: 'AI generation failed.' };
     }
 }
