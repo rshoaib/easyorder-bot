@@ -215,8 +215,8 @@ export default async function SettingsPage({ params }: Props) {
                             <Save size={20} /> Save Changes
                         </button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
 
             <div className="mt-8 pt-8 border-t border-gray-200">
                 <h3 className="text-sm font-bold text-red-600 mb-2 uppercase tracking-wider">Danger Zone</h3>
