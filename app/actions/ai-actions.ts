@@ -13,8 +13,7 @@ async function generateWithFallback(prompt: string, useJson: boolean = false) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const models = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"];
-    let lastError = null;
-
+    const errors = [];
     for (const modelName of models) {
         try {
             const config = (useJson && modelName.includes('1.5')) ? { responseMimeType: "application/json" } : undefined;
@@ -28,10 +27,10 @@ async function generateWithFallback(prompt: string, useJson: boolean = false) {
             return response.text();
         } catch (e: any) {
             console.warn(`Model ${modelName} failed:`, e.message);
-            lastError = e;
+            errors.push(`${modelName}: ${e.message}`);
         }
     }
-    throw lastError || new Error("All AI models failed.");
+    throw new Error(`All AI models failed. Details: ${errors.join(' | ')}`);
 }
 
 export async function generateProductDescription(name: string, category: string, storeContext?: { name: string, type: string }) {
