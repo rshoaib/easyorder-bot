@@ -1,5 +1,11 @@
 
-import { Order, OrderRepository, Product, ProductRepository, OrderStatus } from './types';
+import {
+    Order, OrderRepository, Product, ProductRepository, OrderStatus,
+    Tenant, TenantRepository,
+    AnalyticsRepository, AnalyticsSummary,
+    PromoCode, PromoCodeRepository,
+    Integration
+} from './types';
 import { supabase } from '../supabase';
 
 export class SupabaseOrderRepository implements OrderRepository {
@@ -164,7 +170,7 @@ export class SupabaseProductRepository implements ProductRepository {
     }
 }
 
-import { Tenant, TenantRepository } from './types';
+
 import { SupabaseClient } from '@supabase/supabase-js';
 
 export class SupabaseTenantRepository implements TenantRepository {
@@ -425,9 +431,54 @@ export class SupabaseTenantRepository implements TenantRepository {
 
         if (error) throw new Error(error.message);
     }
+
+    async getIntegration(tenantId: string, provider: string): Promise<Integration | null> {
+        const { data, error } = await this.client
+            .from('integrations')
+            .select('*')
+            .eq('tenant_id', tenantId)
+            .eq('provider', provider)
+            .single();
+
+        if (error || !data) return null;
+
+        return {
+            id: data.id,
+            tenantId: data.tenant_id,
+            provider: data.provider,
+            accessToken: data.access_token,
+            pageId: data.page_id,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at
+        };
+    }
+
+    async saveIntegration(integration: Omit<Integration, 'id' | 'createdAt' | 'updatedAt'>): Promise<void> {
+        const { error } = await this.client
+            .from('integrations')
+            .upsert({
+                tenant_id: integration.tenantId,
+                provider: integration.provider,
+                access_token: integration.accessToken,
+                page_id: integration.pageId,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'tenant_id, provider' });
+
+        if (error) throw new Error(error.message);
+    }
+
+    async deleteIntegration(tenantId: string, provider: string): Promise<void> {
+        const { error } = await this.client
+            .from('integrations')
+            .delete()
+            .eq('tenant_id', tenantId)
+            .eq('provider', provider);
+
+        if (error) throw new Error(error.message);
+    }
 }
 
-import { AnalyticsRepository, AnalyticsSummary } from './types';
+
 
 export class SupabaseAnalyticsRepository implements AnalyticsRepository {
     private client: SupabaseClient;
@@ -472,7 +523,7 @@ export class SupabaseAnalyticsRepository implements AnalyticsRepository {
     }
 }
 
-import { PromoCode, PromoCodeRepository } from './types';
+
 
 export class SupabasePromoCodeRepository implements PromoCodeRepository {
     async getPromo(code: string, tenantId: string): Promise<PromoCode | null> {

@@ -19,7 +19,7 @@ export default async function NewProductPage({ params }: { params: { slug: strin
                 <h1 className="text-3xl font-bold text-slate-900">Add New Product</h1>
             </div>
             
-            <ProductForm tenantId={tenant.id} slug={slug} storeType={tenant.storeType} />
+            <ProductForm tenantId={tenant.id} slug={slug} storeType={tenant.storeType} storeName={tenant.name} />
         </div>
     );
 }

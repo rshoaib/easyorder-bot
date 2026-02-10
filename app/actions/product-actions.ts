@@ -7,6 +7,7 @@ import { Product } from '@/lib/repository/types'; // Import Product interface
 
 
 import { verifyTenantOwnership } from "@/lib/auth/security";
+import { handleAutoPost } from "./social-actions";
 
 export async function toggleProductAvailability(id: string, currentState: boolean, slug: string) {
     // Security Check
@@ -54,6 +55,9 @@ export async function createProduct(formData: FormData, tenantId: string, slug: 
     };
 
     await repo.addProduct(product);
+
+    // Fire and forget auto-post (don't block UI)
+    handleAutoPost(product, tenantId).catch(err => console.error("Background auto-post failed", err));
 
     revalidatePath(`/admin/${slug}/menu`);
     revalidatePath(`/store/${slug}`);

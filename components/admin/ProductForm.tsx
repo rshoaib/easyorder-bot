@@ -1,7 +1,6 @@
 'use client';
 
 import { createProduct } from "@/app/actions/product-actions";
-import { Save, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 
@@ -13,11 +12,17 @@ interface Props {
     tenantId: string;
     slug: string;
     storeType?: string;
+    storeName: string; // New context
 }
 
-export default function ProductForm({ tenantId, slug, storeType }: Props) {
+import { generateProductDescription } from '@/app/actions/ai-actions';
+import { Sparkles, Save, Loader2, ArrowLeft } from "lucide-react";
+
+export default function ProductForm({ tenantId, slug, storeType, storeName }: Props) {
     const [uploading, setUploading] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
+    const [description, setDescription] = useState('');
     
     // Determine labels based on store type
     // We can extend presets.ts or just handle simple logic here
@@ -45,6 +50,37 @@ export default function ProductForm({ tenantId, slug, storeType }: Props) {
             alert('Upload failed');
         } finally {
             setUploading(false);
+        }
+    }
+
+    async function handleAIGenerate() {
+        // We need to get the current values from the form inputs
+        // Since we are using uncontrolled inputs for name/category, we need to grab them via DOM or state
+        // To keep it simple without refactoring everything to controlled state:
+        const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+        const categoryInput = document.querySelector('select[name="category"]') as HTMLSelectElement; 
+        
+        const name = nameInput?.value;
+        const category = categoryInput?.value;
+
+        if (!name) {
+            alert('Please enter a Product Name first.');
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            const result = await generateProductDescription(name, category, { name: storeName, type: type });
+            if (result.success && result.description) {
+                setDescription(result.description);
+            } else {
+                alert(result.message || 'Failed to generate description');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error generating description');
+        } finally {
+            setIsGenerating(false);
         }
     }
 
@@ -94,8 +130,26 @@ export default function ProductForm({ tenantId, slug, storeType }: Props) {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">{ingredientsLabel}</label>
-                    <textarea name="description" rows={3} placeholder={type === 'restaurant' ? "Describe your delicious product..." : "Provide details..."} className="w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" />
+                    <div className="flex justify-between items-center">
+                        <label className="text-sm font-medium text-slate-700">{ingredientsLabel}</label>
+                        <button 
+                            type="button"
+                            onClick={handleAIGenerate}
+                            disabled={isGenerating}
+                            className="text-xs font-bold text-indigo-600 flex items-center gap-1 hover:text-indigo-800 transition-colors"
+                        >
+                            {isGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                            {isGenerating ? 'Writing...' : 'Auto-Write ✨'}
+                        </button>
+                    </div>
+                    <textarea 
+                        name="description" 
+                        rows={3} 
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder={type === 'restaurant' ? "Describe your delicious product..." : "Provide details..."} 
+                        className="w-full rounded-lg border-slate-300 focus:ring-indigo-500 focus:border-indigo-500" 
+                    />
                 </div>
 
                 <div className="space-y-2">

@@ -12,9 +12,11 @@ import { Sparkles } from 'lucide-react';
 interface Props {
     slug: string;
     tenantId: string;
+    storeName: string;
+    storeType?: string;
 }
 
-export default function AddProductForm({ slug, tenantId }: Props) {
+export default function AddProductForm({ slug, tenantId, storeName, storeType }: Props) {
     const [isUploading, setIsUploading] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export default function AddProductForm({ slug, tenantId }: Props) {
 
         setIsGenerating(true);
         try {
-            const result = await generateProductDescription(name, category);
+            const result = await generateProductDescription(name, category, { name: storeName, type: storeType || 'restaurant' });
             if (result.success && result.description) {
                 setDescription(result.description);
             } else {

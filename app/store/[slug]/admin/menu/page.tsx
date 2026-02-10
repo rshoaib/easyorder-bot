@@ -49,7 +49,7 @@ export default async function AdminMenuPage({ params }: Props) {
                 
                 {/* Add Product Form */}
                 <div className="md:col-span-1">
-                    <AddProductForm slug={slug} tenantId={tenant.id} />
+                    <AddProductForm slug={slug} tenantId={tenant.id} storeName={tenant.name} storeType={tenant.storeType} />
                 </div>
 
                 {/* Product List */}

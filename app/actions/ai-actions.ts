@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 
 const apiKey = process.env.GEMINI_API_KEY;
 
-export async function generateProductDescription(name: string, category: string) {
+export async function generateProductDescription(name: string, category: string, storeContext?: { name: string, type: string }) {
     if (!apiKey) {
         return { success: false, message: 'Gemini API Key is not configured.' };
     }
@@ -16,7 +16,14 @@ export async function generateProductDescription(name: string, category: string)
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-        const prompt = `Write a short, appetizing, and professional food menu description (max 2 sentences) for a item named "${name}" which is in the category "${category}". Do not include quotes.`;
+        let prompt = `Write a short, appetizing, and professional food menu description (max 2 sentences) for a item named "${name}" which is in the category "${category}". Do not include quotes.`;
+
+        if (storeContext) {
+            prompt = `Context: A ${storeContext.type} store named "${storeContext.name}".
+            Task: Write a short, enticing, and validation-ready description (max 2 sentences) for a product named "${name}" in the category "${category}".
+            Tone: Professional yet appealing to customers of this specific business type.
+            Constraint: Do not include quotes.`;
+        }
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
