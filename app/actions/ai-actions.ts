@@ -7,16 +7,54 @@ import { revalidatePath } from "next/cache";
 
 const apiKey = process.env.GEMINI_API_KEY;
 
+// Helper to get available models dynamically
+async function getAvailableModels(apiKey: string): Promise<string[]> {
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.models) {
+            // Prioritize flash models, then pro, then others
+            const modelNames = data.models.map((m: any) => m.name.replace('models/', ''));
+            return modelNames.sort((a: string, b: string) => {
+                if (a.includes('flash') && !b.includes('flash')) return -1;
+                if (!a.includes('flash') && b.includes('flash')) return 1;
+                if (a.includes('pro') && !b.includes('pro')) return -1;
+                if (!a.includes('pro') && b.includes('pro')) return 1;
+                return 0;
+            });
+        }
+    } catch (e) {
+        console.error("Failed to fetch models dynamically:", e);
+    }
+    // Fallback if dynamic fetch fails
+    return ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"];
+}
+
 // Helper to try multiple models
 async function generateWithFallback(prompt: string, useJson: boolean = false) {
     if (!apiKey) throw new Error("Gemini API Key is not configured.");
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const models = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"];
+
+    // Get available models dynamically to avoid 404s on model names
+    const availableModels = await getAvailableModels(apiKey);
+    // Filter for generative models (usually start with gemini)
+    const models = availableModels.filter(m => m.includes('gemini'));
+
+    if (models.length === 0) {
+        throw new Error("No Gemini models available for this API key.");
+    }
+
     const errors: string[] = [];
     for (const modelName of models) {
         try {
-            const config = (useJson && modelName.includes('1.5')) ? { responseMimeType: "application/json" } : undefined;
+            // Only use JSON mode if model supports it (usually 1.5+ or starts with gemini-1.5)
+            // But we can try to apply it safely. 
+            // Actually, responseMimeType is safer to apply on 1.5+ models only to avoid errors on older ones.
+            const isJsonSupported = modelName.includes('1.5') || modelName.includes('2.0') || modelName.includes('2.5') || modelName.includes('flash');
+            const config = (useJson && isJsonSupported) ? { responseMimeType: "application/json" } : undefined;
+
             const model = genAI.getGenerativeModel({
                 model: modelName,
                 generationConfig: config
