@@ -491,7 +491,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-02-07",
         author: "Finance Team",
         category: "Cost Savings",
-        coverImage: "https://images.unsplash.com/photo-1577114250269-e741c881a20a?q=80&w=2600&auto=format&fit=crop",
+        coverImage: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2600&auto=format&fit=crop",
         content: `
             <p class="mb-6 text-xl text-slate-600 leading-relaxed">Every time you change a price or add a dish, you pay a printer. In 2026, a static menu is a liability.</p>
             
@@ -534,7 +534,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-02-08",
         author: "Sales Team",
         category: "Sales",
-        coverImage: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=2600&auto=format&fit=crop",
+        coverImage: "https://images.unsplash.com/photo-1556745757-8d76bdb6984b?q=80&w=2600&auto=format&fit=crop",
         content: `
             <p class="mb-6 text-xl text-slate-600 leading-relaxed">"Do you want fries with that?" is the most profitable sentence in history. You can do the same on WhatsApp, but you have to be smart about it.</p>
             
@@ -1093,10 +1093,28 @@ export const blogPosts: BlogPost[] = [
     }
 ];
 
+import { getBlogRepository } from './repository/blog-repo';
+
 export async function getPost(slug: string): Promise<BlogPost | undefined> {
+    try {
+        const repo = getBlogRepository();
+        const post = await repo.getPostBySlug(slug);
+        if (post) return post;
+    } catch (e) {
+        console.warn('Supabase blog fetch failed, falling back to local data:', e);
+    }
+    // Fallback to hardcoded data
     return blogPosts.find(post => post.slug === slug);
 }
 
 export async function getAllPosts(): Promise<BlogPost[]> {
+    try {
+        const repo = getBlogRepository();
+        const posts = await repo.getAllPosts();
+        if (posts.length > 0) return posts;
+    } catch (e) {
+        console.warn('Supabase blog fetch failed, falling back to local data:', e);
+    }
+    // Fallback to hardcoded data
     return blogPosts;
 }
