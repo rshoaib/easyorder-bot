@@ -9,10 +9,31 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'),
-  title: "OrderViaChat | Shop Local",
-  description: "Order fresh items directly via WhatsApp. The best free WhatsApp ordering system for small businesses.",
-  keywords: ["WhatsApp Ordering", "Digital Menu", "Online Store Builder", "No Commission Food Delivery", "Instagram Menu"],
+  title: "OrderViaChat — Free WhatsApp Ordering for Small Businesses",
+  description: "Create a beautiful digital menu and accept orders on WhatsApp. Free forever, no commissions, setup in 2 minutes.",
+  keywords: ["WhatsApp Ordering", "Digital Menu", "Online Store Builder", "No Commission Food Delivery", "Instagram Menu", "Free WhatsApp Store"],
   manifest: "/manifest.json",
+  openGraph: {
+    type: 'website',
+    siteName: 'OrderViaChat',
+    title: 'OrderViaChat — Free WhatsApp Ordering for Small Businesses',
+    description: 'Create a digital menu, share a link, get orders on WhatsApp. 100% free, no commissions, setup in 2 minutes.',
+    images: [
+      {
+        url: '/images/showcase-store.png',
+        width: 1200,
+        height: 630,
+        alt: 'OrderViaChat — Digital menu and WhatsApp ordering',
+      },
+    ],
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'OrderViaChat — Free WhatsApp Ordering',
+    description: 'Create a digital menu, share a link, get orders on WhatsApp. 100% free!',
+    images: ['/images/showcase-store.png'],
+  },
 };
 
 export const viewport: Viewport = {
