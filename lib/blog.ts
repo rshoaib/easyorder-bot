@@ -1,4 +1,4 @@
-
+﻿
 export interface BlogPost {
     slug: string;
     title: string;
@@ -60,7 +60,7 @@ export const blogPosts: BlogPost[] = [
             </div>
             
             <div class="flex items-center gap-4 p-6 bg-green-50 rounded-xl border border-green-100">
-                <div class="text-3xl">🎉</div>
+                <div class="text-3xl">ðŸŽ‰</div>
                 <div>
                     <h4 class="font-bold text-green-900">Pro Tip</h4>
                     <p class="text-green-700">Test your new look on mobile! Most customers will order from their phones.</p>
@@ -92,17 +92,17 @@ export const blogPosts: BlogPost[] = [
             
             <div class="grid md:grid-cols-3 gap-6 my-10">
                 <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 text-center">
-                    <div class="text-4xl mb-4">🔗</div>
+                    <div class="text-4xl mb-4">ðŸ”—</div>
                     <h3 class="font-bold mb-2">1. Share Link</h3>
                     <p class="text-sm text-slate-500">Put your store link in your Instagram Bio.</p>
                 </div>
                 <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 text-center">
-                    <div class="text-4xl mb-4">🛒</div>
+                    <div class="text-4xl mb-4">ðŸ›’</div>
                     <h3 class="font-bold mb-2">2. Browse & Add</h3>
                     <p class="text-sm text-slate-500">Customers choose items and add variations.</p>
                 </div>
                 <div class="bg-slate-50 p-6 rounded-xl border border-slate-100 text-center">
-                    <div class="text-4xl mb-4">✅</div>
+                    <div class="text-4xl mb-4">âœ…</div>
                     <h3 class="font-bold mb-2">3. Auto-Format</h3>
                     <p class="text-sm text-slate-500">You receive a perfect WhatsApp text.</p>
                 </div>
@@ -184,7 +184,7 @@ export const blogPosts: BlogPost[] = [
                     [AI Generating Menu...]
                 </div>
                 <div class="bg-indigo-50 p-4 text-center text-sm text-indigo-700 font-bold">
-                    🚀 Generates Items, Descriptions, and Prices instantly.
+                    ðŸš€ Generates Items, Descriptions, and Prices instantly.
                 </div>
             </div>
 
@@ -341,7 +341,7 @@ export const blogPosts: BlogPost[] = [
                 <li>They hit "Book on WhatsApp".</li>
             </ol>
             
-            <p class="mb-6 text-lg">You receive a message: <strong>"New Booking: Haircut (Afternoon) - $30"</strong>. All you have to do is reply with a thumbs up 👍. Done.</p>
+            <p class="mb-6 text-lg">You receive a message: <strong>"New Booking: Haircut (Afternoon) - $30"</strong>. All you have to do is reply with a thumbs up ðŸ‘. Done.</p>
 
             <div class="bg-indigo-900 text-white p-8 rounded-2xl mt-12 text-center">
                 <h3 class="text-2xl font-bold mb-4">Reclaim Your Time</h3>
@@ -381,7 +381,7 @@ export const blogPosts: BlogPost[] = [
             </div>
 
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">The "Micro-Commitment" Psychology</h2>
-            <p class="mb-4 text-lg">Clicking "Send" on WhatsApp doesn't feel like "spending money" yet—it feels like "asking a question". This lowers the barrier to entry.</p>
+            <p class="mb-4 text-lg">Clicking "Send" on WhatsApp doesn't feel like "spending money" yetâ€”it feels like "asking a question". This lowers the barrier to entry.</p>
             <p class="mb-4 text-lg">Once they are talking to you, your chances of closing the sale explode.</p>
             
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Retargeting is Free</h2>
@@ -573,17 +573,17 @@ export const blogPosts: BlogPost[] = [
         date: "2026-02-10",
         author: "OrderViaChat Team",
         category: "Guide",
-        coverImage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a3a8?q=80&w=2600&auto=format&fit=crop",
+        coverImage: "https://images.unsplash.com/photo-1611746872915-64382b5c76da?q=80&w=2600&auto=format&fit=crop",
         content: `
-            <p class="mb-6 text-xl text-slate-600 leading-relaxed">If you are searching for a <strong>free WhatsApp ordering system</strong>, you are in the right place. Whether you run a restaurant, home bakery, or small retail shop, accepting orders via WhatsApp is the fastest way to start selling online — without paying for expensive software or commissions.</p>
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">If you are searching for a <strong>free WhatsApp ordering system</strong>, you are in the right place. Whether you run a restaurant, home bakery, or small retail shop, accepting orders via WhatsApp is the fastest way to start selling online â€” without paying for expensive software or commissions.</p>
 
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">What is a WhatsApp Ordering System?</h2>
-            <p class="mb-4 text-lg">A WhatsApp ordering system lets your customers <strong>browse a digital menu</strong>, add items to a cart, and send their complete order directly to your WhatsApp number — all without downloading any app.</p>
+            <p class="mb-4 text-lg">A WhatsApp ordering system lets your customers <strong>browse a digital menu</strong>, add items to a cart, and send their complete order directly to your WhatsApp number â€” all without downloading any app.</p>
             <p class="mb-4 text-lg">Instead of manually answering "What do you have?" or "How much is the biryani?", your customers get a <strong>professional menu page</strong> with photos, prices, and descriptions. When they checkout, the order arrives as a perfectly formatted WhatsApp message.</p>
 
             <div class="my-10 bg-green-50 border-l-4 border-green-500 p-6 rounded-r-xl">
                 <h3 class="font-bold text-green-900 mb-2">Why Free Matters</h3>
-                <p class="text-green-700">Most small businesses operate on thin margins. Paying $30-100/month for ordering software — or 15-30% commission per order — simply isn't sustainable. A truly free system removes all barriers to getting started.</p>
+                <p class="text-green-700">Most small businesses operate on thin margins. Paying $30-100/month for ordering software â€” or 15-30% commission per order â€” simply isn't sustainable. A truly free system removes all barriers to getting started.</p>
             </div>
 
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">How to Set Up OrderViaChat (Free, 5 Minutes)</h2>
@@ -594,7 +594,7 @@ export const blogPosts: BlogPost[] = [
                 </li>
                 <li>
                     <strong>Add your menu:</strong>
-                    <p class="text-sm text-slate-500 mt-1">Type your items manually or use the AI Generator — just describe your business in one sentence and it creates your entire menu in seconds.</p>
+                    <p class="text-sm text-slate-500 mt-1">Type your items manually or use the AI Generator â€” just describe your business in one sentence and it creates your entire menu in seconds.</p>
                 </li>
                 <li>
                     <strong>Share your store link:</strong>
@@ -616,8 +616,8 @@ export const blogPosts: BlogPost[] = [
                         <tr class="border-b border-slate-100"><td class="py-3 px-4">Monthly Cost</td><td class="py-3 px-4 text-green-600 font-bold">$0</td><td class="py-3 px-4 text-red-600">$30 - $100</td></tr>
                         <tr class="border-b border-slate-100"><td class="py-3 px-4">Commission per Order</td><td class="py-3 px-4 text-green-600 font-bold">0%</td><td class="py-3 px-4 text-red-600">5% - 30%</td></tr>
                         <tr class="border-b border-slate-100"><td class="py-3 px-4">Setup Time</td><td class="py-3 px-4">2 minutes</td><td class="py-3 px-4">30 min - 2 hours</td></tr>
-                        <tr class="border-b border-slate-100"><td class="py-3 px-4">WhatsApp Integration</td><td class="py-3 px-4 text-green-600 font-bold">✅ Built-in</td><td class="py-3 px-4">Sometimes</td></tr>
-                        <tr class="border-b border-slate-100"><td class="py-3 px-4">AI Menu Generator</td><td class="py-3 px-4 text-green-600 font-bold">✅ Yes</td><td class="py-3 px-4">Rarely</td></tr>
+                        <tr class="border-b border-slate-100"><td class="py-3 px-4">WhatsApp Integration</td><td class="py-3 px-4 text-green-600 font-bold">âœ… Built-in</td><td class="py-3 px-4">Sometimes</td></tr>
+                        <tr class="border-b border-slate-100"><td class="py-3 px-4">AI Menu Generator</td><td class="py-3 px-4 text-green-600 font-bold">âœ… Yes</td><td class="py-3 px-4">Rarely</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -625,11 +625,11 @@ export const blogPosts: BlogPost[] = [
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Who Uses WhatsApp Ordering?</h2>
             <p class="mb-4 text-lg">WhatsApp ordering systems are used by businesses in <strong>190+ countries</strong>. The most common users include:</p>
             <ul class="list-disc pl-6 mb-8 space-y-2 text-lg">
-                <li><strong>Restaurants & cafes</strong> — accept dine-in, takeout, and delivery orders.</li>
-                <li><strong>Home bakers & cloud kitchens</strong> — replace messy DM conversations.</li>
-                <li><strong>Grocery & convenience stores</strong> — let customers order staples for pickup or delivery.</li>
-                <li><strong>Service businesses</strong> — barbers, tutors, and freelancers accept bookings.</li>
-                <li><strong>Online retailers</strong> — sell fashion, crafts, and digital products.</li>
+                <li><strong>Restaurants & cafes</strong> â€” accept dine-in, takeout, and delivery orders.</li>
+                <li><strong>Home bakers & cloud kitchens</strong> â€” replace messy DM conversations.</li>
+                <li><strong>Grocery & convenience stores</strong> â€” let customers order staples for pickup or delivery.</li>
+                <li><strong>Service businesses</strong> â€” barbers, tutors, and freelancers accept bookings.</li>
+                <li><strong>Online retailers</strong> â€” sell fashion, crafts, and digital products.</li>
             </ul>
 
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">FAQ</h2>
@@ -640,7 +640,7 @@ export const blogPosts: BlogPost[] = [
                 </div>
                 <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
                     <h4 class="font-bold text-slate-900 mb-2">Do my customers need to download anything?</h4>
-                    <p class="text-slate-600">No. Your store is a regular web page. Customers open it in any browser, add items, and checkout via WhatsApp — no app download needed.</p>
+                    <p class="text-slate-600">No. Your store is a regular web page. Customers open it in any browser, add items, and checkout via WhatsApp â€” no app download needed.</p>
                 </div>
                 <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
                     <h4 class="font-bold text-slate-900 mb-2">Can I use it without a WhatsApp Business account?</h4>
@@ -664,7 +664,7 @@ export const blogPosts: BlogPost[] = [
         category: "Restaurant",
         coverImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2600&auto=format&fit=crop",
         content: `
-            <p class="mb-6 text-xl text-slate-600 leading-relaxed">The restaurant industry has changed forever. Customers expect to scan a QR code and see your <strong>digital menu</strong> instantly — with photos, prices, and the ability to order right from their phone.</p>
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">The restaurant industry has changed forever. Customers expect to scan a QR code and see your <strong>digital menu</strong> instantly â€” with photos, prices, and the ability to order right from their phone.</p>
 
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">5 Reasons Your Restaurant Needs a Digital Menu</h2>
 
@@ -680,7 +680,7 @@ export const blogPosts: BlogPost[] = [
                     <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600 font-bold text-xl flex-shrink-0">2</div>
                     <div>
                         <h3 class="font-bold text-xl text-slate-900 mb-2">Photos Sell More Food</h3>
-                        <p class="text-lg text-slate-600">Studies show restaurants with <strong>photo menus see 30% higher order values</strong>. Customers order what looks good, not just what sounds safe. A paper menu can't show photos of every dish — but a digital one can.</p>
+                        <p class="text-lg text-slate-600">Studies show restaurants with <strong>photo menus see 30% higher order values</strong>. Customers order what looks good, not just what sounds safe. A paper menu can't show photos of every dish â€” but a digital one can.</p>
                     </div>
                 </div>
                 <div class="flex gap-6 items-start">
@@ -701,7 +701,7 @@ export const blogPosts: BlogPost[] = [
                     <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-600 font-bold text-xl flex-shrink-0">5</div>
                     <div>
                         <h3 class="font-bold text-xl text-slate-900 mb-2">Built-In Online Ordering</h3>
-                        <p class="text-lg text-slate-600">The best digital menus don't just display food — they let customers <strong>order directly</strong>. With OrderViaChat, your menu becomes a full ordering system with WhatsApp checkout.</p>
+                        <p class="text-lg text-slate-600">The best digital menus don't just display food â€” they let customers <strong>order directly</strong>. With OrderViaChat, your menu becomes a full ordering system with WhatsApp checkout.</p>
                     </div>
                 </div>
             </div>
@@ -710,7 +710,7 @@ export const blogPosts: BlogPost[] = [
             <p class="mb-4 text-lg">With OrderViaChat, you can create a complete restaurant digital menu in 3 steps:</p>
             <ol class="list-decimal pl-6 mb-8 space-y-3 text-lg">
                 <li>Sign up at <a href="/register" class="text-indigo-600 underline font-semibold">orderviachat.com/register</a> (free, no credit card)</li>
-                <li>Use the AI Generator: type "Italian restaurant with pasta, pizza, and salads" — the AI creates your entire menu with descriptions and prices</li>
+                <li>Use the AI Generator: type "Italian restaurant with pasta, pizza, and salads" â€” the AI creates your entire menu with descriptions and prices</li>
                 <li>Print a QR code from the Marketing tab and place it on your tables</li>
             </ol>
 
@@ -747,21 +747,21 @@ export const blogPosts: BlogPost[] = [
             <p class="mb-6 text-xl text-slate-600 leading-relaxed">Building a custom food delivery app costs $10,000-50,000. Joining UberEats or DoorDash means giving up 30% of every sale. But there's a third option that costs <strong>$0</strong> and keeps you in control: <strong>WhatsApp Business</strong>.</p>
 
             <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Why WhatsApp for Food Delivery?</h2>
-            <p class="mb-4 text-lg">Think about it: your customers are already on WhatsApp. They use it every day. They trust it. When they order food via WhatsApp, it feels personal — like texting a friend, not filling out a cold web form.</p>
+            <p class="mb-4 text-lg">Think about it: your customers are already on WhatsApp. They use it every day. They trust it. When they order food via WhatsApp, it feels personal â€” like texting a friend, not filling out a cold web form.</p>
 
             <div class="grid md:grid-cols-3 gap-6 my-10">
                 <div class="bg-green-50 p-6 rounded-2xl border border-green-100 text-center">
-                    <div class="text-4xl mb-3">📱</div>
+                    <div class="text-4xl mb-3">ðŸ“±</div>
                     <h3 class="font-bold text-lg mb-1">2 Billion Users</h3>
                     <p class="text-sm text-slate-500">WhatsApp is the world's most used messaging app</p>
                 </div>
                 <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 text-center">
-                    <div class="text-4xl mb-3">⚡</div>
+                    <div class="text-4xl mb-3">âš¡</div>
                     <h3 class="font-bold text-lg mb-1">98% Open Rate</h3>
-                    <p class="text-sm text-slate-500">Messages get read instantly — unlike email or app notifications</p>
+                    <p class="text-sm text-slate-500">Messages get read instantly â€” unlike email or app notifications</p>
                 </div>
                 <div class="bg-purple-50 p-6 rounded-2xl border border-purple-100 text-center">
-                    <div class="text-4xl mb-3">💰</div>
+                    <div class="text-4xl mb-3">ðŸ’°</div>
                     <h3 class="font-bold text-lg mb-1">0% Commission</h3>
                     <p class="text-sm text-slate-500">No middleman taking a cut of your hard-earned revenue</p>
                 </div>
@@ -839,6 +839,255 @@ export const blogPosts: BlogPost[] = [
                 <h3 class="text-2xl font-bold mb-4">Start Your Food Delivery on WhatsApp Today</h3>
                 <p class="mb-8 text-green-100">Free forever. No commissions. Setup takes 2 minutes. Your customers will thank you.</p>
                 <a href="/register" class="inline-block bg-white text-green-700 px-8 py-4 rounded-full font-bold hover:scale-105 transition-all shadow-lg">Create Your Free Store &rarr;</a>
+            </div>
+        `
+    },
+    {
+        slug: "how-to-create-your-store-step-by-step",
+        title: "How to Create Your OrderViaChat Store (Step-by-Step Tutorial)",
+        excerpt: "A complete beginner's guide to setting up your first OrderViaChat store. From sign-up to sharing your first link â€” in under 5 minutes.",
+        date: "2026-02-12",
+        author: "OrderViaChat Team",
+        category: "Setup Guide",
+        coverImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">Welcome to OrderViaChat! This guide will walk you through creating your store from scratch. No technical skills needed â€” if you can send a text message, you can do this.</p>
+
+            <div class="my-10 bg-green-50 border-l-4 border-green-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-green-900 mb-2">What You'll Have by the End</h3>
+                <p class="text-green-700">A live digital store with your products, WhatsApp ordering enabled, and a shareable link ready to send to customers.</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Step 1: Create Your Account</h2>
+            <p class="mb-4 text-lg">Go to <a href="/register" class="text-indigo-600 underline font-semibold">orderviachat.com/register</a> and fill in:</p>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-lg">
+                <li><strong>Store Name:</strong> Your business name (e.g., "Mama's Kitchen", "Fresh Bakes Co.")</li>
+                <li><strong>WhatsApp Number:</strong> The number where you want to receive orders</li>
+                <li><strong>Password:</strong> Something secure you'll remember</li>
+            </ul>
+            <p class="mb-4 text-lg">That's it! Click <strong>"Create Store"</strong> and you're in.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Step 2: Build Your Menu</h2>
+            <p class="mb-4 text-lg">You have two options:</p>
+            <div class="grid md:grid-cols-2 gap-6 my-8">
+                <div class="bg-purple-50 p-6 rounded-2xl border border-purple-100">
+                    <div class="text-3xl mb-3">ðŸ¤–</div>
+                    <h3 class="font-bold text-lg mb-2">Option A: AI Magic Generator</h3>
+                    <p class="text-sm text-slate-600 mb-3">Describe your business in one sentence:</p>
+                    <p class="text-sm italic text-purple-700 bg-purple-100 p-3 rounded-lg">"I run a home bakery selling cakes, cookies, and brownies"</p>
+                    <p class="text-sm text-slate-500 mt-3">The AI creates your entire menu with names, descriptions, and prices in <strong>10 seconds</strong>.</p>
+                </div>
+                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                    <div class="text-3xl mb-3">âœï¸</div>
+                    <h3 class="font-bold text-lg mb-2">Option B: Add Manually</h3>
+                    <p class="text-sm text-slate-600 mb-3">Add your products one by one with:</p>
+                    <ul class="text-sm text-slate-500 space-y-1">
+                        <li>ðŸ“¸ Product photo</li>
+                        <li>ðŸ’° Price</li>
+                        <li>ðŸ“ Description</li>
+                        <li>ðŸ·ï¸ Category</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Step 3: Customize Your Products</h2>
+            <p class="mb-4 text-lg">Edit each product's name, price, description, photo, and category. Group similar items like "Starters", "Mains", "Desserts".</p>
+            <div class="my-10 bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-indigo-900 mb-2">Pro Tip: Photos Matter!</h3>
+                <p class="text-indigo-700">Products with photos get <strong>3x more orders</strong>. Even a quick smartphone photo with natural lighting works great.</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Step 4: Set Up Store Details</h2>
+            <p class="mb-4 text-lg">Go to <strong>Settings</strong> and configure your logo, brand color, description, and currency.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Step 5: Test Your Store</h2>
+            <ol class="list-decimal pl-6 mb-8 space-y-3 text-lg">
+                <li>Open your store link in a new tab</li>
+                <li>Add items to the cart</li>
+                <li>Click <strong>"Order on WhatsApp"</strong></li>
+                <li>Verify the order message on your WhatsApp</li>
+            </ol>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Step 6: Share Your Store!</h2>
+            <div class="grid md:grid-cols-2 gap-4 my-8">
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                    <h4 class="font-bold text-slate-900 mb-2">ðŸ“± WhatsApp Status</h4>
+                    <p class="text-sm text-slate-500">Post your link for all contacts to see</p>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                    <h4 class="font-bold text-slate-900 mb-2">ðŸ“¸ Instagram Bio</h4>
+                    <p class="text-sm text-slate-500">Replace "DM to order" with your store link</p>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                    <h4 class="font-bold text-slate-900 mb-2">ðŸŽ¯ QR Code</h4>
+                    <p class="text-sm text-slate-500">Print and display at your counter</p>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                    <h4 class="font-bold text-slate-900 mb-2">ðŸ’¬ Direct Message</h4>
+                    <p class="text-sm text-slate-500">Send to your regular customers</p>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 rounded-2xl text-white my-12 text-center shadow-xl">
+                <h3 class="text-2xl font-bold mb-4">You're All Set! ðŸŽ‰</h3>
+                <p class="mb-8 text-indigo-100">Your store is live and ready to accept orders.</p>
+                <a href="/register" class="inline-block bg-white text-indigo-600 px-8 py-4 rounded-full font-bold hover:scale-105 transition-all shadow-lg">Create Your Store Now &rarr;</a>
+            </div>
+        `
+    },
+    {
+        slug: "guide-adding-products-categories",
+        title: "Guide: Adding Products, Categories & Variants to Your Store",
+        excerpt: "Learn how to organize your menu with categories, add product variants like sizes and flavors, and upload photos that sell.",
+        date: "2026-02-12",
+        author: "OrderViaChat Team",
+        category: "Setup Guide",
+        coverImage: "https://images.unsplash.com/photo-1556742111-a301076d9d18?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">Your store is created â€” now let's make it <strong>look professional</strong>. This guide covers everything about managing products, categories, and variants.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Adding a New Product</h2>
+            <p class="mb-4 text-lg">From your Admin Dashboard, click <strong>"Add Product"</strong> and fill in:</p>
+            <div class="space-y-4 my-8">
+                <div class="flex gap-4 items-start bg-slate-50 p-5 rounded-xl border border-slate-100">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold flex-shrink-0">1</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900">Product Name</h4>
+                        <p class="text-sm text-slate-500">Be specific: "Chocolate Fudge Brownie" not just "Brownie"</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start bg-slate-50 p-5 rounded-xl border border-slate-100">
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600 font-bold flex-shrink-0">2</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900">Price</h4>
+                        <p class="text-sm text-slate-500">Enter the base price. For different sizes, use the smallest size price.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start bg-slate-50 p-5 rounded-xl border border-slate-100">
+                    <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-bold flex-shrink-0">3</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900">Description</h4>
+                        <p class="text-sm text-slate-500">1-2 appetizing sentences: "Rich dark chocolate brownie with gooey fudge center, topped with sea salt."</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 items-start bg-slate-50 p-5 rounded-xl border border-slate-100">
+                    <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center text-pink-600 font-bold flex-shrink-0">4</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900">Photo</h4>
+                        <p class="text-sm text-slate-500">Upload a clear, well-lit photo. Natural light works best!</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Organizing with Categories</h2>
+            <p class="mb-4 text-lg">Categories group products for easy browsing:</p>
+            <div class="grid md:grid-cols-3 gap-4 my-8">
+                <div class="bg-orange-50 p-5 rounded-xl border border-orange-100 text-center">
+                    <div class="text-2xl mb-2">ðŸ•</div>
+                    <h4 class="font-bold text-sm">Restaurant</h4>
+                    <p class="text-xs text-slate-500 mt-1">Starters Â· Mains Â· Desserts Â· Drinks</p>
+                </div>
+                <div class="bg-pink-50 p-5 rounded-xl border border-pink-100 text-center">
+                    <div class="text-2xl mb-2">ðŸ§</div>
+                    <h4 class="font-bold text-sm">Bakery</h4>
+                    <p class="text-xs text-slate-500 mt-1">Cakes Â· Cookies Â· Pastries Â· Breads</p>
+                </div>
+                <div class="bg-purple-50 p-5 rounded-xl border border-purple-100 text-center">
+                    <div class="text-2xl mb-2">ðŸ‘•</div>
+                    <h4 class="font-bold text-sm">Fashion</h4>
+                    <p class="text-xs text-slate-500 mt-1">Tops Â· Bottoms Â· Dresses Â· Accessories</p>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Adding Product Variants</h2>
+            <p class="mb-4 text-lg">Variants let customers choose options like:</p>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-lg">
+                <li><strong>Sizes:</strong> Small, Medium, Large</li>
+                <li><strong>Flavors:</strong> Chocolate, Vanilla, Strawberry</li>
+                <li><strong>Add-ons:</strong> Extra cheese (+$2), Bacon (+$3)</li>
+            </ul>
+            <div class="my-10 bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-indigo-900 mb-2">How Variants Work</h3>
+                <p class="text-indigo-700">Customers see options to choose their variant. The selection is automatically included in the WhatsApp order message.</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Photo Tips</h2>
+            <div class="space-y-3 my-8">
+                <div class="flex items-start gap-3"><span class="text-green-500 font-bold text-xl">âœ…</span><p class="text-lg"><strong>Do:</strong> Use natural daylight near a window</p></div>
+                <div class="flex items-start gap-3"><span class="text-green-500 font-bold text-xl">âœ…</span><p class="text-lg"><strong>Do:</strong> Use a clean, simple background</p></div>
+                <div class="flex items-start gap-3"><span class="text-green-500 font-bold text-xl">âœ…</span><p class="text-lg"><strong>Do:</strong> Show the actual product customers receive</p></div>
+                <div class="flex items-start gap-3"><span class="text-red-500 font-bold text-xl">âŒ</span><p class="text-lg"><strong>Don't:</strong> Use blurry or dark photos</p></div>
+                <div class="flex items-start gap-3"><span class="text-red-500 font-bold text-xl">âŒ</span><p class="text-lg"><strong>Don't:</strong> Use stock images that don't match</p></div>
+            </div>
+
+            <div class="bg-indigo-900 text-white p-8 rounded-2xl mt-12 text-center">
+                <h3 class="text-2xl font-bold mb-4">Need Help?</h3>
+                <p class="mb-6">Try the AI Generator â€” describe your business and it creates your entire catalog.</p>
+                <a href="/register" class="inline-block bg-white text-indigo-900 px-6 py-3 rounded-full font-bold hover:bg-indigo-50 transition-colors">Try AI Generator</a>
+            </div>
+        `
+    },
+    {
+        slug: "guide-promote-your-store",
+        title: "Guide: How to Get Your First 50 Customers on OrderViaChat",
+        excerpt: "Your store is ready. Now how do you get customers? Here are 10 free strategies to promote your store and start getting orders.",
+        date: "2026-02-12",
+        author: "Riz",
+        category: "Setup Guide",
+        coverImage: "https://images.unsplash.com/photo-1533750516457-a7f992034fec?q=80&w=2600&auto=format&fit=crop",
+        content: `
+            <p class="mb-6 text-xl text-slate-600 leading-relaxed">You've built your store. Your products look great. But no one knows about it yet. Here are <strong>10 proven strategies</strong> to get your first 50 customers â€” all completely free.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 1: WhatsApp Status Blitz</h2>
+            <p class="mb-4 text-lg">Post your store link as a WhatsApp Status. Everyone in your contact list will see it.</p>
+            <div class="bg-green-50 p-5 rounded-xl border border-green-100 my-6">
+                <p class="font-medium text-green-800">ðŸ“ Copy this template:</p>
+                <p class="text-green-700 mt-2 italic">"ðŸŽ‰ My store is now online! Browse my menu and order directly on WhatsApp â€” no more back-and-forth! ðŸ‘‡ [Your store link]"</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 2: Instagram Bio Link</h2>
+            <p class="mb-4 text-lg">Replace "DM to order" with your OrderViaChat link. Update posts to say: <em>"Link in bio to order!"</em></p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 3: QR Code at Your Location</h2>
+            <p class="mb-4 text-lg">Print a QR code and place it on tables, counters, doors, and packaging.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 4: Personal Message to Regulars</h2>
+            <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-100 my-6">
+                <p class="font-medium text-indigo-800">ðŸ“ Copy this template:</p>
+                <p class="text-indigo-700 mt-2 italic">"Hi [Name]! You can now browse my full menu and order online anytime. Just click here: [link]. No need to message me for the menu anymore! ðŸ˜Š"</p>
+            </div>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 5: Google My Business</h2>
+            <p class="mb-4 text-lg">Set your website URL in Google Business Profile to your store link. People on Google Maps will find your ordering page directly.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 6: Package Inserts</h2>
+            <p class="mb-4 text-lg">Include a card with your store QR code in every delivery. Every package becomes a marketing opportunity.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 7: WhatsApp Groups</h2>
+            <p class="mb-4 text-lg">Share in neighborhood and community groups. Be helpful, not spammy.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 8: Facebook Marketplace</h2>
+            <p class="mb-4 text-lg">List your products on Facebook Marketplace with your store link. Free local discovery.</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 9: Word of Mouth</h2>
+            <p class="mb-4 text-lg">Ask every happy customer to share your link. Offer incentives: "Share with 3 friends and get a free item!"</p>
+
+            <h2 class="text-3xl font-bold mt-12 mb-6 text-slate-900">Strategy 10: Weekly Status Updates</h2>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-lg">
+                <li><strong>Monday:</strong> "New item added! Order here ðŸ‘‡"</li>
+                <li><strong>Wednesday:</strong> Photo of your best seller + link</li>
+                <li><strong>Friday:</strong> "Weekend special! ðŸŽ‰"</li>
+            </ul>
+
+            <div class="my-10 bg-green-50 border-l-4 border-green-500 p-6 rounded-r-xl">
+                <h3 class="font-bold text-green-900 mb-2">The 50-Customer Formula</h3>
+                <p class="text-green-700">WhatsApp Status (15) + Instagram Bio (10) + Personal Messages (10) + QR Code (10) + Word of Mouth (5) = <strong>50 Customers</strong></p>
+            </div>
+
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 rounded-2xl text-white my-12 text-center shadow-xl">
+                <h3 class="text-2xl font-bold mb-4">Build It, Then Share It! ðŸš€</h3>
+                <p class="mb-8 text-indigo-100">Don't have a store yet? Create one in 2 minutes.</p>
+                <a href="/register" class="inline-block bg-white text-indigo-600 px-8 py-4 rounded-full font-bold hover:scale-105 transition-all shadow-lg">Create Your Free Store &rarr;</a>
             </div>
         `
     }
