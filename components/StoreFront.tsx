@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
-import { Plus, ShoppingBag, Search, Check } from "lucide-react";
+import { Plus, ShoppingBag, Search, Check, Clock } from "lucide-react";
 import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -29,55 +29,76 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
       return matchesCategory && matchesSearch;
   });
 
+  const isOpen = tenant.isOpen !== false; // default to open
+
   return (
-    <main className="container"> 
-      {/* Header */}
-      <header className="header-wrapper flex items-center justify-between">
-        <div className="flex items-start gap-3">
+    <main className="store-container">
+      {/* Hero Section */}
+      <div 
+        className="store-hero"
+        style={{ 
+          background: `linear-gradient(135deg, ${tenant.themeColor || '#6366f1'}15 0%, ${tenant.themeColor || '#6366f1'}08 50%, transparent 100%)`,
+        }}
+      >
+        <div className="store-hero-content">
+          <div className="flex items-center gap-4">
             {tenant.logoUrl && (
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-100 shadow-sm shrink-0">
-                    <ImageWithFallback 
-                        src={tenant.logoUrl} 
-                        alt={tenant.name} 
-                        fill 
-                        className="object-cover"
-                    />
-                </div>
+              <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 shadow-lg shrink-0" style={{ borderColor: `${tenant.themeColor || '#6366f1'}30` }}>
+                <ImageWithFallback 
+                  src={tenant.logoUrl} 
+                  alt={tenant.name} 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
             )}
-            <div>
-                <h1 className="text-xl font-bold leading-tight">{tenant.name}</h1>
-                <div className="flex gap-2 mt-1">
-                    {tenant.instagramUrl && (
-                        <a href={tenant.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                        </a>
-                    )}
-                    {tenant.facebookUrl && (
-                        <a href={tenant.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                        </a>
-                    )}
-                </div>
-                <p className="text-xs text-gray-500 font-medium mt-0.5">{dict.poweredBy}</p>
-            </div>
-        </div>
-        <div className="cart-btn-wrapper">
-          <Link href={`${tenant.slug}/cart`}>
-            <button className="cart-btn">
-              <ShoppingBag size={22} />
-              {itemCount > 0 && (
-                <span className="cart-badge animate-in zoom-in duration-300" style={{ backgroundColor: tenant.themeColor || '#000' }}>
-                  {itemCount}
+            <div className="flex-1">
+              <h1 className="text-2xl md:text-3xl font-extrabold leading-tight text-slate-900">{tenant.name}</h1>
+              <div className="flex items-center gap-3 mt-1.5">
+                {/* Open/Closed badge */}
+                <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full ${
+                  isOpen 
+                    ? 'bg-emerald-100 text-emerald-700' 
+                    : 'bg-red-100 text-red-600'
+                }`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+                  {isOpen ? 'Open Now' : 'Closed'}
                 </span>
-              )}
-            </button>
-          </Link>
+                
+                {/* Social icons */}
+                {tenant.instagramUrl && (
+                  <a href={tenant.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                )}
+                {tenant.facebookUrl && (
+                  <a href={tenant.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Cart button */}
+          <div className="cart-btn-wrapper">
+            <Link href={`${tenant.slug}/cart`}>
+              <button className="cart-btn">
+                <ShoppingBag size={22} />
+                {itemCount > 0 && (
+                  <span className="cart-badge animate-in zoom-in duration-300" style={{ backgroundColor: tenant.themeColor || '#000' }}>
+                    {itemCount}
+                  </span>
+                )}
+              </button>
+            </Link>
+          </div>
         </div>
-      </header>
+      </div>
       
       {/* Search */}
       <div className="search-bar">
-        <Search size={20} className="mr-3 text-gray-500"/>
+        <Search size={20} className="mr-3 text-gray-400"/>
         <input 
             type="text" 
             placeholder={dict.searchPlaceholder}
@@ -93,8 +114,8 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
           <button
             key={cat}
             onClick={() => setCategory(cat)}
-            className={`category-pill ${category === cat ? "active text-white shadow-md shadow-indigo-500/20" : ""}`}
-            style={category === cat ? { backgroundColor: tenant.themeColor || '#000', borderColor: tenant.themeColor || '#000' } : {}}
+            className={`category-pill ${category === cat ? "active" : ""}`}
+            style={category === cat ? { backgroundColor: tenant.themeColor || '#000', borderColor: tenant.themeColor || '#000', color: '#fff' } : {}}
           >
             {cat}
           </button>
@@ -108,15 +129,37 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
         ))}
       </div>
 
-
-      <footer className="mt-12 py-8 border-t border-gray-100 text-center pb-24 md:pb-8">
+      {/* Footer */}
+      <footer className="store-footer">
+        <div className="store-footer-info">
+          {(tenant.instagramUrl || tenant.facebookUrl) && (
+            <div className="flex items-center justify-center gap-4 mb-3">
+              {tenant.instagramUrl && (
+                <a href={tenant.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 transition-colors p-2 rounded-full hover:bg-pink-50">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+              )}
+              {tenant.facebookUrl && (
+                <a href={tenant.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-blue-50">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </a>
+              )}
+            </div>
+          )}
+          {!isOpen && (
+            <div className="flex items-center justify-center gap-2 text-sm text-amber-600 mb-3">
+              <Clock size={14} />
+              <span className="font-medium">Currently closed — check back later!</span>
+            </div>
+          )}
+        </div>
         <Link 
             href={`${process.env.NEXT_PUBLIC_BASE_URL || '/'}`} 
             target="_blank" 
-            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-indigo-600 transition-colors bg-gray-50 hover:bg-indigo-50 px-4 py-2 rounded-full"
+            className="powered-by-badge"
         >
-            <span>Powered by</span>
-            <span className="font-bold">OrderViaChat</span>
+            <span className="text-gray-400">Powered by</span>
+            <span className="font-bold text-gray-600">OrderViaChat</span>
         </Link>
       </footer>
 
@@ -175,7 +218,7 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
 
     return (
         <div 
-          className={`product-card group cursor-pointer hover:scale-[1.02] transition-transform duration-200 ${!product.isAvailable ? 'opacity-80' : ''}`}
+          className={`product-card group cursor-pointer ${!product.isAvailable ? 'opacity-80' : ''}`}
           onClick={handleAdd}
         >
             <div className="product-image-container">
