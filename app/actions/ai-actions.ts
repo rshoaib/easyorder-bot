@@ -3,6 +3,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { verifyTenantOwnership } from "@/lib/auth/security";
 import { getProductRepository, getTenantRepository } from "@/lib/repository";
+import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
 const apiKey = process.env.GEMINI_API_KEY;
@@ -141,8 +142,9 @@ export async function generateMenu(slug: string, businessDescription: string) {
         if (inferredType === 'service') productType = 'service';
         if (inferredType === 'digital') productType = 'digital';
 
-        const productRepo = getProductRepository();
-        const tenantRepo = getTenantRepository();
+        const supabase = await createClient();
+        const productRepo = getProductRepository(supabase);
+        const tenantRepo = getTenantRepository(supabase);
 
         for (const item of data.items) {
             const keyword = encodeURIComponent(item.imageKeyword || item.name);
