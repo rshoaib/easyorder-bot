@@ -174,7 +174,10 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
     };
 
     return (
-        <div className="product-card group">
+        <div 
+          className={`product-card group cursor-pointer hover:scale-[1.02] transition-transform duration-200 ${!product.isAvailable ? 'opacity-80' : ''}`}
+          onClick={handleAdd}
+        >
             <div className="product-image-container">
               <ImageWithFallback
                 src={product.image}
@@ -204,13 +207,16 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
             </div>
             
             <div>
-                 <h3 className="font-bold text-sm mb-1 line-clamp-1">{product.name}</h3>
+                 <h3 className="font-bold text-sm mb-0.5 line-clamp-1">{product.name}</h3>
+                 {product.description && (
+                   <p className="text-[11px] text-gray-400 line-clamp-1 mb-1">{product.description}</p>
+                 )}
                  <div className="flex items-center gap-2 mb-1">
                      <p className="text-xs text-gray-500 uppercase tracking-wide line-clamp-1">{product.category}</p>
                      {product.type === 'service' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">SERVICE</span>}
                      {product.type === 'digital' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">DIGITAL</span>}
                  </div>
-                 <div className="mt-2 text-lg font-bold">
+                 <div className="mt-1 text-lg font-bold">
                     {tenant.currency}{Number(product.price).toFixed(2)}
                  </div>
             </div>

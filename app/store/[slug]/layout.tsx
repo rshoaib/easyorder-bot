@@ -60,6 +60,20 @@ export default async function StoreLayout({
   return (
     <>
       {tenant?.metaPixelId && <FacebookPixel pixelId={tenant.metaPixelId} />}
+      
+      {/* Demo Store Banner */}
+      {slug === 'demo' && (
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-center py-2.5 px-4 text-sm font-medium sticky top-0 z-[60]">
+          <span className="opacity-90">🎯 This is a demo store.</span>{' '}
+          <a 
+            href="/login?view=signup" 
+            className="underline underline-offset-2 font-bold hover:text-indigo-200 transition-colors"
+          >
+            Create Your Own Free Store →
+          </a>
+        </div>
+      )}
+      
       {children}
       
       {/* Demo Admin Access Button (Client Component handles visibility) */}

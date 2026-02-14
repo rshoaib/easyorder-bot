@@ -211,15 +211,17 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
-                    <ShoppingBag size={24} />
+            <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl flex items-center justify-center mb-6 shadow-sm border border-indigo-100/50">
+                    <ShoppingBag size={36} className="text-indigo-400" />
                 </div>
-                <h1 className="text-xl font-bold mb-2">Your cart is empty</h1>
-                <p className="text-gray-500 mb-6">Looks like you haven't added anything yet.</p>
+                <h1 className="text-2xl font-bold text-slate-900 mb-2">Your cart is empty</h1>
+                <p className="text-gray-500 mb-8 max-w-xs leading-relaxed">
+                    Browse the menu and tap any item to add it here. It only takes a few taps to order!
+                </p>
                 <Link href={`/store/${slug}`}>
-                    <button className="btn-primary">
-                        Start Shopping
+                    <button className="btn-primary flex items-center gap-2 px-6 py-3 text-base shadow-lg shadow-indigo-500/20">
+                        <ArrowLeft size={18} /> Browse Menu
                     </button>
                 </Link>
             </div>
