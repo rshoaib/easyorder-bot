@@ -11,6 +11,7 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
     const [selectedType, setSelectedType] = useState<PresetType | null>(null);
     const [customPrompt, setCustomPrompt] = useState("");
     const [mode, setMode] = useState<'preset' | 'ai'>('preset');
+    const [error, setError] = useState<string | null>(null);
     
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
@@ -19,19 +20,24 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
         if (mode === 'preset' && !selectedType) return;
         if (mode === 'ai' && !customPrompt.trim()) return;
         
+        setError(null);
         startTransition(async () => {
-            let res: any;
-            if (mode === 'ai') {
-                res = await generateMenu(slug, customPrompt);
-            } else {
-                res = await seedStore(slug, selectedType!);
-            }
+            try {
+                let res: any;
+                if (mode === 'ai') {
+                    res = await generateMenu(slug, customPrompt);
+                } else {
+                    res = await seedStore(slug, selectedType!);
+                }
 
-            if (res.success) {
-                router.refresh();
-                window.location.reload(); 
-            } else {
-                alert(res.message || res.error || "Failed");
+                if (res.success) {
+                    router.refresh();
+                    window.location.reload(); 
+                } else {
+                    setError(res.message || res.error || "Something went wrong. Please try again.");
+                }
+            } catch (err: any) {
+                setError(err.message || 'An unexpected error occurred.');
             }
         });
     };
@@ -51,6 +57,12 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
                     </p>
                 </div>
 
+                {error && (
+                    <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm mb-6 border border-red-100 max-w-xl mx-auto">
+                        <p className="font-bold mb-1">⚠️ Generation Failed</p>
+                        <p>{error}</p>
+                    </div>
+                )}
 
 
                 {/* Tabs */}
@@ -126,7 +138,7 @@ export default function OnboardingWizard({ slug }: { slug: string }) {
                         disabled={(mode === 'preset' && !selectedType) || (mode === 'ai' && !customPrompt) || isPending}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-12 rounded-xl transition-all shadow-lg shadow-indigo-200 disabled:opacity-50 disabled:shadow-none flex items-center gap-2"
                     >
-                        {isPending ? <Loader2 className="animate-spin" /> : "Generate Catalog"}
+                        {isPending ? <><Loader2 className="animate-spin" /> {mode === 'ai' ? 'AI is generating your catalog...' : 'Creating products...'}</> : "Generate Catalog"}
                     </button>
                 </div>
             </div>
