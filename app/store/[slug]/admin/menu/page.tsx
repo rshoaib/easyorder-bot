@@ -28,7 +28,7 @@ export default async function AdminMenuPage({ params }: Props) {
     const addProductWithSlug = addProduct.bind(null, slug);
 
     return (
-        <main className="container pt-6 pb-10" style={{ maxWidth: '900px' }}>
+        <main className="container pt-6 pb-10" style={{ maxWidth: '1100px' }}>
             <div className="flex justify-between mb-8 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-wrap gap-4">
                 <div>
                     <h1 className="text-2xl font-bold mb-1">Product Catalog</h1>
@@ -45,15 +45,15 @@ export default async function AdminMenuPage({ params }: Props) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 
                 {/* Add Product Form */}
-                <div className="md:col-span-1">
+                <div className="lg:col-span-2">
                     <AddProductForm slug={slug} tenantId={tenant.id} storeName={tenant.name} storeType={tenant.storeType} />
                 </div>
 
                 {/* Product List */}
-                <div className="md:col-span-2 space-y-4">
+                <div className="lg:col-span-3 space-y-4 min-w-0">
                     <h2 className="text-lg font-bold px-2">Current Products ({products.length})</h2>
                     {products.map((product: any) => {
                         const deleteProductWithSlug = deleteProduct.bind(null, slug, product.id);
