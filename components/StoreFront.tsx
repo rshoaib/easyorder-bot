@@ -184,7 +184,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
       ) : (
           /* Sticky Viral Button (Only when cart is empty) */
           <div className="md:hidden fixed bottom-4 left-4 right-4 z-40 animate-in slide-in-from-bottom-5 duration-700">
-              <Link href="/register" target="_blank">
+              <Link href="/login?view=signup&next=/register" target="_blank">
                   <div className="bg-white/90 backdrop-blur-md text-gray-900 p-4 rounded-xl shadow-lg flex items-center justify-between border border-gray-200">
                       <div>
                           <p className="font-bold text-sm">Want a store like this?</p>

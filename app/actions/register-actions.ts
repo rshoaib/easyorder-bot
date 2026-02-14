@@ -56,3 +56,15 @@ export async function registerTenant(formData: FormData) {
         return { error: error.message || "Something went wrong. Please try again." };
     }
 }
+
+export async function checkSlugAvailability(slug: string) {
+    if (!slug || slug.length < 2) {
+        return { available: false, error: 'Slug must be at least 2 characters' };
+    }
+
+    const supabase = await createClient();
+    const repo = getTenantRepository(supabase);
+    const existing = await repo.getTenantBySlug(slug);
+
+    return { available: !existing };
+}
