@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'),
+  verification: {
+    google: 'WcuXQJqslc4P5QSu6dxMcHrXZUK0R-qudDlIKZFYrL8',
+  },
   title: "OrderViaChat — Free WhatsApp Ordering for Small Businesses",
   description: "Create a beautiful digital menu and accept orders on WhatsApp. Free forever, no commissions, setup in 2 minutes.",
   keywords: ["WhatsApp Ordering", "Digital Menu", "Online Store Builder", "No Commission Food Delivery", "Instagram Menu", "Free WhatsApp Store"],
