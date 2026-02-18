@@ -1,16 +1,12 @@
-import { getTenantRepository } from '@/lib/repository';
 import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com';
-    const repo = getTenantRepository();
-    const tenants = await repo.getAllTenants();
 
-    // 1. Static Routes
+    // 1. Static Routes (SEO-valuable pages only — no auth pages)
     const routes = [
         '',
-        '/register',
-        '/login',
+        '/privacy-policy',
     ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
@@ -18,15 +14,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 1,
     }));
 
-    // 2. Dynamic Store Routes
-    const storeRoutes = tenants
-        .filter((tenant) => tenant.status === 'active')
-        .map((tenant) => ({
-            url: `${baseUrl}/store/${tenant.slug}`,
-            lastModified: new Date(),
-            changeFrequency: 'daily' as const,
-            priority: 0.8,
-        }));
+    // 2. Demo Store (the only curated public store)
+    const storeRoutes = [{
+        url: `${baseUrl}/store/demo`,
+        lastModified: new Date(),
+        changeFrequency: 'daily' as const,
+        priority: 0.8,
+    }];
 
     // 3. Blog Routes
     const { getAllPosts } = await import('@/lib/blog');
