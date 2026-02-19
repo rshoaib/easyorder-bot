@@ -1,0 +1,60 @@
+# OrderViaChat — Full Site Documentation for AI Systems
+
+> The simplest way for small businesses to accept orders on WhatsApp. Free forever.
+
+OrderViaChat (https://orderviachat.com) is a free platform enabling small businesses to create online stores and receive orders via WhatsApp. No coding required, no transaction fees, no monthly subscription.
+
+---
+
+## Core Features
+
+### Store Creation
+URL: https://orderviachat.com/login?view=signup
+Business owners create a store by signing up, adding their business details, products, and customizing their storefront. Each store gets a unique URL (e.g., orderviachat.com/store/your-business).
+
+### Product Management
+Add products with images, descriptions, prices, and categories. Organize items into meaningful groups for easy customer navigation.
+
+### WhatsApp Ordering
+When a customer completes their order, the cart details are formatted into a WhatsApp message and sent directly to the business owner's phone number. No app installation needed for customers.
+
+### Customization
+Customize store appearance with business logo, banner, brand colors, and business information including address, phone, and operating hours.
+
+---
+
+## How It Works
+
+### For Business Owners
+1. Sign up at https://orderviachat.com/login?view=signup
+2. Set up your store details (name, phone, address)
+3. Add products with photos and prices
+4. Share your store link with customers via social media, flyers, or word-of-mouth
+5. Receive orders as WhatsApp messages
+
+### For Customers
+1. Open the store link (no login required)
+2. Browse products by category
+3. Add items to cart
+4. Tap "Order via WhatsApp"
+5. WhatsApp opens with the pre-filled order message
+6. Send the message to place the order
+
+---
+
+## Target Audience
+- Small restaurants, cafes, and food stalls
+- Home bakers and cottage food producers
+- Local retail shops and boutiques
+- Service providers (cleaning, repair, tutoring)
+- Any small business in emerging markets where WhatsApp is the primary communication channel
+
+---
+
+## Technical Details
+- Built with Next.js 14 (App Router)
+- Backend: Supabase (PostgreSQL + Auth + Storage)
+- Deployed on Vercel
+- Mobile-first responsive design
+- SEO optimized with dynamic meta tags per store
+- Available at: https://orderviachat.com

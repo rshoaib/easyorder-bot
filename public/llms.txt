@@ -1,0 +1,33 @@
+# OrderViaChat
+
+> The simplest way for small businesses to accept orders on WhatsApp. Free forever.
+
+OrderViaChat (https://orderviachat.com) is a free platform that lets small businesses create an online store and receive customer orders directly via WhatsApp. No login required for customers, no transaction fees.
+
+## Features
+- Create a free online store with products, categories, and pricing
+- Customers browse and order without downloading apps or creating accounts
+- Orders are sent directly to the business owner's WhatsApp
+- Customizable store branding (colors, logo, business details)
+- Mobile-first responsive design
+- Multi-language support
+
+## How It Works
+1. Business owner signs up and creates their store
+2. Add products with images, descriptions, and prices
+3. Share the store link with customers
+4. Customers browse, add to cart, and checkout
+5. Order details are sent as a WhatsApp message to the business
+
+## Use Cases
+- Small restaurants and cafes
+- Home bakers and food businesses
+- Local shops and retail stores
+- Service-based businesses
+- Any small business wanting to accept orders online without complex e-commerce setup
+
+## Contact
+- Website: https://orderviachat.com
+- Live Demo: https://orderviachat.com/store/demo
+- Blog: https://orderviachat.com/blog
+- Privacy Policy: https://orderviachat.com/privacy-policy
