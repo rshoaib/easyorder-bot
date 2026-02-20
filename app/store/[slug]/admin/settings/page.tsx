@@ -17,7 +17,8 @@ async function updateSettings(formData: FormData) {
     'use server';
     
     const { verifyTenantOwnership } = await import('@/lib/auth/security');
-    const tenantRepo = getTenantRepository();
+    const { createClient } = await import('@/utils/supabase/server');
+
     const id = formData.get('id') as string;
     const slug = formData.get('slug') as string;
 
@@ -41,6 +42,9 @@ async function updateSettings(formData: FormData) {
         return;
     }
 
+    // Use authenticated server client for RLS compliance
+    const supabase = await createClient();
+    const tenantRepo = getTenantRepository(supabase);
     await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType);
     revalidatePath(`/store/${slug}`);
     revalidatePath(`/store/${slug}/admin/settings`);
