@@ -16,6 +16,13 @@ export const metadata: Metadata = {
   description: "Create a beautiful digital menu and accept orders on WhatsApp. Free forever, no commissions, setup in 2 minutes.",
   keywords: ["WhatsApp Ordering", "Digital Menu", "Online Store Builder", "No Commission Food Delivery", "Instagram Menu", "Free WhatsApp Store"],
   manifest: "/manifest.json",
+  alternates: {
+    canonical: 'https://orderviachat.com',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     type: 'website',
     siteName: 'OrderViaChat',
