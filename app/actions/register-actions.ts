@@ -12,6 +12,14 @@ export async function registerTenant(formData: FormData) {
         return { error: "You must be logged in to create a store." };
     }
 
+    const repo = getTenantRepository(supabase);
+
+    // Block duplicate stores — one store per account
+    const existingTenant = await repo.getTenantByUserId(user.id);
+    if (existingTenant) {
+        return { error: "You already have a store. Only one store per account is allowed.", slug: existingTenant.slug };
+    }
+
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
     const ownerPhone = formData.get('ownerPhone') as string;
@@ -21,8 +29,6 @@ export async function registerTenant(formData: FormData) {
     if (!name || !slug || !ownerPhone) {
         return { error: "All fields are required" };
     }
-
-    const repo = getTenantRepository(supabase);
 
     // Check if slug exists
     const existing = await repo.getTenantBySlug(slug);

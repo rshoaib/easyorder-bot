@@ -18,6 +18,7 @@ function LoginForm() {
     const view = searchParams.get('view');
     const supabase = createClient();
     const [isSignUp, setIsSignUp] = useState(view === 'signup');
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
 
     const handleGoogleLogin = async () => {
         setLoading(true);
@@ -81,6 +82,28 @@ function LoginForm() {
                 router.push(next);
                 router.refresh();
             }
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        setMessage(null);
+
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get('email') as string;
+
+        try {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/auth/callback?next=/login`,
+            });
+            if (error) throw error;
+            setMessage('Password reset link sent! Check your email.');
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -175,9 +198,51 @@ function LoginForm() {
                     </button>
                 </form>
 
+                {!isSignUp && !showForgotPassword && (
+                    <div className="mt-3 text-center">
+                        <button 
+                            onClick={() => setShowForgotPassword(true)}
+                            className="text-sm text-slate-400 hover:text-indigo-600 transition-colors"
+                        >
+                            Forgot your password?
+                        </button>
+                    </div>
+                )}
+
+                {showForgotPassword && (
+                    <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <h3 className="text-sm font-bold text-slate-700 mb-2">Reset Password</h3>
+                        <form onSubmit={handleForgotPassword} className="space-y-3">
+                            <input 
+                                name="email" 
+                                type="email" 
+                                required 
+                                placeholder="Enter your email" 
+                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
+                            />
+                            <div className="flex gap-2">
+                                <button 
+                                    type="submit" 
+                                    disabled={loading}
+                                    className="flex-1 bg-indigo-600 text-white font-bold py-2 rounded-xl text-sm hover:bg-indigo-700 transition-colors disabled:opacity-70"
+                                >
+                                    {loading ? 'Sending...' : 'Send Reset Link'}
+                                </button>
+                                <button 
+                                    type="button" 
+                                    onClick={() => setShowForgotPassword(false)}
+                                    className="px-3 py-2 text-sm text-slate-500 hover:text-slate-700"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+
                 <div className="mt-6 text-center text-sm">
                     <button 
-                        onClick={() => setIsSignUp(!isSignUp)}
+                        onClick={() => { setIsSignUp(!isSignUp); setShowForgotPassword(false); }}
                         className="text-indigo-600 font-bold hover:underline"
                     >
                         {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}

@@ -396,6 +396,38 @@ export class SupabaseTenantRepository implements TenantRepository {
         };
     }
 
+    async getTenantByUserId(userId: string): Promise<Tenant | null> {
+        const { data, error } = await this.client
+            .from('tenants')
+            .select('*')
+            .eq('user_id', userId)
+            .neq('status', 'disabled')
+            .single();
+
+        if (error || !data) return null;
+
+        return {
+            id: data.id,
+            slug: data.slug,
+            name: data.name,
+            ownerPhone: data.owner_phone,
+            currency: data.currency,
+            themeColor: data.theme_color,
+            email: data.email,
+            status: data.status,
+            stripeCustomerId: data.stripe_customer_id,
+            password: data.password,
+            language: data.language || 'en',
+            customDomain: data.custom_domain,
+            instagramUrl: data.instagram_url,
+            facebookUrl: data.facebook_url,
+            metaPixelId: data.meta_pixel_id,
+            userId: data.user_id,
+            isOpen: data.is_open ?? true,
+            storeType: data.store_type || 'restaurant'
+        };
+    }
+
     async updateTenantBilling(id: string, billingData: { lemonsqueezy_customer_id?: string; lemonsqueezy_subscription_id?: string; lemonsqueezy_variant_id?: string; subscription_status?: string }): Promise<void> {
         const updateData: any = {};
         if (billingData.lemonsqueezy_customer_id) updateData.lemonsqueezy_customer_id = billingData.lemonsqueezy_customer_id;

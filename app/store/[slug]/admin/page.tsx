@@ -49,12 +49,39 @@ export default async function AdminPage({ params }: Props) {
 
   if (!tenant) return <div className="p-10">Store not found</div>;
 
+  // Owner-only access check
+  const supabaseAuth = await createClient();
+  const { data: { user } } = await supabaseAuth.auth.getUser();
+  if (!user || tenant.userId !== user.id) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center p-10 max-w-md">
+          <h1 className="text-2xl font-bold text-red-600 mb-3">⛔ Access Denied</h1>
+          <p className="text-gray-600 mb-6">You don&apos;t have permission to manage this store. Only the store owner can access the admin panel.</p>
+          <a href="/" className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors inline-block">Go to Homepage</a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <main className="container pt-6 pb-10" style={{ maxWidth: '900px' }}>
       {/* Header Section */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 text-sm">Welcome back to {tenant.name}</p>
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-500 text-sm">Welcome back to {tenant.name}</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <a href={`/store/${slug}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 transition-colors px-3 py-2 bg-white border border-gray-200 rounded-lg">
+            👁️ Preview Store
+          </a>
+          <form action="/auth/signout" method="post">
+            <button type="submit" className="text-sm text-gray-400 hover:text-red-500 transition-colors px-3 py-2 bg-white border border-gray-200 rounded-lg">
+              Sign Out
+            </button>
+          </form>
+        </div>
       </div>
 
       {productCount === 0 && (
