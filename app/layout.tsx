@@ -65,6 +65,36 @@ export default function RootLayout({
         </CartProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
         <Toaster position="top-center" richColors />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "OrderViaChat",
+              url: "https://orderviachat.com",
+              description: "Create a beautiful digital menu and accept orders on WhatsApp. Free forever, no commissions.",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: "https://orderviachat.com/?q={search_term_string}",
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "OrderViaChat",
+              url: "https://orderviachat.com",
+              logo: "https://orderviachat.com/images/showcase-store.png",
+              description: "Free WhatsApp ordering platform for small businesses — digital menus, no commissions, setup in 2 minutes.",
+            }),
+          }}
+        />
       </body>
     </html>
   );
