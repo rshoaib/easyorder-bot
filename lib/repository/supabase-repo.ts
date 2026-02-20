@@ -356,10 +356,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             updateData.logo_url = logoUrl;
         }
 
-        // Note: is_open and store_type columns are not yet in the tenants table schema.
-        // Uncomment these when the columns are added via a Supabase migration.
-        // if (isOpen !== undefined) { updateData.is_open = isOpen; }
-        // if (storeType) { updateData.store_type = storeType; }
+        if (isOpen !== undefined) { updateData.is_open = isOpen; }
+        if (storeType) { updateData.store_type = storeType; }
 
         const { error } = await this.client
             .from('tenants')
