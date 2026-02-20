@@ -344,10 +344,6 @@ export class SupabaseTenantRepository implements TenantRepository {
             meta_pixel_id: metaPixelId
         };
 
-        if (isOpen !== undefined) {
-            updateData.is_open = isOpen;
-        }
-
         if (currency) {
             updateData.currency = currency;
         }
@@ -360,9 +356,10 @@ export class SupabaseTenantRepository implements TenantRepository {
             updateData.logo_url = logoUrl;
         }
 
-        if (storeType) {
-            updateData.store_type = storeType;
-        }
+        // Note: is_open and store_type columns are not yet in the tenants table schema.
+        // Uncomment these when the columns are added via a Supabase migration.
+        // if (isOpen !== undefined) { updateData.is_open = isOpen; }
+        // if (storeType) { updateData.store_type = storeType; }
 
         const { error } = await this.client
             .from('tenants')
