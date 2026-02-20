@@ -1,5 +1,5 @@
 import { getTenantRepository } from "@/lib/repository";
-import { ArrowLeft, Save, Instagram, Facebook, Phone, Banknote } from "lucide-react";
+import { ArrowLeft, Save, Instagram, Facebook, Phone, Banknote, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import ServiceStatus from "@/components/admin/ServiceStatus";
 import { redirect } from "next/navigation";
@@ -10,6 +10,10 @@ export const dynamic = 'force-dynamic';
 interface Props {
     params: {
         slug: string;
+    }
+    searchParams: {
+        saved?: string;
+        error?: string;
     }
 }
 
@@ -56,18 +60,22 @@ async function updateSettings(formData: FormData) {
             throw err;
         }
         console.error('[updateSettings] Error:', err?.message || err);
-        // Fall through — page reloads without success
+        // Redirect with error
+        revalidatePath(`/store/${slug}/admin/settings`);
+        redirect(`/store/${slug}/admin/settings?error=${encodeURIComponent(err?.message || 'Failed to save')}`);
     }
 
     revalidatePath(`/store/${slug}`);
     revalidatePath(`/store/${slug}/admin/settings`);
+    redirect(`/store/${slug}/admin/settings?saved=1`);
 }
 
 import BrandingSettings from "./BrandingSettings";
 import DeleteStoreButton from "@/components/admin/DeleteStoreButton";
 
-export default async function SettingsPage({ params }: Props) {
+export default async function SettingsPage({ params, searchParams }: Props) {
     const { slug } = await params;
+    const { saved, error } = await searchParams;
     const repo = getTenantRepository();
     const tenant = await repo.getTenantBySlug(slug);
 
@@ -87,6 +95,19 @@ export default async function SettingsPage({ params }: Props) {
                     </button>
                 </Link>
             </div>
+
+            {saved && (
+                <div className="mb-6 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-5 py-4 rounded-xl animate-fade-in">
+                    <CheckCircle size={20} className="text-green-600 flex-shrink-0" />
+                    <span className="font-medium">Settings saved successfully!</span>
+                </div>
+            )}
+
+            {error && (
+                <div className="mb-6 flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 px-5 py-4 rounded-xl">
+                    <span className="font-medium">Error: {decodeURIComponent(error)}</span>
+                </div>
+            )}
 
             <ServiceStatus />
 
