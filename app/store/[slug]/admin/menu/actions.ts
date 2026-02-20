@@ -3,7 +3,7 @@
 import { getProductRepository, getTenantRepository } from "@/lib/repository";
 import { Product } from "@/lib/repository/types";
 import { revalidatePath } from "next/cache";
-
+import { createClient } from "@/utils/supabase/server";
 import { verifyTenantOwnership } from "@/lib/auth/security";
 
 export async function addProduct(slug: string, formData: FormData) {
@@ -12,11 +12,14 @@ export async function addProduct(slug: string, formData: FormData) {
 
     if (!slug) throw new Error("Slug is required");
 
-    const tenantRepo = getTenantRepository();
+    // Use authenticated server client for RLS compliance
+    const supabase = await createClient();
+
+    const tenantRepo = getTenantRepository(supabase);
     const tenant = await tenantRepo.getTenantBySlug(slug);
     if (!tenant) throw new Error("Tenant not found");
 
-    const repo = getProductRepository();
+    const repo = getProductRepository(supabase);
 
     const id = Date.now().toString();
 
@@ -42,9 +45,9 @@ export async function deleteProduct(slug: string, id: string) {
     // Security Check
     await verifyTenantOwnership(slug);
 
-    const repo = getProductRepository();
-    // We should ideally verify the product belongs to the tenant here, but repo.deleteProduct uses ID.
-    // Assuming IDs are unique globally or we trust the admin authentication which is scoped.
+    // Use authenticated server client for RLS compliance
+    const supabase = await createClient();
+    const repo = getProductRepository(supabase);
     await repo.deleteProduct(id);
     revalidatePath(`/store/${slug}/admin/menu`);
     revalidatePath(`/store/${slug}`);
@@ -54,11 +57,14 @@ export async function importProducts(slug: string, products: Omit<Product, 'id' 
     // Security Check
     await verifyTenantOwnership(slug);
 
-    const tenantRepo = getTenantRepository();
+    // Use authenticated server client for RLS compliance
+    const supabase = await createClient();
+
+    const tenantRepo = getTenantRepository(supabase);
     const tenant = await tenantRepo.getTenantBySlug(slug);
     if (!tenant) throw new Error("Tenant not found");
 
-    const repo = getProductRepository();
+    const repo = getProductRepository(supabase);
 
     for (const p of products) {
         const product: Product = {
