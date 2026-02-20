@@ -16,36 +16,49 @@ interface Props {
 async function updateSettings(formData: FormData) {
     'use server';
     
-    const { verifyTenantOwnership } = await import('@/lib/auth/security');
-    const { createClient } = await import('@/utils/supabase/server');
-
-    const id = formData.get('id') as string;
     const slug = formData.get('slug') as string;
+    const id = formData.get('id') as string;
 
     if (!id || !slug) return;
 
-    // Security: Verify ownership
-    await verifyTenantOwnership(slug);
+    let success = false;
 
-    const ownerPhone = formData.get('ownerPhone') as string;
-    const instagram = formData.get('instagram') as string;
-    const facebook = formData.get('facebook') as string;
-    const metaPixelId = formData.get('metaPixelId') as string;
-    const currency = formData.get('currency') as string;
-    const storeType = formData.get('storeType') as string;
-    
-    // Checkbox is "true" if checked, null if unchecked
-    const isOpen = formData.get('isOpen') === 'true';
-    
-    // Security: Prevent modifying demo store
-    if (slug === 'demo') {
-        return;
+    try {
+        const { verifyTenantOwnership } = await import('@/lib/auth/security');
+        const { createClient } = await import('@/utils/supabase/server');
+
+        // Security: Verify ownership
+        await verifyTenantOwnership(slug);
+
+        const ownerPhone = formData.get('ownerPhone') as string;
+        const instagram = formData.get('instagram') as string;
+        const facebook = formData.get('facebook') as string;
+        const metaPixelId = formData.get('metaPixelId') as string;
+        const currency = formData.get('currency') as string;
+        const storeType = formData.get('storeType') as string;
+        
+        // Checkbox is "true" if checked, null if unchecked
+        const isOpen = formData.get('isOpen') === 'true';
+        
+        // Security: Prevent modifying demo store
+        if (slug === 'demo') {
+            return;
+        }
+
+        // Use authenticated server client for RLS compliance
+        const supabase = await createClient();
+        const tenantRepo = getTenantRepository(supabase);
+        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType);
+        success = true;
+    } catch (err: any) {
+        // Re-throw Next.js redirect/notFound errors — they use throw internally
+        if (err?.digest?.startsWith('NEXT_REDIRECT') || err?.digest?.startsWith('NEXT_NOT_FOUND')) {
+            throw err;
+        }
+        console.error('[updateSettings] Error:', err?.message || err);
+        // Fall through — page reloads without success
     }
 
-    // Use authenticated server client for RLS compliance
-    const supabase = await createClient();
-    const tenantRepo = getTenantRepository(supabase);
-    await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType);
     revalidatePath(`/store/${slug}`);
     revalidatePath(`/store/${slug}/admin/settings`);
 }
