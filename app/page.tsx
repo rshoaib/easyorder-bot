@@ -626,16 +626,7 @@ export default async function HomePage() {
                   </li>
                 </ul>
               </div>
-              <div>
-                <h4 className="text-white font-semibold mb-3">Our Tools</h4>
-                <ul className="space-y-2">
-                  <li><a href="https://dailysmartcalc.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Smart Calculators</a></li>
-                  <li><a href="https://mycalcfinance.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Finance Calculators</a></li>
-                  <li><a href="https://onlineimageshrinker.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Image Compressor</a></li>
-                  <li><a href="https://legalpolicygen.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Legal Policy Gen</a></li>
-                  <li><a href="https://imrizwan.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Developer Blog</a></li>
-                </ul>
-              </div>
+
             </div>
           </div>
           <div className="mt-10 pt-6 border-t border-slate-800 text-xs text-center text-slate-500">
