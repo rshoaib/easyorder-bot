@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTenantRepository, getOrderRepository, getProductRepository } from '@/lib/repository';
 import { Order, Product } from '@/lib/repository/types';
-import { Resend } from 'resend';
-import { OrderReceiptEmail } from '@/components/email/OrderReceiptEmail';
 import { getCurrencySymbol } from '@/lib/currency';
 
 export async function POST(req: NextRequest) {
@@ -10,11 +8,15 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { items, total, customer, slug, promoCode, paymentMethod } = body;
 
+        if (!slug) {
+            return NextResponse.json({ error: 'Missing store slug' }, { status: 400 });
+        }
+
         const tenantRepo = getTenantRepository();
         const tenant = await tenantRepo.getTenantBySlug(slug);
 
         if (!tenant) {
-            return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
+            return NextResponse.json({ error: 'Store not found' }, { status: 404 });
         }
 
         const productRepo = getProductRepository();
@@ -24,15 +26,13 @@ export async function POST(req: NextRequest) {
         const validatedItems = [];
 
         if (!Array.isArray(items) || items.length === 0) {
-            return NextResponse.json({ error: 'Invalid items in order' }, { status: 400 });
+            return NextResponse.json({ error: 'Your cart is empty' }, { status: 400 });
         }
 
         for (const item of items) {
             const product = products.find((p) => p.id === item.id);
             if (!product) {
-                // If product not found (e.g. deleted), we might want to skip or error.
-                // For now, let's error to be safe.
-                return NextResponse.json({ error: `Product not found: ${item.name}` }, { status: 400 });
+                return NextResponse.json({ error: `Product "${item.name}" is no longer available. Please refresh and try again.` }, { status: 400 });
             }
 
             // Verify price
@@ -51,9 +51,9 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // Apply distinct promo code logic here if needed (omitted for now as it wasn't in original)
-        // If there was a discount, we should recalculate it too.
-        // For this health check, let's stick to base price validation.
+        if (validatedItems.length === 0) {
+            return NextResponse.json({ error: 'No valid items in your order' }, { status: 400 });
+        }
 
         // Overwrite total with calculated one
         const finalTotal = calculatedTotal;
@@ -68,10 +68,10 @@ export async function POST(req: NextRequest) {
             customer,
             items: validatedItems,
             subtotal: finalTotal,
-            deliveryFee: 0, // Should fetch from config
+            deliveryFee: 0,
             discount: 0,
             promoCode,
-            total: finalTotal, // Use server-calculated total
+            total: finalTotal,
             paymentMethod,
             status: 'pending'
         };
@@ -92,14 +92,14 @@ export async function POST(req: NextRequest) {
             `*Payment:* ${paymentMethod}\n` +
             (customer.locationLink ? `\n*Location:* ${customer.locationLink}` : '');
 
-        // --- Send Email Receipt ---
+        // --- Send Email Receipt (non-blocking) ---
         if (customer.email && process.env.RESEND_API_KEY) {
             try {
+                const { Resend } = await import('resend');
+                const { OrderReceiptEmail } = await import('@/components/email/OrderReceiptEmail');
                 const resend = new Resend(process.env.RESEND_API_KEY);
-                // In dev, usually only sending to verified email is allowed. 
-                // We'll try to send to customer, but log if it fails.
                 await resend.emails.send({
-                    from: 'EasyOrder <orders@resend.dev>', // Default Resend testing domain
+                    from: 'EasyOrder <orders@resend.dev>',
                     to: customer.email,
                     subject: `Order Receipt #${orderId} - ${tenant.name}`,
                     react: (
@@ -120,20 +120,13 @@ export async function POST(req: NextRequest) {
                 // Don't fail the request, just log it
             }
         }
-        // --------------------------
 
         // Generate WhatsApp Link
-
-        // Generate WhatsApp Link
-        // Use tenant.ownerPhone if available, otherwise fallback (or error?)
-        // For now, if no ownerPhone, we might fail or send to a default?
-        // Let's assume the user MUST set it up.
-
         let whatsappNumber = tenant.ownerPhone;
 
         // DEV: Fallback for demo store testing
         if (!whatsappNumber && slug === 'demo') {
-            whatsappNumber = '923224609117'; // User provided test number
+            whatsappNumber = '923224609117';
         }
 
         // Clean number
@@ -149,7 +142,8 @@ export async function POST(req: NextRequest) {
         });
 
     } catch (error: any) {
-        console.error('Available Place Order Error:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        console.error('Place Order Error:', error?.message, error?.stack);
+        return NextResponse.json({ error: error?.message || 'Internal server error' }, { status: 500 });
     }
 }
+

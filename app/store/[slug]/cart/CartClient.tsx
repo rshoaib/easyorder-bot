@@ -203,9 +203,10 @@ export default function CartClient({ tenantId, slug, isOpen, currency }: Props) 
                      }, 2000);
                 }
             }
-        } catch (error) {
-            console.error(error);
-            toast.error('Failed to place order. Please try again.');
+        } catch (error: any) {
+            console.error('Order placement error:', error);
+            const apiError = error?.response?.data?.error;
+            toast.error(apiError || 'Failed to place order. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
