@@ -361,14 +361,10 @@ export class SupabaseTenantRepository implements TenantRepository {
         // if (isOpen !== undefined) { updateData.is_open = isOpen; }
         // if (storeType) { updateData.store_type = storeType; }
 
-        console.log('[updateTenantSettings] Updating tenant:', id, 'with data:', JSON.stringify(updateData));
-
-        const { error, count } = await this.client
+        const { error } = await this.client
             .from('tenants')
             .update(updateData)
             .eq('id', id);
-
-        console.log('[updateTenantSettings] Result - error:', error, 'count:', count);
 
         if (error) throw new Error(error.message);
     }
