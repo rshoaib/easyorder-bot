@@ -8,9 +8,17 @@ export async function middleware(request: NextRequest) {
     const hostname = request.headers.get('host')!;
 
     // 1. Admin Protection (Supabase Auth)
-    if (url.pathname.startsWith('/admin')) {
-        // Exclude login page from protection to avoid loop if we ever put it under /admin (though currently /login)
-        if (url.pathname !== '/admin/login' && !user) {
+    const isGlobalAdmin = url.pathname.startsWith('/admin');
+    const storeAdminMatch = url.pathname.match(/^\/store\/([^/]+)\/admin/);
+    const isStoreAdmin = !!storeAdminMatch;
+
+    if (isGlobalAdmin || isStoreAdmin) {
+        // Exclude login pages from protection to avoid redirect loops
+        const isLoginPage = url.pathname === '/admin/login' || url.pathname.endsWith('/admin/login');
+        if (!isLoginPage && !user) {
+            if (storeAdminMatch) {
+                return NextResponse.redirect(new URL(`/store/${storeAdminMatch[1]}/admin/login?next=${encodeURIComponent(url.pathname)}`, request.url));
+            }
             return NextResponse.redirect(new URL('/login', request.url));
         }
     }

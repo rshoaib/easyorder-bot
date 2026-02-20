@@ -23,6 +23,7 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType }:
     const [description, setDescription] = useState('');
     const [productType, setProductType] = useState<'physical' | 'digital' | 'service'>('physical');
     const [digitalFileName, setDigitalFileName] = useState<string | null>(null);
+    const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
     async function handleAIGenerate() {
         // Get current name/category from form inputs by ID since we don't control them with state for simplicity
@@ -54,12 +55,12 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType }:
 
     async function handleSubmit(formData: FormData) {
         setIsUploading(true);
+        setFeedback(null);
         try {
             const file = formData.get('imageFile') as File;
             let imageUrl = formData.get('image') as string;
             const submitData = new FormData();
             
-            // If a file was selected, upload it
             // If a file was selected, upload it
             if (file && file.size > 0) {
                 const uploadedUrl = await uploadProductImage(file, tenantId);
@@ -79,27 +80,34 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType }:
                 }
             }
 
-
-
             submitData.set('name', formData.get('name') as string);
             submitData.set('price', formData.get('price') as string);
             submitData.set('category', formData.get('category') as string);
-            submitData.set('description', description || (formData.get('description') as string)); // Use state if available
+            submitData.set('description', description || (formData.get('description') as string));
             submitData.set('image', imageUrl);
             submitData.set('type', productType);
 
             await addProduct(slug, submitData);
             
+            // Success — reset form
             setPreview(null);
-            setPreview(null);
-            setDescription(''); // Reset
+            setDescription('');
             setDigitalFileName(null);
             setProductType('physical');
+            setFeedback({ type: 'success', message: '✅ Product added successfully!' });
             (document.getElementById('addProductForm') as HTMLFormElement)?.reset();
+            setTimeout(() => setFeedback(null), 4000);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            alert('Failed to add product');
+            const msg = error?.message || 'Failed to add product';
+            if (msg.includes('logged in') || msg.includes('Unauthenticated') || msg.includes('authenticate')) {
+                setFeedback({ type: 'error', message: '🔒 Session expired. Redirecting to login...' });
+                setTimeout(() => { window.location.href = `/store/${slug}/admin/login`; }, 2000);
+            } else {
+                setFeedback({ type: 'error', message: `❌ ${msg}` });
+                setTimeout(() => setFeedback(null), 5000);
+            }
         } finally {
             setIsUploading(false);
         }
@@ -206,6 +214,16 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType }:
                     />
                 </div>
                 
+                {feedback && (
+                    <div className={`p-3 rounded-xl text-sm font-medium animate-in fade-in duration-300 ${
+                        feedback.type === 'success' 
+                            ? 'bg-green-50 text-green-800 border border-green-200' 
+                            : 'bg-red-50 text-red-800 border border-red-200'
+                    }`}>
+                        {feedback.message}
+                    </div>
+                )}
+
                 <button type="submit" disabled={isUploading} className="btn-block mt-2 flex items-center justify-center gap-2">
                     {isUploading ? <Loader2 className="animate-spin" size={20} /> : 'Add Item'}
                 </button>

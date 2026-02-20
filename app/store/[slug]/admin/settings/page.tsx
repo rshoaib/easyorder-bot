@@ -16,9 +16,16 @@ interface Props {
 async function updateSettings(formData: FormData) {
     'use server';
     
+    const { verifyTenantOwnership } = await import('@/lib/auth/security');
     const tenantRepo = getTenantRepository();
     const id = formData.get('id') as string;
     const slug = formData.get('slug') as string;
+
+    if (!id || !slug) return;
+
+    // Security: Verify ownership
+    await verifyTenantOwnership(slug);
+
     const ownerPhone = formData.get('ownerPhone') as string;
     const instagram = formData.get('instagram') as string;
     const facebook = formData.get('facebook') as string;
@@ -27,15 +34,11 @@ async function updateSettings(formData: FormData) {
     const storeType = formData.get('storeType') as string;
     
     // Checkbox is "true" if checked, null if unchecked
-    // But we need to be careful: if the user unchecks it, it won't be in formData at all.
-    // So we assume checked if present.
     const isOpen = formData.get('isOpen') === 'true';
-
-    if (!id || !slug) return;
     
     // Security: Prevent modifying demo store
     if (slug === 'demo') {
-        return; // Or throw error, but silent return is safer for now to avoid crashing if UI bypass happens
+        return;
     }
 
     await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType);
