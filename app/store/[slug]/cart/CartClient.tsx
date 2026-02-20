@@ -13,6 +13,7 @@ import { PromoCode } from "@/lib/repository/types";
 import { toast } from "sonner";
 import { runFireworks } from "@/components/ui/Confetti";
 import { motion, AnimatePresence } from "framer-motion";
+import { formatPrice, getCurrencySymbol } from '@/lib/currency';
 
 // Helper to calc discount
 function calculateDiscount(subtotal: number, promo: Pick<PromoCode, 'discountType' | 'value'>) {
@@ -65,9 +66,10 @@ interface Props {
     tenantId: string;
     slug: string;
     isOpen: boolean;
+    currency?: string;
 }
 
-export default function CartClient({ tenantId, slug, isOpen }: Props) {
+export default function CartClient({ tenantId, slug, isOpen, currency }: Props) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', email: '', locationLink: '' });
@@ -169,7 +171,7 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                 sendGAEvent('event', 'purchase', {
                     transaction_id: response.data.orderId || Date.now().toString(),
                     value: finalTotal,
-                    currency: 'USD',
+                    currency: currency || 'USD',
                     items: items.map(item => ({
                         item_id: item.id,
                         item_name: item.name,
@@ -282,7 +284,7 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                                 </button>
                             </div>
                             <div className="flex items-center gap-2 mb-2">
-                                <div className="text-sm text-gray-500">${item.price.toFixed(2)}</div>
+                                <div className="text-sm text-gray-500">{formatPrice(item.price, currency)}</div>
                                 {(item as any).type === 'digital' && <span className="text-[10px] uppercase font-bold bg-indigo-100 text-indigo-700 px-2 rounded-sm">Digital</span>}
                             </div>
                             <div className="flex items-center gap-3">
@@ -309,26 +311,26 @@ export default function CartClient({ tenantId, slug, isOpen }: Props) {
                 <div className="border-t border-gray-100 pt-4 space-y-2">
                     <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Subtotal</span>
-                        <span className="font-medium">${total.toFixed(2)}</span>
+                        <span className="font-medium">{formatPrice(total, currency)}</span>
                     </div>
                     {/* Hide delivery fee for digital only */}
                     {!isDigitalOnly && deliveryFee > 0 && (
                         <div className="flex justify-between text-sm">
                             <span className="text-gray-500">Delivery Fee</span>
-                            <span className="font-medium">${deliveryFee.toFixed(2)}</span>
+                            <span className="font-medium">{formatPrice(deliveryFee, currency)}</span>
                         </div>
                     )}
                     {appliedPromo && (
                         <div className="flex justify-between text-sm text-green-600">
                             <span className="font-medium flex items-center gap-1"><Tag size={12}/> Code: {appliedPromo.code}</span>
-                            <span className="font-bold">-${calculateDiscount(total, appliedPromo).toFixed(2)}</span>
+                            <span className="font-bold">-{formatPrice(calculateDiscount(total, appliedPromo), currency)}</span>
                         </div>
                     )}
                 </div>
                 
                 <div className="border-t border-gray-100 my-2 pt-2 flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span>${Math.max(0, total + (isDigitalOnly ? 0 : deliveryFee) - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0)).toFixed(2)}</span>
+                    <span>{formatPrice(Math.max(0, total + (isDigitalOnly ? 0 : deliveryFee) - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0)), currency)}</span>
                 </div>
             </div>
 

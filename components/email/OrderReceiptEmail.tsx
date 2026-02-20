@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { formatPrice } from '@/lib/currency';
 
 interface OrderReceiptEmailProps {
   orderId: string;
@@ -12,6 +13,7 @@ interface OrderReceiptEmailProps {
   total: number;
   date: string;
   storeName?: string;
+  currency?: string;
 }
 
 export const OrderReceiptEmail: React.FC<OrderReceiptEmailProps> = ({
@@ -21,6 +23,7 @@ export const OrderReceiptEmail: React.FC<OrderReceiptEmailProps> = ({
   total,
   date,
   storeName = 'Our Store',
+  currency,
 }) => (
   <div style={{ fontFamily: 'sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', border: '1px solid #e5e5e5', borderRadius: '8px' }}>
     <h1 style={{ color: '#333', textAlign: 'center' }}>{storeName}</h1>
@@ -55,14 +58,14 @@ export const OrderReceiptEmail: React.FC<OrderReceiptEmailProps> = ({
                 )}
             </td>
             <td style={{ textAlign: 'center', padding: '10px' }}>{item.quantity}</td>
-            <td style={{ textAlign: 'right', padding: '10px' }}>${item.price.toFixed(2)}</td>
+            <td style={{ textAlign: 'right', padding: '10px' }}>{formatPrice(item.price, currency)}</td>
           </tr>
         ))}
       </tbody>
       <tfoot>
         <tr>
           <td colSpan={2} style={{ textAlign: 'right', padding: '10px', fontWeight: 'bold' }}>Total</td>
-          <td style={{ textAlign: 'right', padding: '10px', fontWeight: 'bold' }}>${total.toFixed(2)}</td>
+          <td style={{ textAlign: 'right', padding: '10px', fontWeight: 'bold' }}>{formatPrice(total, currency)}</td>
         </tr>
       </tfoot>
     </table>

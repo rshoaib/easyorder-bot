@@ -1,4 +1,5 @@
 import { getProductRepository, getTenantRepository } from "@/lib/repository";
+import { formatPrice } from '@/lib/currency';
 import { addProduct, deleteProduct } from "./actions";
 import { Trash2, Plus, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -64,7 +65,7 @@ export default async function AdminMenuPage({ params }: Props) {
                             </div>
                             <div className="flex-1">
                                 <h3 className="font-bold">{product.name}</h3>
-                                <div className="text-sm text-gray-500">{product.category} • ${product.price.toFixed(2)}</div>
+                                <div className="text-sm text-gray-500">{product.category} • {formatPrice(product.price, tenant?.currency)}</div>
                             </div>
                             
                             {/* Toggle Availability */}

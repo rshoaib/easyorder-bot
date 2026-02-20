@@ -3,6 +3,7 @@ import { getTenantRepository, getOrderRepository, getProductRepository } from '@
 import { Order, Product } from '@/lib/repository/types';
 import { Resend } from 'resend';
 import { OrderReceiptEmail } from '@/components/email/OrderReceiptEmail';
+import { getCurrencySymbol } from '@/lib/currency';
 
 export async function POST(req: NextRequest) {
     try {
@@ -79,14 +80,15 @@ export async function POST(req: NextRequest) {
         await orderRepo.saveOrder(order);
 
         // Construct WhatsApp Message
-        const itemsList = validatedItems.map((item: any) => `- ${item.quantity}x ${item.name} ($${item.price})`).join('\n');
+        const currencySymbol = getCurrencySymbol(tenant.currency);
+        const itemsList = validatedItems.map((item: any) => `- ${item.quantity}x ${item.name} (${currencySymbol}${item.price})`).join('\n');
         const message = `*New Order #${orderId}*\n\n` +
             `*Customer:* ${customer.name}\n` +
             `*Phone:* ${customer.phone}\n` +
             (customer.email ? `*Email:* ${customer.email}\n` : '') +
             `*Address:* ${customer.address}\n\n` +
             `*Items:*\n${itemsList}\n\n` +
-            `*Total:* $${finalTotal.toFixed(2)}\n` +
+            `*Total:* ${currencySymbol}${finalTotal.toFixed(2)}\n` +
             `*Payment:* ${paymentMethod}\n` +
             (customer.locationLink ? `\n*Location:* ${customer.locationLink}` : '');
 
@@ -108,6 +110,7 @@ export async function POST(req: NextRequest) {
                             total={finalTotal}
                             date={order.date}
                             storeName={tenant.name}
+                            currency={tenant.currency}
                         />
                     )
                 });

@@ -3,6 +3,7 @@ import { Order } from "@/lib/repository/types";
 import Link from "next/link";
 import StatusSelector from '@/components/admin/StatusSelector';
 import { FileText, RefreshCw, ShoppingBag, Cloud } from 'lucide-react';
+import { formatPrice } from '@/lib/currency';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,7 +100,7 @@ export default async function AdminOrdersPage({ params }: Props) {
                           ))}
                       </div>
                   </td>
-                  <td className="py-4 px-6 font-bold text-gray-900 align-top">${order.total.toFixed(2)}</td>
+                  <td className="py-4 px-6 font-bold text-gray-900 align-top">{formatPrice(order.total, tenant?.currency)}</td>
                   <td className="py-4 px-6 text-center align-top">
                     <StatusSelector orderId={order.id} currentStatus={order.status || 'pending'} slug={slug} />
                   </td>

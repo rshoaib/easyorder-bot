@@ -181,7 +181,7 @@ export default async function AdminPage({ params }: Props) {
       </div>
 
       {/* Orders List */}
-      <OrderList orders={orders} slug={slug} />
+      <OrderList orders={orders} slug={slug} currency={tenant?.currency} />
     </main>
   );
 }

@@ -5,15 +5,17 @@ import { Order } from '@/lib/repository/types';
 import StatusSelector from '@/components/admin/StatusSelector';
 import { FileText, Cloud, Search, Filter } from 'lucide-react';
 import Link from 'next/link';
+import { formatPrice } from '@/lib/currency';
 
 interface OrderListProps {
     orders: Order[];
     slug: string;
+    currency?: string;
 }
 
 type FilterStatus = 'all' | 'pending' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
 
-export default function OrderList({ orders, slug }: OrderListProps) {
+export default function OrderList({ orders, slug, currency }: OrderListProps) {
     const [filter, setFilter] = useState<FilterStatus>('all');
     const [search, setSearch] = useState('');
     const [mounted, setMounted] = useState(false);
@@ -112,7 +114,7 @@ export default function OrderList({ orders, slug }: OrderListProps) {
                                     <div className="text-xs text-gray-500 font-mono">{order.customer.phone}</div>
                                     <div className="text-xs text-gray-400 truncate max-w-[150px]">{order.customer.address}</div>
                                 </td>
-                                <td className="py-4 px-6 font-bold text-gray-900">${order.total.toFixed(2)}</td>
+                                <td className="py-4 px-6 font-bold text-gray-900">{formatPrice(order.total, currency)}</td>
                                 <td className="py-4 px-6 text-center">
                                     <StatusSelector orderId={order.id} currentStatus={order.status || 'pending'} slug={slug} />
                                 </td>
