@@ -8,6 +8,7 @@ import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Tenant } from "@/lib/repository/types";
 import { Product } from "@/lib/repository/types";
+import { formatPrice } from "@/lib/currency";
 
 interface StoreFrontProps {
     initialProducts: Product[];
@@ -164,34 +165,19 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
       </footer>
 
       {/* Sticky Cart Summary (Mobile Only, Shows when items in cart) */}
-      {itemCount > 0 ? (
+      {itemCount > 0 && (
           <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-5 duration-300">
               <Link href={`${tenant.slug}/cart`}>
                   <div className="bg-gray-900 text-white p-4 rounded-xl shadow-2xl flex items-center justify-between border border-gray-800">
                       <div className="flex flex-col">
                           <span className="text-xs text-gray-400 font-medium">{itemCount} items</span>
-                          <span className="font-bold text-lg leading-none">{tenant.currency}{total.toFixed(2)}</span>
+                          <span className="font-bold text-lg leading-none">{formatPrice(total, tenant.currency)}</span>
                       </div>
                       <div 
                         className="flex items-center gap-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-bold"
                         style={{ color: tenant.themeColor || '#000' }}
                       >
                           View Cart <ShoppingBag size={16} />
-                      </div>
-                  </div>
-              </Link>
-          </div>
-      ) : (
-          /* Sticky Viral Button (Only when cart is empty) */
-          <div className="md:hidden fixed bottom-4 left-4 right-4 z-40 animate-in slide-in-from-bottom-5 duration-700">
-              <Link href="/login?view=signup&next=/register" target="_blank">
-                  <div className="bg-white/90 backdrop-blur-md text-gray-900 p-4 rounded-xl shadow-lg flex items-center justify-between border border-gray-200">
-                      <div>
-                          <p className="font-bold text-sm">Want a store like this?</p>
-                          <p className="text-xs text-gray-500">Launch for free in 2 mins.</p>
-                      </div>
-                      <div className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">
-                          Start 🚀
                       </div>
                   </div>
               </Link>
@@ -260,7 +246,7 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
                      {product.type === 'digital' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">DIGITAL</span>}
                  </div>
                  <div className="mt-1 text-lg font-bold">
-                    {tenant.currency}{Number(product.price).toFixed(2)}
+                    {formatPrice(Number(product.price), tenant.currency)}
                  </div>
             </div>
           </div>

@@ -20,9 +20,9 @@ export function getCurrencySymbol(currency?: string): string {
 
 /**
  * Format a price with currency symbol.
- * Example: formatPrice(12.5, 'PKR') => "Rs.12.50"
+ * Example: formatPrice(12.5, 'PKR') => "Rs. 12.50"
  */
 export function formatPrice(amount: number, currency?: string): string {
     const symbol = getCurrencySymbol(currency);
-    return `${symbol}${amount.toFixed(2)}`;
+    return `${symbol} ${amount.toFixed(2)}`;
 }
