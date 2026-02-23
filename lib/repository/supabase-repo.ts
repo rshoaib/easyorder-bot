@@ -111,7 +111,8 @@ export class SupabaseProductRepository implements ProductRepository {
         const { data, error } = await this.client
             .from('products')
             .select('*')
-            .eq('tenant_id', tenantId);
+            .eq('tenant_id', tenantId)
+            .order('name', { ascending: true });
 
         if (error) {
             console.error("Supabase Products Fetch Error:", error);
