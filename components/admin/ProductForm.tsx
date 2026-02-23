@@ -134,12 +134,13 @@ export default function ProductForm({ tenantId, slug, storeType, storeName }: Pr
                         <label className="text-sm font-medium text-slate-700">{ingredientsLabel}</label>
                         <button 
                             type="button"
-                            onClick={handleAIGenerate}
-                            disabled={isGenerating}
-                            className="text-xs font-bold text-indigo-600 flex items-center gap-1 hover:text-indigo-800 transition-colors"
+                            onClick={() => alert('✨ Auto-Write is a PRO feature. Upgrade to unlock AI-powered descriptions!')}
+                            className="text-xs font-bold text-slate-400 flex items-center gap-1 cursor-not-allowed"
+                            title="PRO feature — Upgrade to unlock"
                         >
-                            {isGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                            {isGenerating ? 'Writing...' : 'Auto-Write ✨'}
+                            <Sparkles size={12} />
+                            Auto-Write
+                            <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>
                         </button>
                     </div>
                     <textarea 
