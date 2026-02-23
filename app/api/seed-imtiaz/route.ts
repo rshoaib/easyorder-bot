@@ -1,12 +1,19 @@
-import { getTenantRepository, getProductRepository, getOrderRepository, getPromoCodeRepository } from "@/lib/repository";
+import { getTenantRepository, getProductRepository, getOrderRepository } from "@/lib/repository";
 import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
 export async function GET() {
     try {
-        const tenantRepo = getTenantRepository();
-        const productRepo = getProductRepository();
-        const orderRepo = getOrderRepository();
-        const promoRepo = getPromoCodeRepository();
+        // Use service role client to bypass RLS
+        const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!
+        );
+
+        const tenantRepo = getTenantRepository(supabase);
+        const productRepo = getProductRepository(supabase);
+        const orderRepo = getOrderRepository(supabase);
+
 
         const tenant = await tenantRepo.getTenantBySlug('imtiazstore');
         if (!tenant) {
@@ -195,16 +202,16 @@ export async function GET() {
         }
 
         // ─── 3. Seed Promo Codes ───
-        await promoRepo.createPromo({
-            tenantId: tenant.id,
+        await supabase.from('promo_codes').insert({
+            tenant_id: tenant.id,
             code: 'WELCOME10',
-            discountType: 'percent',
+            discount_type: 'percent',
             value: 10,
         });
-        await promoRepo.createPromo({
-            tenantId: tenant.id,
+        await supabase.from('promo_codes').insert({
+            tenant_id: tenant.id,
             code: 'FLAT50',
-            discountType: 'fixed',
+            discount_type: 'fixed',
             value: 50,
         });
 
