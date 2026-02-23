@@ -3,20 +3,21 @@
 import { getProductRepository, getTenantRepository } from "@/lib/repository";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Product } from '@/lib/repository/types'; // Import Product interface
+import { Product } from '@/lib/repository/types';
+import { createClient } from "@/utils/supabase/server";
 
 
 import { verifyTenantOwnership } from "@/lib/auth/security";
 import { handleAutoPost } from "./social-actions";
 
-export async function toggleProductAvailability(id: string, currentState: boolean, slug: string) {
+export async function toggleProductAvailability(id: string, newState: boolean, slug: string) {
     // Security Check
     await verifyTenantOwnership(slug);
 
-    const repo = getProductRepository();
-    // Security: In a real app we should verify the user owns the tenant of this product!
-    await repo.toggleAvailability(id, !currentState);
-    revalidatePath(`/admin/${slug}/menu`);
+    const supabase = await createClient();
+    const repo = getProductRepository(supabase);
+    await repo.toggleAvailability(id, newState);
+    revalidatePath(`/store/${slug}/admin/menu`);
     revalidatePath(`/store/${slug}`);
     return { success: true };
 }
