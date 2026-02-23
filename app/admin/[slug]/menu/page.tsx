@@ -1,7 +1,8 @@
 import { getProductRepository, getTenantRepository } from "@/lib/repository";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit } from "lucide-react";
 import Link from "next/link";
 import ProductToggle from "@/components/admin/ProductToggle";
+import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
 export default async function MenuPage({ params }: { params: { slug: string } }) {
     const { slug } = await params;
@@ -69,9 +70,7 @@ export default async function MenuPage({ params }: { params: { slug: string } })
                                         <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                                             <Edit size={18} />
                                         </button>
-                                        <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                            <Trash2 size={18} />
-                                        </button>
+                                        <DeleteProductButton productId={product.id} slug={slug} />
                                     </div>
                                 </td>
                             </tr>
@@ -79,7 +78,7 @@ export default async function MenuPage({ params }: { params: { slug: string } })
                         {products.length === 0 && (
                             <tr>
                                 <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
-                                    No products found. Click "Add Product" to get started.
+                                    No products found. Click &quot;Add Product&quot; to get started.
                                 </td>
                             </tr>
                         )}

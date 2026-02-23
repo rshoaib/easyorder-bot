@@ -22,7 +22,7 @@ export default function ProductToggle({ id, initialAvailable, slug }: Props) {
     setIsAvailable(newState);
 
     try {
-      await toggleProductAvailability(id, isAvailable, slug);
+      await toggleProductAvailability(id, newState, slug);
     } catch (e) {
       // Revert on error
       setIsAvailable(!newState);

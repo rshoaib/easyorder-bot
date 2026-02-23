@@ -51,6 +51,7 @@ export async function deleteProduct(slug: string, id: string) {
     const repo = getProductRepository(supabase);
     await repo.deleteProduct(id);
     revalidatePath(`/store/${slug}/admin/menu`);
+    revalidatePath(`/admin/${slug}/menu`);
     revalidatePath(`/store/${slug}`);
 }
 

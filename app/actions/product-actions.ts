@@ -18,6 +18,7 @@ export async function toggleProductAvailability(id: string, newState: boolean, s
     const repo = getProductRepository(supabase);
     await repo.toggleAvailability(id, newState);
     revalidatePath(`/store/${slug}/admin/menu`);
+    revalidatePath(`/admin/${slug}/menu`);
     revalidatePath(`/store/${slug}`);
     return { success: true };
 }
