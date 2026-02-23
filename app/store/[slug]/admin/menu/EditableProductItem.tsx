@@ -10,16 +10,32 @@ interface Props {
     product: any;
     slug: string;
     currency?: string;
-    onToggle: (id: string, isAvailable: boolean) => void;
+    onToggle: (id: string, newAvailability: boolean) => Promise<void>;
 }
 
 export default function EditableProductItem({ product, slug, currency, onToggle }: Props) {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isToggling, setIsToggling] = useState(false);
+    const [isAvailable, setIsAvailable] = useState(product.isAvailable);
     const [name, setName] = useState(product.name);
     const [price, setPrice] = useState(product.price.toString());
     const [category, setCategory] = useState(product.category);
+
+    const handleToggle = async () => {
+        if (isToggling) return;
+        setIsToggling(true);
+        const newState = !isAvailable;
+        setIsAvailable(newState); // Optimistic update
+        try {
+            await onToggle(product.id, newState);
+        } catch (e) {
+            setIsAvailable(!newState); // Revert on error
+        } finally {
+            setIsToggling(false);
+        }
+    };
 
     const handleSave = async () => {
         setIsSaving(true);
@@ -123,16 +139,17 @@ export default function EditableProductItem({ product, slug, currency, onToggle 
             >
                 <Pencil size={16} />
             </button>
-            <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                    type="checkbox"
-                    checked={product.isAvailable}
-                    onChange={(e) => onToggle(product.id, e.target.checked)}
-                    className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                <span className="ml-1 text-xs text-gray-500">{product.isAvailable ? 'In Stock' : 'Out'}</span>
-            </label>
+            <button
+                onClick={handleToggle}
+                disabled={isToggling}
+                className={`relative w-11 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20 ${isAvailable ? 'bg-blue-600' : 'bg-gray-200'} ${isToggling ? 'opacity-60' : ''}`}
+                title={isAvailable ? 'Mark as Sold Out' : 'Mark as Available'}
+            >
+                <span className={`absolute top-[2px] left-[2px] bg-white w-5 h-5 rounded-full transition-transform border border-gray-300 ${isAvailable ? 'translate-x-5' : 'translate-x-0'}`} />
+            </button>
+            <span className="text-xs text-gray-500 w-14">
+                {isToggling ? <Loader2 size={12} className="animate-spin inline" /> : (isAvailable ? 'In Stock' : 'Out')}
+            </span>
             <button
                 onClick={handleDelete}
                 disabled={isDeleting}
