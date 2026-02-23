@@ -7,16 +7,24 @@ export const dynamic = 'force-dynamic';
 
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export default async function SuperAdminPage() {
-    // Strict Auth: Only allow the super admin email
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    // Auth: Accept either httpOnly cookie (set by /api/auth/login with master password)
+    // OR Supabase Auth with the super admin email
+    const cookiesInfo = await cookies();
+    const hasSuperAuth = cookiesInfo.get('super_auth')?.value === 'true';
 
-    const SUPER_ADMIN_EMAIL = "segmentibi@gmail.com";
+    if (!hasSuperAuth) {
+        // Fallback: Check Supabase Auth
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user || user.email !== SUPER_ADMIN_EMAIL) {
-        redirect("/super-admin/login");
+        const SUPER_ADMIN_EMAIL = "segmentibi@gmail.com";
+
+        if (!user || user.email !== SUPER_ADMIN_EMAIL) {
+            redirect("/super-admin/login");
+        }
     }
 
     const repo = getTenantRepository();

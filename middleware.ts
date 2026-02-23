@@ -16,7 +16,11 @@ export async function middleware(request: NextRequest) {
     if (isGlobalAdmin || isStoreAdmin || isSuperAdmin) {
         // Exclude login pages from protection to avoid redirect loops
         const isLoginPage = url.pathname === '/admin/login' || url.pathname.endsWith('/admin/login') || url.pathname === '/super-admin/login';
-        if (!isLoginPage && !user) {
+
+        // For super-admin, also accept the httpOnly super_auth cookie (set by master password login)
+        const hasSuperAuthCookie = isSuperAdmin && request.cookies.get('super_auth')?.value === 'true';
+
+        if (!isLoginPage && !user && !hasSuperAuthCookie) {
             if (isSuperAdmin) {
                 return NextResponse.redirect(new URL('/super-admin/login', request.url));
             }
