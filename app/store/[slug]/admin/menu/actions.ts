@@ -79,3 +79,14 @@ export async function importProducts(slug: string, products: Omit<Product, 'id' 
     revalidatePath(`/store/${slug}/admin/menu`);
     revalidatePath(`/store/${slug}`);
 }
+
+export async function updateProduct(slug: string, productId: string, data: { name?: string; price?: number; category?: string; description?: string }) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
+    const supabase = await createClient();
+    const repo = getProductRepository(supabase);
+    await repo.updateProduct(productId, data);
+    revalidatePath(`/store/${slug}/admin/menu`);
+    revalidatePath(`/store/${slug}`);
+}

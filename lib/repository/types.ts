@@ -69,6 +69,7 @@ export interface ProductRepository {
     addProduct(product: Product): Promise<void>;
     deleteProduct(id: string): Promise<void>;
     toggleAvailability(id: string, isAvailable: boolean): Promise<void>;
+    updateProduct(id: string, data: Partial<Pick<Product, 'name' | 'price' | 'category' | 'description'>>): Promise<void>;
 }
 
 // Analytics Interface

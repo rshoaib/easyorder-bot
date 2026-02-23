@@ -8,15 +8,17 @@ import Image from 'next/image';
 
 import { generateProductDescription } from '@/app/actions/ai-actions';
 import { Sparkles } from 'lucide-react';
+import { getCurrencySymbol } from '@/lib/currency';
 
 interface Props {
     slug: string;
     tenantId: string;
     storeName: string;
     storeType?: string;
+    currency?: string;
 }
 
-export default function AddProductForm({ slug, tenantId, storeName, storeType }: Props) {
+export default function AddProductForm({ slug, tenantId, storeName, storeType, currency }: Props) {
     const [isUploading, setIsUploading] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
@@ -163,7 +165,7 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType }:
                 )}
                 <div className="grid grid-cols-2 gap-2">
                     <div>
-                        <label className="form-label">Price ($)</label>
+                        <label className="form-label">Price ({getCurrencySymbol(currency)})</label>
                         <input name="price" type="number" step="0.01" required placeholder="10.50" className="form-input" />
                     </div>
                     <div>

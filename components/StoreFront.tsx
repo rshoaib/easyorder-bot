@@ -204,7 +204,7 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
 
     return (
         <div 
-          className={`product-card group cursor-pointer ${!product.isAvailable ? 'opacity-80' : ''}`}
+          className={`product-card group ${product.isAvailable ? 'cursor-pointer' : 'opacity-60 cursor-default'}`}
           onClick={handleAdd}
         >
             <div className="product-image-container">

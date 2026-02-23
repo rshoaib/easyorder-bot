@@ -1,12 +1,11 @@
 import { getProductRepository, getTenantRepository } from "@/lib/repository";
 import { formatPrice } from '@/lib/currency';
 import { addProduct, deleteProduct } from "./actions";
-import { Trash2, Plus, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import ImageWithFallback from "@/components/ui/ImageWithFallback";
-import ProductToggle from "@/components/admin/ProductToggle";
 import AddProductForm from "./AddProductForm";
 import ImportExportButtons from "./ImportExportButtons";
+import ProductListClient from "./ProductListClient";
 
 export const dynamic = 'force-dynamic';
 
@@ -25,8 +24,6 @@ export default async function AdminMenuPage({ params }: Props) {
 
     const repo = getProductRepository();
     const products = await repo.getProducts(tenant.id);
-
-    const addProductWithSlug = addProduct.bind(null, slug);
 
     return (
         <main className="container pt-6 pb-10" style={{ maxWidth: '1100px' }}>
@@ -50,39 +47,13 @@ export default async function AdminMenuPage({ params }: Props) {
                 
                 {/* Add Product Form */}
                 <div className="lg:col-span-2">
-                    <AddProductForm slug={slug} tenantId={tenant.id} storeName={tenant.name} storeType={tenant.storeType} />
+                    <AddProductForm slug={slug} tenantId={tenant.id} storeName={tenant.name} storeType={tenant.storeType} currency={tenant.currency} />
                 </div>
 
                 {/* Product List */}
                 <div className="lg:col-span-3 space-y-4 min-w-0">
                     <h2 className="text-lg font-bold px-2">Current Products ({products.length})</h2>
-                    {products.map((product: any) => {
-                        const deleteProductWithSlug = deleteProduct.bind(null, slug, product.id);
-                        return (
-                        <div key={product.id} className="bg-white p-4 rounded-xl border border-gray-100 flex gap-4 items-center">
-                            <div className="h-16 w-16 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0 relative">
-                                <ImageWithFallback src={product.image} alt={product.name} fill className="object-cover" />
-                            </div>
-                            <div className="flex-1">
-                                <h3 className="font-bold">{product.name}</h3>
-                                <div className="text-sm text-gray-500">{product.category} • {formatPrice(product.price, tenant?.currency)}</div>
-                            </div>
-                            
-                            {/* Toggle Availability */}
-                            <ProductToggle 
-                                id={product.id} 
-                                initialAvailable={product.isAvailable ?? true} 
-                                slug={slug} 
-                            />
-
-                            {/* Delete Button (Wrapped in form for Server Action) */}
-                            <form action={deleteProductWithSlug}>
-                                <button type="submit" className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete Item">
-                                    <Trash2 size={18} />
-                                </button>
-                            </form>
-                        </div>
-                    )})}
+                    <ProductListClient products={products} slug={slug} currency={tenant.currency} />
                     {products.length === 0 && (
                         <div className="text-center py-10 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
                             No items in the menu. Add one!
@@ -93,3 +64,4 @@ export default async function AdminMenuPage({ params }: Props) {
         </main>
     );
 }
+

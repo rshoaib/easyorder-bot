@@ -115,4 +115,22 @@ export class JsonProductRepository implements ProductRepository {
             // Ignore
         }
     }
+
+    async updateProduct(id: string, data: Partial<Pick<Product, 'name' | 'price' | 'category' | 'description'>>): Promise<void> {
+        const filePath = this.getFilePath();
+        try {
+            const fileData = await fs.readFile(filePath, 'utf8');
+            const products: Product[] = JSON.parse(fileData);
+            const idx = products.findIndex(p => p.id === id);
+            if (idx !== -1) {
+                if (data.name !== undefined) products[idx].name = data.name;
+                if (data.price !== undefined) products[idx].price = data.price;
+                if (data.category !== undefined) products[idx].category = data.category;
+                if (data.description !== undefined) products[idx].description = data.description;
+                await fs.writeFile(filePath, JSON.stringify(products, null, 2));
+            }
+        } catch {
+            // Ignore
+        }
+    }
 }

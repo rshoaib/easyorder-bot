@@ -53,7 +53,7 @@ export default function ServiceStatus() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <StatusItem label="AI Service (Gemini)" active={status.ai} />
                 <StatusItem label="Database" active={status.database} />
-                <StatusItem label="Email Service" active={status.email} />
+                <StatusItem label="Email Service" active={status.email} optional />
             </div>
 
             {aiTestResult && (
@@ -72,7 +72,16 @@ export default function ServiceStatus() {
     );
 }
 
-function StatusItem({ label, active }: { label: string, active: boolean }) {
+function StatusItem({ label, active, optional }: { label: string, active: boolean, optional?: boolean }) {
+    // For optional services (like email), show neutral gray instead of alarming red
+    if (!active && optional) {
+        return (
+            <div className="flex items-center justify-between p-3 rounded-xl border bg-gray-50 border-gray-100">
+                <span className="font-medium text-gray-500">{label}</span>
+                <span className="text-xs font-bold text-gray-400 px-2 py-0.5 rounded bg-gray-100">N/A</span>
+            </div>
+        );
+    }
     return (
         <div className={`flex items-center justify-between p-3 rounded-xl border ${active ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
             <span className={`font-medium ${active ? 'text-green-900' : 'text-red-900'}`}>{label}</span>

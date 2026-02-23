@@ -168,6 +168,23 @@ export class SupabaseProductRepository implements ProductRepository {
             throw new Error(error.message);
         }
     }
+
+    async updateProduct(id: string, data: Partial<Pick<Product, 'name' | 'price' | 'category' | 'description'>>): Promise<void> {
+        const updateData: any = {};
+        if (data.name !== undefined) updateData.name = data.name;
+        if (data.price !== undefined) updateData.price = data.price;
+        if (data.category !== undefined) updateData.category = data.category;
+        if (data.description !== undefined) updateData.description = data.description;
+
+        const { error } = await this.client
+            .from('products')
+            .update(updateData)
+            .eq('id', id);
+
+        if (error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
 
