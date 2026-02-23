@@ -10,9 +10,9 @@ interface Props {
 }
 
 export default function ProductListClient({ products, slug, currency }: Props) {
-    const handleToggle = async (id: string, isAvailable: boolean) => {
+    const handleToggle = async (id: string, newAvailability: boolean) => {
         try {
-            await toggleProductAvailability(id, !isAvailable, slug);
+            await toggleProductAvailability(id, newAvailability, slug);
         } catch (e: any) {
             alert(e.message || 'Failed to toggle');
         }
