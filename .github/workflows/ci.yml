@@ -1,0 +1,46 @@
+name: Content Pipeline CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-and-build:
+    name: 🔄 Content Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: 🔍 SEO Validation
+        run: node scripts/validate-seo.js
+        continue-on-error: true
+
+      - name: 🔧 TypeScript Check
+        run: npx tsc --noEmit
+
+      - name: 🏗️ Production Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+      - name: ✅ Pipeline Complete
+        if: success()
+        run: echo "✅ Content pipeline passed! Vercel will auto-deploy."
+
+      - name: ❌ Pipeline Failed
+        if: failure()
+        run: echo "❌ Content pipeline failed. Check logs above."
