@@ -24,13 +24,13 @@ export default async function AdminPromosPage({ params }: Props) {
 
   async function create(formData: FormData) {
       'use server';
-      await createPromoCode(formData, tenant!.id);
+      await createPromoCode(formData, tenant!.id, slug);
       revalidatePath(`/store/${slug}/admin/promos`);
   }
 
   async function toggle(id: string, currentState: boolean) {
       'use server';
-      await togglePromoAction(id, !currentState);
+      await togglePromoAction(id, !currentState, slug);
       revalidatePath(`/store/${slug}/admin/promos`);
   }
 

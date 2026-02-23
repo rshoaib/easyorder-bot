@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getTenantRepository, getOrderRepository, getProductRepository } from '@/lib/repository';
 import { Order, Product } from '@/lib/repository/types';
 import { getCurrencySymbol } from '@/lib/currency';
+import { sanitizeCustomerInput } from '@/lib/sanitize';
 
 export async function POST(req: NextRequest) {
     try {
@@ -61,11 +62,14 @@ export async function POST(req: NextRequest) {
         // Generate Order ID (simple unique ID)
         const orderId = `ORD-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`;
 
+        // Sanitize customer input
+        const safeCustomer = sanitizeCustomerInput(customer);
+
         const order: Order = {
             id: orderId,
             tenantId: tenant.id,
             date: new Date().toISOString(),
-            customer,
+            customer: safeCustomer,
             items: validatedItems,
             subtotal: finalTotal,
             deliveryFee: 0,

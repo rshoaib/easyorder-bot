@@ -1,7 +1,24 @@
 import { supabase } from './supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
 
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_LOGO_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_DIGITAL_SIZE = 50 * 1024 * 1024; // 50MB
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+function validateFile(file: File, maxSize: number, allowedTypes?: string[]): void {
+    if (file.size > maxSize) {
+        const sizeMB = (maxSize / (1024 * 1024)).toFixed(0);
+        throw new Error(`File too large. Maximum size is ${sizeMB}MB.`);
+    }
+    if (allowedTypes && !allowedTypes.includes(file.type)) {
+        throw new Error(`Invalid file type "${file.type}". Allowed: ${allowedTypes.join(', ')}`);
+    }
+}
+
 export async function uploadProductImage(file: File, tenantId: string): Promise<string | null> {
+    validateFile(file, MAX_IMAGE_SIZE, ALLOWED_IMAGE_TYPES);
+
     const fileExt = file.name.split('.').pop();
     const fileName = `${tenantId}/${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `${fileName}`;
@@ -23,6 +40,8 @@ export async function uploadProductImage(file: File, tenantId: string): Promise<
 }
 
 export async function uploadTenantLogo(file: File, tenantId: string, client: SupabaseClient = supabase): Promise<string | null> {
+    validateFile(file, MAX_LOGO_SIZE, ALLOWED_IMAGE_TYPES);
+
     const fileExt = file.name.split('.').pop();
     const fileName = `${tenantId}/logo_${Date.now()}.${fileExt}`;
     const filePath = `${fileName}`;
@@ -46,6 +65,8 @@ export async function uploadTenantLogo(file: File, tenantId: string, client: Sup
 }
 
 export async function uploadDigitalFile(file: File, tenantId: string): Promise<string | null> {
+    validateFile(file, MAX_DIGITAL_SIZE);
+
     const fileExt = file.name.split('.').pop();
     // Obscure the filename for MVP security
     const randomHash = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -68,3 +89,4 @@ export async function uploadDigitalFile(file: File, tenantId: string): Promise<s
 
     return data.publicUrl;
 }
+

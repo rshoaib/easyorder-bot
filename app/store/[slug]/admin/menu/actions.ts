@@ -5,6 +5,7 @@ import { Product } from "@/lib/repository/types";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
 import { verifyTenantOwnership } from "@/lib/auth/security";
+import { sanitizeProductName, sanitizeDescription, sanitizeCategory, validatePrice } from "@/lib/sanitize";
 
 export async function addProduct(slug: string, formData: FormData) {
     // Security Check
@@ -25,11 +26,11 @@ export async function addProduct(slug: string, formData: FormData) {
 
     const product: Product = {
         id,
-        name: formData.get('name') as string,
-        price: parseFloat(formData.get('price') as string),
-        category: formData.get('category') as string,
+        name: sanitizeProductName(formData.get('name') as string),
+        price: validatePrice(parseFloat(formData.get('price') as string)),
+        category: sanitizeCategory(formData.get('category') as string),
         image: formData.get('image') as string,
-        description: formData.get('description') as string || '',
+        description: sanitizeDescription(formData.get('description') as string || ''),
         tenantId: tenant.id,
         isAvailable: true,
         type: (formData.get('type') as 'physical' | 'digital' | 'service') || 'physical',
@@ -84,9 +85,16 @@ export async function updateProduct(slug: string, productId: string, data: { nam
     // Security Check
     await verifyTenantOwnership(slug);
 
+    // Sanitize inputs
+    const sanitized: any = {};
+    if (data.name !== undefined) sanitized.name = sanitizeProductName(data.name);
+    if (data.price !== undefined) sanitized.price = validatePrice(data.price);
+    if (data.category !== undefined) sanitized.category = sanitizeCategory(data.category);
+    if (data.description !== undefined) sanitized.description = sanitizeDescription(data.description);
+
     const supabase = await createClient();
     const repo = getProductRepository(supabase);
-    await repo.updateProduct(productId, data);
+    await repo.updateProduct(productId, sanitized);
     revalidatePath(`/store/${slug}/admin/menu`);
     revalidatePath(`/store/${slug}`);
 }

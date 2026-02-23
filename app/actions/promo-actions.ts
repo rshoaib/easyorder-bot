@@ -1,6 +1,7 @@
 'use server';
 
 import { getPromoCodeRepository } from "@/lib/repository";
+import { verifyTenantOwnership } from "@/lib/auth/security";
 
 export async function validatePromoCode(code: string, tenantId: string) {
     const repo = getPromoCodeRepository();
@@ -20,7 +21,10 @@ export async function validatePromoCode(code: string, tenantId: string) {
     };
 }
 
-export async function createPromoCode(formData: FormData, tenantId: string) {
+export async function createPromoCode(formData: FormData, tenantId: string, slug: string) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
     const code = formData.get('code') as string;
     const type = formData.get('type') as 'percent' | 'fixed';
     const value = parseFloat(formData.get('value') as string);
@@ -43,8 +47,12 @@ export async function createPromoCode(formData: FormData, tenantId: string) {
     }
 }
 
-export async function togglePromoAction(id: string, isActive: boolean) {
+export async function togglePromoAction(id: string, isActive: boolean, slug: string) {
+    // Security Check
+    await verifyTenantOwnership(slug);
+
     const repo = getPromoCodeRepository();
     await repo.togglePromo(id, isActive);
     return { success: true };
 }
+
