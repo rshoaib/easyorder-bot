@@ -25,6 +25,11 @@ const nextConfig: NextConfig = {
         destination: '/manifest.json',
         permanent: true,
       },
+      {
+        source: '/month',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 

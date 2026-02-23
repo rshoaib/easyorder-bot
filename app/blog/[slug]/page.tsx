@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { getPost, getAllPosts } from '@/lib/blog';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Calendar, User, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, User, ShoppingBag } from 'lucide-react';
 import ShareButtons from '@/components/blog/ShareButtons';
 import { Metadata } from 'next';
 
@@ -39,8 +39,41 @@ export default async function BlogPost({ params }: Props) {
         notFound();
     }
 
+    // Get related posts (excluding current)
+    const allPosts = await getAllPosts();
+    const relatedPosts = allPosts
+        .filter(p => p.slug !== slug)
+        .slice(0, 3);
+
     return (
         <main className="min-h-screen bg-white">
+            {/* BlogPosting JSON-LD */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BlogPosting",
+                        "headline": post.title,
+                        "description": post.excerpt,
+                        "author": {
+                            "@type": "Person",
+                            "name": post.author
+                        },
+                        "datePublished": post.date,
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "OrderViaChat",
+                            "url": "https://orderviachat.com"
+                        },
+                        "mainEntityOfPage": {
+                            "@type": "WebPage",
+                            "@id": `https://orderviachat.com/blog/${post.slug}`
+                        },
+                        ...(post.coverImage ? { "image": post.coverImage } : {})
+                    })
+                }}
+            />
              {/* Navbar (Simplified) */}
              <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
@@ -127,6 +160,32 @@ export default async function BlogPost({ params }: Props) {
                     </Link>
                 </div>
             </section>
+
+            {/* Related Posts */}
+            {relatedPosts.length > 0 && (
+                <section className="py-16 bg-white border-t border-slate-200">
+                    <div className="max-w-4xl mx-auto px-6">
+                        <h2 className="text-2xl font-bold text-slate-900 mb-8">More Guides You'll Love</h2>
+                        <div className="grid sm:grid-cols-3 gap-5">
+                            {relatedPosts.map(rp => (
+                                <Link key={rp.slug} href={`/blog/${rp.slug}`} className="group block">
+                                    <div className="bg-slate-50 rounded-2xl border border-slate-100 p-5 hover:border-indigo-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full">
+                                        <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+                                            {rp.category}
+                                        </span>
+                                        <h3 className="text-sm font-bold text-slate-900 mt-2.5 mb-1.5 group-hover:text-indigo-600 transition-colors leading-snug line-clamp-2">
+                                            {rp.title}
+                                        </h3>
+                                        <div className="mt-3 text-xs font-semibold text-indigo-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                                            Read <ArrowRight size={12} />
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
         </main>
     );
 }

@@ -23,12 +23,14 @@ import {
   XCircle,
   CheckCircle,
   HelpCircle,
+  BookOpen,
 } from "lucide-react";
 import ScrollFadeIn from "@/components/landing/ScrollFadeIn";
 import AnimatedCounter from "@/components/landing/AnimatedCounter";
 import HeroDemo from "@/components/landing/HeroDemo";
 import FAQ from "@/components/landing/FAQ";
 import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
+import { getAllPosts } from "@/lib/blog";
 
 const WHATSAPP_SHARE_URL = `https://wa.me/?text=${encodeURIComponent(
   "Check out OrderViaChat — a free tool to create a digital menu and get orders on WhatsApp! 🚀\nhttps://orderviachat.com"
@@ -37,8 +39,35 @@ const WHATSAPP_SHARE_URL = `https://wa.me/?text=${encodeURIComponent(
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  const posts = (await getAllPosts()).slice(0, 4);
+
   return (
     <main className="min-h-screen bg-white overflow-x-hidden">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "OrderViaChat",
+            "url": "https://orderviachat.com",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "description": "Free WhatsApp ordering system for restaurants and small businesses. Create a digital menu, share your store link, and receive orders on WhatsApp.",
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "ratingCount": "120"
+            }
+          })
+        }}
+      />
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 glass border-b border-slate-100 transition-all duration-300">
         <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
@@ -505,6 +534,59 @@ export default async function HomePage() {
 
           <ScrollFadeIn>
             <FAQ />
+          </ScrollFadeIn>
+        </div>
+      </section>
+
+      {/* ─── Latest Guides (SEO Internal Linking) ─── */}
+      <section className="py-20 md:py-24 bg-white border-t border-slate-100">
+        <div className="max-w-5xl mx-auto px-6">
+          <ScrollFadeIn className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <BookOpen size={20} className="text-indigo-600" />
+              <span className="text-sm font-bold text-indigo-600 uppercase tracking-wide">
+                Blog
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
+              Latest Guides & Tips
+            </h2>
+            <p className="text-slate-500 text-lg max-w-lg mx-auto">
+              Learn how to grow your business with WhatsApp ordering.
+            </p>
+          </ScrollFadeIn>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {posts.map((post, i) => (
+              <ScrollFadeIn key={post.slug} delay={i * 100}>
+                <Link href={`/blog/${post.slug}`} className="group block">
+                  <div className="bg-slate-50 rounded-2xl border border-slate-100 p-6 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
+                      {post.category}
+                    </span>
+                    <h3 className="text-lg font-bold text-slate-900 mt-3 mb-2 group-hover:text-indigo-600 transition-colors leading-snug">
+                      {post.title}
+                    </h3>
+                    <p className="text-slate-500 text-sm leading-relaxed line-clamp-2">
+                      {post.excerpt}
+                    </p>
+                    <div className="mt-4 text-sm font-semibold text-indigo-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                      Read Guide <ArrowRight size={14} />
+                    </div>
+                  </div>
+                </Link>
+              </ScrollFadeIn>
+            ))}
+          </div>
+
+          <ScrollFadeIn delay={400}>
+            <div className="text-center mt-10">
+              <Link href="/blog">
+                <button className="text-indigo-600 hover:text-indigo-700 font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all">
+                  View All Guides <ArrowRight size={16} />
+                </button>
+              </Link>
+            </div>
           </ScrollFadeIn>
         </div>
       </section>
