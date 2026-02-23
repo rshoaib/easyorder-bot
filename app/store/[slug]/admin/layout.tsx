@@ -1,6 +1,7 @@
 import { getTenantRepository } from "@/lib/repository";
 import Link from "next/link";
 import { ExternalLink, LayoutDashboard, Menu, Settings, Tag, QrCode, ShoppingBag, BookOpen } from "lucide-react";
+import WhatsAppSupportButton from "@/components/admin/WhatsAppSupportButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -103,6 +104,9 @@ export default async function AdminLayout({
       <div className="hidden"></div>
 
       {children}
+
+      {/* Floating WhatsApp Support Button */}
+      <WhatsAppSupportButton storeName={tenant.name} />
 
       <div className="container mx-auto px-4 py-8 text-center text-sm text-gray-400">
         <p>Need help or customization?</p>
