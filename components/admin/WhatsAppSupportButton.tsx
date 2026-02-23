@@ -12,7 +12,7 @@ export default function WhatsAppSupportButton({ storeName }: { storeName: string
     return () => clearTimeout(timer);
   }, []);
 
-  const phoneNumber = "92322460991";
+  const phoneNumber = "923224609117";
   const message = encodeURIComponent(`Hi, I need help with my store: ${storeName}`);
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
