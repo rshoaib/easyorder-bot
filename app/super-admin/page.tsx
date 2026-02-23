@@ -7,26 +7,16 @@ export const dynamic = 'force-dynamic';
 
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 
 export default async function SuperAdminPage() {
-    // 1. Check for Master Password Cookie
-    const cookiesInfo = await cookies();
-    const hasSuperAuth = cookiesInfo.get('super_auth')?.value === 'true';
+    // Strict Auth: Only allow the super admin email
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (hasSuperAuth) {
-        // Authorized via Master Password
-    } else {
-        // 2. Fallback: Check Supabase Auth (for future use or if they are logged in as owner)
-        const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+    const SUPER_ADMIN_EMAIL = "segmentibi@gmail.com";
 
-        const SUPER_ADMIN_EMAIL = "segmentibi@gmail.com";
-        const isAuthorizedEmail = user && user.email === SUPER_ADMIN_EMAIL;
-
-        if (!isAuthorizedEmail) {
-            redirect("/super-admin/login");
-        }
+    if (!user || user.email !== SUPER_ADMIN_EMAIL) {
+        redirect("/super-admin/login");
     }
 
     const repo = getTenantRepository();
@@ -169,7 +159,7 @@ export default async function SuperAdminPage() {
                                         <span className="truncate max-w-[120px]" title={tenant.slug}>/store/{tenant.slug}</span>
                                         <div className="flex items-center gap-2">
                                             <span className="text-gray-400">Pass:</span>
-                                            <span className="bg-white px-2 py-0.5 rounded border border-gray-200 text-gray-700">{tenant.password}</span>
+                                            <span className="bg-white px-2 py-0.5 rounded border border-gray-200 text-gray-700">••••••</span>
                                         </div>
                                     </div>
 

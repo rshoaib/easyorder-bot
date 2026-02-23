@@ -4,8 +4,31 @@ import { Order, Product } from '@/lib/repository/types';
 import { getCurrencySymbol } from '@/lib/currency';
 import { sanitizeCustomerInput } from '@/lib/sanitize';
 
+// Simple in-memory rate limiter (resets on deploy/restart)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_MAX = 10; // Max orders per window
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+
+function checkRateLimit(ip: string): boolean {
+    const now = Date.now();
+    const entry = rateLimitMap.get(ip);
+    if (!entry || now > entry.resetTime) {
+        rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+        return true;
+    }
+    if (entry.count >= RATE_LIMIT_MAX) return false;
+    entry.count++;
+    return true;
+}
+
 export async function POST(req: NextRequest) {
     try {
+        // Rate limiting
+        const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown';
+        if (!checkRateLimit(ip)) {
+            return NextResponse.json({ error: 'Too many orders. Please try again later.' }, { status: 429 });
+        }
+
         const body = await req.json();
         const { items, total, customer, slug, promoCode, paymentMethod } = body;
 

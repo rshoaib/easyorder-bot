@@ -9,13 +9,17 @@ export async function middleware(request: NextRequest) {
 
     // 1. Admin Protection (Supabase Auth)
     const isGlobalAdmin = url.pathname.startsWith('/admin');
+    const isSuperAdmin = url.pathname.startsWith('/super-admin');
     const storeAdminMatch = url.pathname.match(/^\/store\/([^/]+)\/admin/);
     const isStoreAdmin = !!storeAdminMatch;
 
-    if (isGlobalAdmin || isStoreAdmin) {
+    if (isGlobalAdmin || isStoreAdmin || isSuperAdmin) {
         // Exclude login pages from protection to avoid redirect loops
-        const isLoginPage = url.pathname === '/admin/login' || url.pathname.endsWith('/admin/login');
+        const isLoginPage = url.pathname === '/admin/login' || url.pathname.endsWith('/admin/login') || url.pathname === '/super-admin/login';
         if (!isLoginPage && !user) {
+            if (isSuperAdmin) {
+                return NextResponse.redirect(new URL('/super-admin/login', request.url));
+            }
             if (storeAdminMatch) {
                 return NextResponse.redirect(new URL(`/store/${storeAdminMatch[1]}/admin/login?next=${encodeURIComponent(url.pathname)}`, request.url));
             }
