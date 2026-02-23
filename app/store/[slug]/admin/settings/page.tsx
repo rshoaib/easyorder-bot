@@ -71,6 +71,7 @@ async function updateSettings(formData: FormData) {
 }
 
 import BrandingSettings from "./BrandingSettings";
+import { DomainSettings } from "@/components/admin/DomainSettings";
 import DeleteStoreButton from "@/components/admin/DeleteStoreButton";
 
 export default async function SettingsPage({ params, searchParams }: Props) {
@@ -259,6 +260,21 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                     </div>
                 </div>
             </form>
+
+            {/* Branding */}
+            <div className="mt-8">
+                <BrandingSettings 
+                    tenantId={tenant.id} 
+                    slug={slug} 
+                    initialThemeColor={tenant.themeColor} 
+                    initialLogoUrl={tenant.logoUrl} 
+                />
+            </div>
+
+            {/* Custom Domain (PRO) */}
+            <div className="mt-8">
+                <DomainSettings slug={slug} currentDomain={tenant.customDomain} />
+            </div>
 
             <div className="mt-8 pt-8 border-t border-gray-200">
                 <h3 className="text-sm font-bold text-red-600 mb-2 uppercase tracking-wider">Danger Zone</h3>
