@@ -1,5 +1,5 @@
 import { getTenantRepository } from "@/lib/repository";
-import { ArrowLeft, Save, Instagram, Facebook, Phone, Banknote, CheckCircle } from "lucide-react";
+import { ArrowLeft, Save, Instagram, Facebook, Phone, Banknote, CheckCircle, CreditCard, Wallet } from "lucide-react";
 import Link from "next/link";
 import ServiceStatus from "@/components/admin/ServiceStatus";
 import { redirect } from "next/navigation";
@@ -41,6 +41,11 @@ async function updateSettings(formData: FormData) {
         const currency = formData.get('currency') as string;
         const storeType = formData.get('storeType') as string;
         
+        // Payment methods
+        const paypalLink = formData.get('paypalLink') as string;
+        const stripeLink = formData.get('stripeLink') as string;
+        const codEnabled = formData.get('codEnabled') === 'true';
+        
         // Checkbox is "true" if checked, null if unchecked
         const isOpen = formData.get('isOpen') === 'true';
         
@@ -52,7 +57,7 @@ async function updateSettings(formData: FormData) {
         // Use authenticated server client for RLS compliance
         const supabase = await createClient();
         const tenantRepo = getTenantRepository(supabase);
-        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType);
+        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType, paypalLink, stripeLink, codEnabled);
         success = true;
     } catch (err: any) {
         // Re-throw Next.js redirect/notFound errors — they use throw internally
@@ -250,6 +255,68 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                         />
                         <p className="text-xs text-gray-500 mt-2">
                             Find this in your Facebook Events Manager. We'll automatically convert it into a tracking script.
+                        </p>
+                    </div>
+
+                    <div className="pt-4 border-t border-gray-100"></div>
+
+                    {/* Payment Methods */}
+                    <div className="mb-2">
+                        <h2 className="font-bold text-gray-900 flex items-center gap-2">
+                            <CreditCard size={18} className="text-indigo-600" /> Payment Methods
+                        </h2>
+                        <p className="text-sm text-gray-500 mt-1">Configure how customers can pay you.</p>
+                    </div>
+
+                    {/* Cash on Delivery */}
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h3 className="font-semibold text-gray-700 text-sm flex items-center gap-2">
+                                💵 Cash on Delivery
+                            </h3>
+                            <p className="text-xs text-gray-500">Customers pay when they receive their order.</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                                type="checkbox" 
+                                name="codEnabled" 
+                                defaultChecked={tenant.codEnabled !== false} 
+                                value="true"
+                                className="sr-only peer" 
+                            />
+                            <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                    </div>
+
+                    {/* PayPal.Me */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                             <Wallet size={16} className="text-blue-600" /> PayPal.Me Link
+                        </label>
+                        <input 
+                            name="paypalLink" 
+                            defaultValue={tenant.paypalLink} 
+                            placeholder="paypal.me/YourName"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium" 
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                            Paste your PayPal.Me link. Customers will be redirected to pay the order total.
+                        </p>
+                    </div>
+
+                    {/* Stripe Payment Link */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                             <CreditCard size={16} className="text-purple-600" /> Stripe Payment Link
+                        </label>
+                        <input 
+                            name="stripeLink" 
+                            defaultValue={tenant.stripeLink} 
+                            placeholder="https://buy.stripe.com/..."
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium" 
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                            Create a payment link in your Stripe Dashboard and paste it here.
                         </p>
                     </div>
 

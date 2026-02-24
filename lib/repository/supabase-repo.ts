@@ -226,7 +226,10 @@ export class SupabaseTenantRepository implements TenantRepository {
             metaPixelId: data.meta_pixel_id,
             userId: data.user_id,
             isOpen: data.is_open ?? true, // Default to true
-            storeType: data.store_type || 'restaurant'
+            storeType: data.store_type || 'restaurant',
+            paypalLink: data.paypal_link,
+            stripeLink: data.stripe_link,
+            codEnabled: data.cod_enabled ?? true
         };
     }
 
@@ -255,7 +258,10 @@ export class SupabaseTenantRepository implements TenantRepository {
             instagramUrl: row.instagram_url,
             facebookUrl: row.facebook_url,
             metaPixelId: row.meta_pixel_id,
-            storeType: row.store_type || 'restaurant'
+            storeType: row.store_type || 'restaurant',
+            paypalLink: row.paypal_link,
+            stripeLink: row.stripe_link,
+            codEnabled: row.cod_enabled ?? true
         }));
     }
 
@@ -354,7 +360,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean): Promise<void> {
         const updateData: any = {
             owner_phone: ownerPhone,
             instagram_url: instagramUrl,
@@ -376,6 +382,11 @@ export class SupabaseTenantRepository implements TenantRepository {
 
         if (isOpen !== undefined) { updateData.is_open = isOpen; }
         if (storeType) { updateData.store_type = storeType; }
+
+        // Payment methods — allow setting to empty string to clear
+        if (paypalLink !== undefined) { updateData.paypal_link = paypalLink || null; }
+        if (stripeLink !== undefined) { updateData.stripe_link = stripeLink || null; }
+        if (codEnabled !== undefined) { updateData.cod_enabled = codEnabled; }
 
         const { error } = await this.client
             .from('tenants')
@@ -410,7 +421,10 @@ export class SupabaseTenantRepository implements TenantRepository {
             instagramUrl: data.instagram_url,
             facebookUrl: data.facebook_url,
             metaPixelId: data.meta_pixel_id,
-            storeType: data.store_type || 'restaurant'
+            storeType: data.store_type || 'restaurant',
+            paypalLink: data.paypal_link,
+            stripeLink: data.stripe_link,
+            codEnabled: data.cod_enabled ?? true
         };
     }
 
@@ -442,7 +456,10 @@ export class SupabaseTenantRepository implements TenantRepository {
             metaPixelId: data.meta_pixel_id,
             userId: data.user_id,
             isOpen: data.is_open ?? true,
-            storeType: data.store_type || 'restaurant'
+            storeType: data.store_type || 'restaurant',
+            paypalLink: data.paypal_link,
+            stripeLink: data.stripe_link,
+            codEnabled: data.cod_enabled ?? true
         };
     }
 

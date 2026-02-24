@@ -1,7 +1,7 @@
 'use client';
 
 import { useCart } from "@/context/CartContext";
-import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin, Tag, Store } from "lucide-react";
+import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin, Tag, Store, CreditCard, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -67,13 +67,33 @@ interface Props {
     slug: string;
     isOpen: boolean;
     currency?: string;
+    paypalLink?: string;
+    stripeLink?: string;
+    codEnabled?: boolean;
 }
 
-export default function CartClient({ tenantId, slug, isOpen, currency }: Props) {
+export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled }: Props) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', email: '', locationLink: '' });
-    const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
+
+    // Build available payment methods dynamically
+    const availableMethods: { id: string; label: string; icon: React.ReactNode }[] = [];
+    if (codEnabled !== false) {
+        availableMethods.push({ id: 'cod', label: 'Cash on Delivery', icon: <span className="text-lg">💵</span> });
+    }
+    if (paypalLink) {
+        availableMethods.push({ id: 'paypal', label: 'Pay with PayPal', icon: <Wallet size={18} className="text-blue-600" /> });
+    }
+    if (stripeLink) {
+        availableMethods.push({ id: 'stripe', label: 'Pay with Card (Stripe)', icon: <CreditCard size={18} className="text-purple-600" /> });
+    }
+    // Fallback: If nothing is configured, show COD + Bank Transfer
+    if (availableMethods.length === 0) {
+        availableMethods.push({ id: 'cod', label: 'Cash on Delivery', icon: <span className="text-lg">💵</span> });
+    }
+
+    const [paymentMethod, setPaymentMethod] = useState(availableMethods[0]?.id || 'cod');
     const router = useRouter();
 
     const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -181,17 +201,35 @@ export default function CartClient({ tenantId, slug, isOpen, currency }: Props) 
                 });
 
                 clearCart();
+
+                // Handle PayPal redirect
+                if (paymentMethod === 'paypal' && paypalLink) {
+                    toast.success("Order placed!", { description: "Redirecting to PayPal..." });
+                    runFireworks();
+                    // Normalize the PayPal link and append amount
+                    let ppLink = paypalLink.trim();
+                    if (!ppLink.startsWith('http')) ppLink = `https://${ppLink}`;
+                    // Append amount and currency
+                    const ppUrl = `${ppLink}/${finalTotal.toFixed(2)}${currency || 'USD'}`;
+                    window.open(ppUrl, '_blank');
+                    setTimeout(() => { window.location.href = `/store/${slug}`; }, 2000);
+                    return;
+                }
+
+                // Handle Stripe redirect
+                if (paymentMethod === 'stripe' && stripeLink) {
+                    toast.success("Order placed!", { description: "Redirecting to payment..." });
+                    runFireworks();
+                    window.open(stripeLink, '_blank');
+                    setTimeout(() => { window.location.href = `/store/${slug}`; }, 2000);
+                    return;
+                }
                 
                 if (response.data.whatsappNumber) {
                      toast.success("Order placed!", { description: "Redirecting to WhatsApp..." });
                      runFireworks();
                      const url = `https://wa.me/${response.data.whatsappNumber}?text=${response.data.message}`;
-                     
-                     // Try to prevent popup blocker issues by opening in same tab if possible or new tab
-                     // New tab is safer for WhatsApp web
                      window.open(url, '_blank');
-                     
-                     // Redirect back to store after a moment
                      setTimeout(() => {
                         window.location.href = `/store/${slug}`;
                      }, 2000);
@@ -411,21 +449,23 @@ export default function CartClient({ tenantId, slug, isOpen, currency }: Props) 
                 <div>
                     <label className="form-label mb-2 block">Payment Method</label>
                     <div className="space-y-2">
-                        {['Cash on Delivery', 'Card on Delivery', 'Bank Transfer'].map((method) => (
-                            <label key={method} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                                paymentMethod === method 
+                        {availableMethods.map((method) => (
+                            <label key={method.id} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                                paymentMethod === method.id 
                                 ? 'border-indigo-600 bg-indigo-50 text-indigo-900' 
                                 : 'border-gray-200 hover:bg-gray-50'
                             }`}>
                                 <input 
                                     type="radio" 
                                     name="paymentMethod" 
-                                    value={method}
-                                    checked={paymentMethod === method}
+                                    value={method.id}
+                                    checked={paymentMethod === method.id}
                                     onChange={(e) => setPaymentMethod(e.target.value)}
                                     className="w-5 h-5 text-indigo-600 focus:ring-indigo-500"
                                 />
-                                <span className="font-medium">{method}</span>
+                                <span className="flex items-center gap-2 font-medium">
+                                    {method.icon} {method.label}
+                                </span>
                             </label>
                         ))}
                     </div>
