@@ -119,7 +119,6 @@ export interface TenantRepository {
     getTenantByUserId(userId: string): Promise<Tenant | null>;
     updateTenantBilling(id: string, billingData: { lemonsqueezy_customer_id?: string; lemonsqueezy_subscription_id?: string; lemonsqueezy_variant_id?: string; subscription_status?: string }): Promise<void>;
     deleteTenant(id: string): Promise<void>;
-    deleteTenant(id: string): Promise<void>;
 
     // Integrations
     getIntegration(tenantId: string, provider: string): Promise<Integration | null>;

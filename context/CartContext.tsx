@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { Product } from '@/data/products';
+import { Product } from '@/lib/repository/types';
 import { usePathname } from 'next/navigation';
 
 export interface CartItem extends Product {

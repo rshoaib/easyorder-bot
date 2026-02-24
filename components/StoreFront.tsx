@@ -83,7 +83,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
           
           {/* Cart button */}
           <div className="cart-btn-wrapper">
-            <Link href={`${tenant.slug}/cart`}>
+            <Link href={`/store/${tenant.slug}/cart`}>
               <button className="cart-btn">
                 <ShoppingBag size={22} />
                 {itemCount > 0 && (
@@ -167,7 +167,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
       {/* Sticky Cart Summary (Mobile Only, Shows when items in cart) */}
       {itemCount > 0 && (
           <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-5 duration-300">
-              <Link href={`${tenant.slug}/cart`}>
+              <Link href={`/store/${tenant.slug}/cart`}>
                   <div className="bg-gray-900 text-white p-4 rounded-xl shadow-2xl flex items-center justify-between border border-gray-800">
                       <div className="flex flex-col">
                           <span className="text-xs text-gray-400 font-medium">{itemCount} items</span>

@@ -134,7 +134,7 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
                         
                          {step.completed && step.id === 'whatsapp' && (
                              <div className="text-xs text-green-600 font-medium flex items-center gap-1">
-                                 Generic verification? <Link href={`https://wa.me/${tenant.ownerPhone}?text=Test`} target="_blank" className="underline hover:text-green-700">Test</Link>
+                                 Verified ✓ <Link href={`https://wa.me/${tenant.ownerPhone}?text=Test`} target="_blank" className="underline hover:text-green-700">Send Test</Link>
                              </div>
                          )}
                     </div>
