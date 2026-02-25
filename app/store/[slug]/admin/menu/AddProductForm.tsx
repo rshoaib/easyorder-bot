@@ -174,23 +174,55 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                     </div>
                 </div>
                 
-                {/* Image Upload */}
+                {/* Image Upload — Camera + Gallery */}
                 <div>
                     <label className="form-label">Product Image</label>
                     <input type="hidden" name="image" value={preview || ''} /> 
-                    <div className="mt-1 flex items-center justify-center w-full">
-                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors relative overflow-hidden">
-                            {preview ? (
-                                <Image src={preview} alt="Preview" fill className="object-cover" />
-                            ) : (
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6 text-gray-400">
-                                    <Upload size={24} className="mb-2" />
-                                    <p className="text-xs text-center">Click to upload image</p>
-                                </div>
-                            )}
-                            <input id="dropzone-file" name="imageFile" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                        </label>
-                    </div>
+                    
+                    {preview ? (
+                        /* Preview with remove button */
+                        <div className="relative w-full h-36 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                            <Image src={preview} alt="Preview" fill className="object-cover" />
+                            <button
+                                type="button"
+                                onClick={() => { setPreview(null); }}
+                                className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white text-xs font-bold px-2.5 py-1 rounded-lg transition-colors backdrop-blur-sm"
+                            >
+                                ✕ Remove
+                            </button>
+                        </div>
+                    ) : (
+                        /* Dual buttons: Camera + Gallery */
+                        <div className="grid grid-cols-2 gap-2 mt-1">
+                            <label htmlFor="camera-capture" className="flex flex-col items-center justify-center h-28 border-2 border-dashed border-green-300 rounded-xl cursor-pointer bg-green-50/50 hover:bg-green-50 hover:border-green-400 transition-all group">
+                                <span className="text-2xl mb-1 group-hover:scale-110 transition-transform">📸</span>
+                                <span className="text-xs font-bold text-green-700">Take Photo</span>
+                                <span className="text-[10px] text-green-600 mt-0.5">Opens Camera</span>
+                                <input 
+                                    id="camera-capture" 
+                                    name="imageFile" 
+                                    type="file" 
+                                    accept="image/*" 
+                                    capture="environment"
+                                    className="hidden" 
+                                    onChange={handleFileChange} 
+                                />
+                            </label>
+                            <label htmlFor="gallery-upload" className="flex flex-col items-center justify-center h-28 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all group">
+                                <span className="text-2xl mb-1 group-hover:scale-110 transition-transform">🖼️</span>
+                                <span className="text-xs font-bold text-gray-700">From Gallery</span>
+                                <span className="text-[10px] text-gray-500 mt-0.5">Upload File</span>
+                                <input 
+                                    id="gallery-upload" 
+                                    name="imageFile" 
+                                    type="file" 
+                                    accept="image/*" 
+                                    className="hidden" 
+                                    onChange={handleFileChange} 
+                                />
+                            </label>
+                        </div>
+                    )}
                 </div>
 
                 <div>
