@@ -122,6 +122,36 @@ export default async function AdminLayout({
         </div>
       </nav>
 
+      {/* Mobile: Scrollable Quick-Nav Pills */}
+      <div className="lg:hidden bg-white border-b border-gray-100 sticky top-16 z-20">
+        <div className="flex gap-1.5 overflow-x-auto px-3 py-2 scrollbar-hide" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+          <Link href={`/store/${slug}/admin`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            <LayoutDashboard size={12} /> Dashboard
+          </Link>
+          <Link href={`/store/${slug}/admin/orders`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            <ShoppingBag size={12} /> Orders
+          </Link>
+          <Link href={`/store/${slug}/admin/menu`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            <Menu size={12} /> Products
+          </Link>
+          <Link href={`/store/${slug}/admin/promos`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            <Tag size={12} /> Promos
+          </Link>
+          <Link href={`/store/${slug}/admin/marketing`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            📣 Marketing
+          </Link>
+          <Link href={`/store/${slug}/admin/settings`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            <Settings size={12} /> Settings
+          </Link>
+          <Link href={`/store/${slug}/admin/integrations`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            🔗 Integrations
+          </Link>
+          <Link href={`/store/${slug}/admin/blog`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+            <BookOpen size={12} /> Blog
+          </Link>
+        </div>
+      </div>
+
       {/* Mobile Bottom Nav */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-around h-14">

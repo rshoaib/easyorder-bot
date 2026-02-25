@@ -67,20 +67,38 @@ export default async function AdminPage({ params }: Props) {
   return (
     <main className="container pt-6 pb-10" style={{ maxWidth: '900px' }}>
       {/* Header Section */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex justify-between items-start mb-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-500 text-sm">Welcome back to {tenant.name}</p>
         </div>
         <div className="flex items-center gap-2">
           <a href={`/store/${slug}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 transition-colors px-3 py-2 bg-white border border-gray-200 rounded-lg">
-            👁️ Preview Store
+            👁️ <span className="hidden sm:inline">Preview Store</span><span className="sm:hidden">Preview</span>
           </a>
           <form action="/auth/signout" method="post">
             <button type="submit" className="text-sm text-gray-400 hover:text-red-500 transition-colors px-3 py-2 bg-white border border-gray-200 rounded-lg">
               Sign Out
             </button>
           </form>
+        </div>
+      </div>
+
+      {/* Mobile: Compact Stats Strip */}
+      <div className="lg:hidden mb-4">
+        <div className="grid grid-cols-3 gap-2">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-3 text-center">
+            <p className="text-lg font-bold text-blue-700">{orders.filter((o: Order) => { const d = new Date(o.date); const t = new Date(); return d.toDateString() === t.toDateString(); }).length}</p>
+            <p className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider">Today</p>
+          </div>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-xl p-3 text-center">
+            <p className="text-lg font-bold text-green-700">{analytics?.totalOrders ?? orders.length}</p>
+            <p className="text-[10px] font-semibold text-green-500 uppercase tracking-wider">Total Orders</p>
+          </div>
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 rounded-xl p-3 text-center">
+            <p className="text-lg font-bold text-purple-700">{productCount}</p>
+            <p className="text-[10px] font-semibold text-purple-500 uppercase tracking-wider">Products</p>
+          </div>
         </div>
       </div>
 
