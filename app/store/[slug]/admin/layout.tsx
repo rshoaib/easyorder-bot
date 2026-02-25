@@ -52,7 +52,7 @@ export default async function AdminLayout({
     <div className="min-h-screen bg-gray-50 pb-28">
       {/* Admin Top Navigation */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-30">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="container mx-auto px-4 h-12 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link href={`/store/${slug}/admin`} className="font-bold text-lg flex items-center gap-2">
               <span className="bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-lg">
@@ -123,7 +123,7 @@ export default async function AdminLayout({
       </nav>
 
       {/* Mobile: Scrollable Quick-Nav Pills */}
-      <div className="lg:hidden bg-white border-b border-gray-100 sticky top-16 z-20">
+      <div className="lg:hidden bg-white border-b border-gray-100 sticky top-12 z-20">
         <div className="flex gap-1.5 overflow-x-auto px-3 py-2 scrollbar-hide" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
           <Link href={`/store/${slug}/admin`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
             <LayoutDashboard size={12} /> Dashboard
