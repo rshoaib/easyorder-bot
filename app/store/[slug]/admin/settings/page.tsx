@@ -101,7 +101,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
     if (!tenant) return <div>Store not found</div>;
 
     return (
-        <main className="container pt-6 pb-10" style={{ maxWidth: '800px' }}>
+        <main className="container pt-3 pb-10" style={{ maxWidth: '800px' }}>
             <div className="flex justify-between mb-8 items-center">
                 <div>
                     <h1 className="text-2xl font-bold mb-1">Store Settings</h1>

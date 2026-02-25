@@ -34,7 +34,7 @@ export default async function AdminOrdersPage({ params }: Props) {
   if (!tenant) return <div className="p-10">Store not found</div>;
 
   return (
-    <main className="container pt-6 pb-10" style={{ maxWidth: '1000px' }}>
+    <main className="container pt-3 pb-10" style={{ maxWidth: '1000px' }}>
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-6 gap-4">
          <div>

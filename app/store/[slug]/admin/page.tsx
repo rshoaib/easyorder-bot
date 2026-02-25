@@ -65,7 +65,7 @@ export default async function AdminPage({ params }: Props) {
   }
 
   return (
-    <main className="container pt-6 pb-10" style={{ maxWidth: '900px' }}>
+    <main className="container pt-3 pb-10" style={{ maxWidth: '900px' }}>
       {/* Header Section */}
       <div className="flex justify-between items-start mb-4">
         <div>

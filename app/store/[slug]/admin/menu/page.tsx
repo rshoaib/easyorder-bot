@@ -26,7 +26,7 @@ export default async function AdminMenuPage({ params }: Props) {
     const products = await repo.getProducts(tenant.id);
 
     return (
-        <main className="container pt-6 pb-10" style={{ maxWidth: '1100px' }}>
+        <main className="container pt-3 pb-10" style={{ maxWidth: '1100px' }}>
             <div className="flex justify-between mb-8 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-wrap gap-4">
                 <div>
                     <h1 className="text-2xl font-bold mb-1">Product Catalog</h1>
