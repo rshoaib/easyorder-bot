@@ -72,6 +72,13 @@ body {
   padding-bottom: 6rem;
 }
 
+/* Remove large bottom padding from .container when used inside nav/header */
+nav .container,
+nav>.container {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
 .store-container {
   max-width: 1200px;
   margin: 0 auto;
