@@ -52,43 +52,41 @@ export default async function AdminLayout({
     <div className="min-h-screen bg-gray-50 pb-28">
       {/* Admin Top Navigation */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-30">
-        <div className="container mx-auto px-4 h-12 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link href={`/store/${slug}/admin`} className="font-bold text-lg flex items-center gap-2">
-              <span className="bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-lg">
+        <div className="container mx-auto px-4 h-12 flex items-center gap-4">
+          <Link href={`/store/${slug}/admin`} className="font-bold text-lg flex items-center gap-2 shrink-0">
+              <span className="bg-indigo-600 text-white w-7 h-7 flex items-center justify-center rounded-lg text-sm">
                 {tenant.name.charAt(0)}
               </span>
-              <span className="hidden sm:inline whitespace-nowrap">{tenant.name} Admin</span>
-            </Link>
+              <span className="hidden sm:inline whitespace-nowrap text-sm">{tenant.name}</span>
+          </Link>
 
-            {/* Desktop Nav Links */}
-            <div className="hidden lg:flex items-center gap-1">
-                <Link href={`/store/${slug}/admin`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <LayoutDashboard size={16} /> Dashboard
+            {/* Desktop Nav Links — fill the middle space */}
+            <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+                <Link href={`/store/${slug}/admin`} className="px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                    <LayoutDashboard size={14} /> Dashboard
                 </Link>
-                <Link href={`/store/${slug}/admin/orders`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <ShoppingBag size={16} /> Orders
+                <Link href={`/store/${slug}/admin/orders`} className="px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                    <ShoppingBag size={14} /> Orders
                 </Link>
-                <Link href={`/store/${slug}/admin/menu`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <Menu size={16} /> Products
+                <Link href={`/store/${slug}/admin/menu`} className="px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                    <Menu size={14} /> Products
                 </Link>
-                <Link href={`/store/${slug}/admin/promos`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <Tag size={16} /> Promos
+                <Link href={`/store/${slug}/admin/promos`} className="px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                    <Tag size={14} /> Promos
                 </Link>
-                <Link href={`/store/${slug}/admin/settings`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <Settings size={16} /> Settings
+                <Link href={`/store/${slug}/admin/settings`} className="px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                    <Settings size={14} /> Settings
                 </Link>
-                <Link href={`/store/${slug}/admin/share`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <QrCode size={16} /> Share
+                <Link href={`/store/${slug}/admin/share`} className="px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                    <QrCode size={14} /> Share
                 </Link>
-                <Link href={`/store/${slug}/admin/integrations`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <Tag size={16} /> Integrations
+                <Link href={`/store/${slug}/admin/integrations`} className="px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                    <Tag size={14} /> Integrations
                 </Link>
-                <Link href={`/store/${slug}/admin/blog`} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-2">
-                    <BookOpen size={16} /> Blog
+                <Link href={`/store/${slug}/admin/blog`} className="px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                    <BookOpen size={14} /> Blog
                 </Link>
             </div>
-          </div>
 
           {/* Mobile: Fill empty header space with status + quick actions */}
           <div className="flex items-center gap-2 lg:hidden">
