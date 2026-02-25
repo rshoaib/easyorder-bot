@@ -90,10 +90,32 @@ export default async function AdminLayout({
             </div>
           </div>
 
+          {/* Mobile: Fill empty header space with status + quick actions */}
+          <div className="flex items-center gap-2 lg:hidden">
+              {/* Live Store Status Pill */}
+              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${
+                  tenant.isOpen !== false 
+                      ? 'bg-green-50 text-green-700 border-green-200' 
+                      : 'bg-red-50 text-red-700 border-red-200'
+              }`}>
+                  <span className={`w-2 h-2 rounded-full ${tenant.isOpen !== false ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
+                  {tenant.isOpen !== false ? 'Open' : 'Closed'}
+              </div>
+
+              {/* Share Link Button */}
+              <Link href={`/store/${slug}/admin/share`}>
+                  <button className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-indigo-600 bg-gray-50 hover:bg-indigo-50 px-2.5 py-1.5 rounded-lg transition-colors border border-gray-200">
+                      <QrCode size={13} /> Share
+                  </button>
+              </Link>
+          </div>
+
           <div className="flex items-center gap-3">
              <Link href={`/store/${slug}`} target="_blank">
                 <button className="flex items-center gap-2 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition-colors">
-                    View Store <ExternalLink size={14} />
+                    <span className="hidden sm:inline">View Store</span>
+                    <span className="sm:hidden">Store</span>
+                    <ExternalLink size={14} />
                 </button>
              </Link>
           </div>
