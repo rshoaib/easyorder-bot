@@ -35,7 +35,7 @@ export default async function AdminPromosPage({ params }: Props) {
   }
 
   return (
-    <main className="container pt-3 pb-10" style={{ maxWidth: '800px' }}>
+    <main className="container pt-1 pb-10" style={{ maxWidth: '800px' }}>
       {/* Header */}
       <div className="flex justify-between mb-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
         <div>

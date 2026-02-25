@@ -23,7 +23,7 @@ export default async function MarketingPage({ params }: Props) {
     const storeUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://orderviachat.com'}/store/${slug}`;
 
     return (
-        <main className="container pt-3 pb-10" style={{ maxWidth: '900px' }}>
+        <main className="container pt-1 pb-10" style={{ maxWidth: '900px' }}>
             <div className="flex items-center gap-4 mb-8">
                 <Link href={`/store/${slug}/admin`}>
                     <button className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600">
