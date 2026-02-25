@@ -27,7 +27,7 @@ export default async function AdminMenuPage({ params }: Props) {
 
     return (
         <main className="container pt-3 pb-10" style={{ maxWidth: '1100px' }}>
-            <div className="flex justify-between mb-8 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-wrap gap-4">
+            <div className="flex justify-between mb-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-wrap gap-4">
                 <div>
                     <h1 className="text-2xl font-bold mb-1">Product Catalog</h1>
                     <p className="text-gray-500 text-sm">Add or remove items for {tenant.name}</p>

@@ -17,7 +17,7 @@ export default async function BlogAdminPage({ params }: Props) {
 
     return (
         <main className="container pt-3 pb-10" style={{ maxWidth: '900px' }}>
-            <div className="flex justify-between mb-8 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-wrap gap-4">
+            <div className="flex justify-between mb-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-wrap gap-4">
                 <div>
                     <h1 className="text-2xl font-bold mb-1">Blog Images</h1>
                     <p className="text-sm text-gray-500">Generate AI cover images for blog posts</p>

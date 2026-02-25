@@ -102,7 +102,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
 
     return (
         <main className="container pt-3 pb-10" style={{ maxWidth: '800px' }}>
-            <div className="flex justify-between mb-8 items-center">
+            <div className="flex justify-between mb-4 items-center">
                 <div>
                     <h1 className="text-2xl font-bold mb-1">Store Settings</h1>
                     <p className="text-gray-500 text-sm">Manage your store profile and preferences</p>
