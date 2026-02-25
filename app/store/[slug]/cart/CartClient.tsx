@@ -398,7 +398,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                         value={customer.phone}
                         onChange={e => {
                             let val = e.target.value;
-                            if(!val.startsWith('+')) val = '+' + val.replace(/^\+/, '');
+                            val = '+' + val.replace(/^\++/, '');
                             setCustomer({...customer, phone: val})
                         }}
                     />

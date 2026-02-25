@@ -27,9 +27,9 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
             id: 'whatsapp',
             label: 'Connect WhatsApp',
             completed: !!tenant.ownerPhone,
-            description: 'Critical for receiving orders.',
-            icon: !!tenant.ownerPhone ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-slate-300" />,
-            action: { label: 'Configure', href: `/store/${slug}/admin/settings` }
+            description: '⚠️ Without this, customers CANNOT order! Add your number with country code (e.g. +1 for US, +44 for UK).',
+            icon: !!tenant.ownerPhone ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-red-400 animate-pulse" />,
+            action: { label: 'Set Number →', href: `/store/${slug}/admin/settings` }
         },
         {
             id: 'products',

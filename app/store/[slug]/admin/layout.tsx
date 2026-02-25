@@ -100,8 +100,31 @@ export default async function AdminLayout({
         </div>
       </nav>
 
-      {/* Mobile Bottom Nav - Removed per user preference */}
-      <div className="hidden"></div>
+      {/* Mobile Bottom Nav */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 pb-[env(safe-area-inset-bottom)]">
+        <div className="flex items-center justify-around h-14">
+          <Link href={`/store/${slug}/admin`} className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-indigo-600 transition-colors px-2 py-1">
+            <LayoutDashboard size={20} />
+            <span className="text-[10px] font-semibold">Home</span>
+          </Link>
+          <Link href={`/store/${slug}/admin/orders`} className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-indigo-600 transition-colors px-2 py-1">
+            <ShoppingBag size={20} />
+            <span className="text-[10px] font-semibold">Orders</span>
+          </Link>
+          <Link href={`/store/${slug}/admin/menu`} className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-indigo-600 transition-colors px-2 py-1">
+            <Menu size={20} />
+            <span className="text-[10px] font-semibold">Products</span>
+          </Link>
+          <Link href={`/store/${slug}/admin/settings`} className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-indigo-600 transition-colors px-2 py-1">
+            <Settings size={20} />
+            <span className="text-[10px] font-semibold">Settings</span>
+          </Link>
+          <Link href={`/store/${slug}/admin/share`} className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-indigo-600 transition-colors px-2 py-1">
+            <QrCode size={20} />
+            <span className="text-[10px] font-semibold">Share</span>
+          </Link>
+        </div>
+      </nav>
 
       {children}
 

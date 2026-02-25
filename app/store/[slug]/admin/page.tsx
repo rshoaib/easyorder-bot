@@ -90,6 +90,29 @@ export default async function AdminPage({ params }: Props) {
 
       <QuickStartGuide tenant={tenant} productCount={productCount} slug={slug} />
 
+      {/* Missing WhatsApp Number Warning */}
+      {!tenant.ownerPhone && (
+          <div className="mb-8 p-5 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-xl animate-fade-in">
+              <div className="flex items-start gap-3">
+                  <div className="p-2 bg-amber-100 text-amber-600 rounded-full shrink-0 mt-0.5">
+                      <AlertCircle size={22} />
+                  </div>
+                  <div className="flex-1">
+                      <h3 className="font-bold text-amber-900 text-base">⚠️ Your WhatsApp number is not set!</h3>
+                      <p className="text-amber-800 text-sm mt-1 leading-relaxed">
+                          Customers <strong>cannot send you orders</strong> without a WhatsApp number. 
+                          This is the most important setting for your store.
+                      </p>
+                      <Link href={`/store/${slug}/admin/settings`}>
+                          <button className="mt-3 px-5 py-2.5 bg-amber-600 text-white text-sm font-bold rounded-lg hover:bg-amber-700 transition-colors shadow-sm">
+                              Set WhatsApp Number Now →
+                          </button>
+                      </Link>
+                  </div>
+              </div>
+          </div>
+      )}
+
 
       {/* Action Items Widget */}
       {orders.filter((o: any) => o.status === 'pending').length > 0 && (
