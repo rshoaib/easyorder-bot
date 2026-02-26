@@ -230,7 +230,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             storeType: data.store_type || 'restaurant',
             paypalLink: data.paypal_link,
             stripeLink: data.stripe_link,
-            codEnabled: data.cod_enabled ?? true
+            codEnabled: data.cod_enabled ?? true,
+            plan: data.plan || 'free'
         };
     }
 
@@ -263,7 +264,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             storeType: row.store_type || 'restaurant',
             paypalLink: row.paypal_link,
             stripeLink: row.stripe_link,
-            codEnabled: row.cod_enabled ?? true
+            codEnabled: row.cod_enabled ?? true,
+            plan: row.plan || 'free'
         }));
     }
 
@@ -427,7 +429,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             storeType: data.store_type || 'restaurant',
             paypalLink: data.paypal_link,
             stripeLink: data.stripe_link,
-            codEnabled: data.cod_enabled ?? true
+            codEnabled: data.cod_enabled ?? true,
+            plan: data.plan || 'free'
         };
     }
 
@@ -463,7 +466,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             storeType: data.store_type || 'restaurant',
             paypalLink: data.paypal_link,
             stripeLink: data.stripe_link,
-            codEnabled: data.cod_enabled ?? true
+            codEnabled: data.cod_enabled ?? true,
+            plan: data.plan || 'free'
         };
     }
 

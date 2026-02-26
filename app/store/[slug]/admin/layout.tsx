@@ -82,9 +82,11 @@ export default async function AdminLayout({
                 </Link>
                 <Link href={`/store/${slug}/admin/integrations`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                     <Tag size={15} /> Integrations
+                    {tenant.plan !== 'pro' && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>}
                 </Link>
                 <Link href={`/store/${slug}/admin/blog`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                     <BookOpen size={15} /> Blog
+                    {tenant.plan !== 'pro' && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>}
                 </Link>
             </div>
 
@@ -142,10 +144,10 @@ export default async function AdminLayout({
             <Settings size={12} /> Settings
           </Link>
           <Link href={`/store/${slug}/admin/integrations`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
-            🔗 Integrations
+            🔗 Integrations {tenant.plan !== 'pro' && <span className="text-[9px] bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full font-bold leading-none">PRO</span>}
           </Link>
           <Link href={`/store/${slug}/admin/blog`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
-            <BookOpen size={12} /> Blog
+            <BookOpen size={12} /> Blog {tenant.plan !== 'pro' && <span className="text-[9px] bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full font-bold leading-none">PRO</span>}
           </Link>
         </div>
       </div>

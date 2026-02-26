@@ -24,6 +24,7 @@ export interface Tenant {
     paypalLink?: string; // PayPal.Me link for payments
     stripeLink?: string; // Stripe Payment Link
     codEnabled?: boolean; // Cash on Delivery toggle
+    plan?: 'free' | 'pro'; // Subscription plan
 }
 
 export interface Order {
