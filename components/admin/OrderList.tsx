@@ -56,7 +56,7 @@ export default function OrderList({ orders, slug, currency }: OrderListProps) {
             {/* Toolbar */}
             <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 {/* Status Tabs */}
-                <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
+                <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
                     {(['all', 'pending', 'preparing', 'ready', 'delivered', 'cancelled'] as FilterStatus[]).map((s) => (
                         <button
                             key={s}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrderRepository } from '@/lib/repository';
 import { generateInvoiceBuffer } from '@/lib/invoice';
+import { createClient } from '@/utils/supabase/server';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
@@ -9,11 +10,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             return new NextResponse('Missing Order ID', { status: 400 });
         }
 
-        const repo = getOrderRepository();
+        const supabase = await createClient();
+        const repo = getOrderRepository(supabase);
 
         // Fetch order from DB (Supabase in Prod, or JSON in Dev)
-        // Since getOrderById might not verify if order exists (or throws), handle errors
         const order = await repo.getOrderById(id);
+
 
         if (!order) {
             return new NextResponse('Order not found', { status: 404 });
