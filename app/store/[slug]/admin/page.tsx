@@ -2,17 +2,13 @@ import { createClient } from "@/utils/supabase/server";
 import OnboardingWizard from "@/components/admin/OnboardingWizard";
 import QuickStartGuide from "@/components/admin/QuickStartGuide";
 import StoreStatusToggle from "@/components/admin/StoreStatusToggle";
-import { Download, Cloud } from 'lucide-react';
 
 import { getProductRepository, getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
-import { Order } from "@/lib/repository/types";
 import Link from "next/link";
-import { LanguageSelector } from "@/components/admin/LanguageSelector";
 import { DomainSettings } from "@/components/admin/DomainSettings";
-import { FileText, RefreshCw, ArrowLeft, TrendingUp, ShoppingBag, DollarSign, Tag, Settings, Menu, Share2, AlertCircle } from 'lucide-react';
-import StatusSelector from '@/components/admin/StatusSelector';
+import { TrendingUp, ShoppingBag, DollarSign, AlertCircle, ArrowRight } from 'lucide-react';
 import RevenueChart from "@/components/admin/RevenueChart";
-import OrderList from "@/components/admin/OrderList";
+
 
 export const dynamic = 'force-dynamic';
 
@@ -22,14 +18,11 @@ interface Props {
     }>
 }
 
-async function getOrders(slug: string) {
+async function getDashboardData(slug: string) {
   const supabase = await createClient();
   const tenantRepo = getTenantRepository(supabase);
   const tenant = await tenantRepo.getTenantBySlug(slug);
-  if (!tenant) return { orders: [], tenant: null, analytics: null, productCount: 0 };
-  
-  const repo = getOrderRepository(supabase);
-  const orders = await repo.getOrders(tenant.id);
+  if (!tenant) return { tenant: null, analytics: null, productCount: 0, chartOrders: [] as { date: string; total: number; status: string }[] };
   
   const analyticsRepo = getAnalyticsRepository(supabase);
   const analytics = await analyticsRepo.getSummary(tenant.id);
@@ -37,15 +30,17 @@ async function getOrders(slug: string) {
   const productRepo = getProductRepository(supabase);
   const products = await productRepo.getProducts(tenant.id);
 
-  // Ensure strict date sorting desc
-  const sortedOrders = orders.slice().sort((a: Order, b: Order) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  
-  return { orders: sortedOrders, tenant, analytics, productCount: products.length };
+  // Lightweight orders fetch for revenue chart only
+  const orderRepo = getOrderRepository(supabase);
+  const orders = await orderRepo.getOrders(tenant.id);
+  const chartOrders = orders.map(o => ({ date: o.date, total: o.total, status: o.status || 'pending' }));
+
+  return { tenant, analytics, productCount: products.length, chartOrders };
 }
 
 export default async function AdminPage({ params }: Props) {
   const { slug } = await params;
-  const { orders, tenant, analytics, productCount } = await getOrders(slug);
+  const { tenant, analytics, productCount, chartOrders } = await getDashboardData(slug);
 
   if (!tenant) return <div className="p-10">Store not found</div>;
 
@@ -86,13 +81,9 @@ export default async function AdminPage({ params }: Props) {
 
       {/* Mobile: Compact Stats Strip */}
       <div className="lg:hidden mb-4">
-        <div className="grid grid-cols-3 gap-2">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-3 text-center">
-            <p className="text-lg font-bold text-blue-700">{orders.filter((o: Order) => { const d = new Date(o.date); const t = new Date(); return d.toDateString() === t.toDateString(); }).length}</p>
-            <p className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider">Today</p>
-          </div>
+        <div className="grid grid-cols-2 gap-2">
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-xl p-3 text-center">
-            <p className="text-lg font-bold text-green-700">{analytics?.totalOrders ?? orders.length}</p>
+            <p className="text-lg font-bold text-green-700">{analytics?.totalOrders ?? 0}</p>
             <p className="text-[10px] font-semibold text-green-500 uppercase tracking-wider">Total Orders</p>
           </div>
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 rounded-xl p-3 text-center">
@@ -132,28 +123,6 @@ export default async function AdminPage({ params }: Props) {
       )}
 
 
-      {/* Action Items Widget */}
-      {orders.filter((o: any) => o.status === 'pending').length > 0 && (
-          <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between animate-fade-in">
-              <div className="flex items-center gap-3">
-                  <div className="p-2 bg-amber-100 text-amber-600 rounded-full">
-                      <AlertCircle size={20} />
-                  </div>
-                  <div>
-                      <h3 className="font-bold text-amber-900">Action Needed</h3>
-                      <p className="text-amber-700 text-sm">
-                          You have {orders.filter((o: any) => o.status === 'pending').length} pending orders to confirm.
-                      </p>
-                  </div>
-              </div>
-              <Link href="#orders-table">
-                  <button className="px-4 py-2 bg-amber-600 text-white text-sm font-bold rounded-lg hover:bg-amber-700 transition-colors shadow-sm">
-                      View Orders
-                  </button>
-              </Link>
-          </div>
-      )}
-
       {/* Analytics & Revenue Chart */}
       {analytics && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -184,7 +153,7 @@ export default async function AdminPage({ params }: Props) {
 
             {/* Right Col: Revenue Chart (Spans 2 cols) */}
             <div className="lg:col-span-2">
-                <RevenueChart orders={orders} currency={tenant.currency} />
+                <RevenueChart orders={chartOrders} currency={tenant.currency} />
             </div>
         </div>
       )}
@@ -192,64 +161,35 @@ export default async function AdminPage({ params }: Props) {
       {/* Domain Settings */}
       <DomainSettings slug={slug} currentDomain={tenant.customDomain} />
 
-      {/* Main Action Bar */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 bg-gray-50 p-4 rounded-xl border border-gray-100">
-          <div className="flex flex-wrap items-center gap-2">
-               <Link href={`/store/${slug}/board`} target="_blank">
-                  <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm">
-                      Order Board
-                  </button>
-               </Link>
-               <StoreStatusToggle tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-                 <Link href={`/store/${slug}/admin/menu`}>
-                    <button className="flex items-center gap-2 bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm">
-                        <Menu size={16} />
-                        Product Catalog
-                    </button>
-                 </Link>
-                 <Link href={`/store/${slug}/admin/promos`}>
-                    <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm">
-                        <Tag size={16} />
-                        Promos
-                    </button>
-                 </Link>
-                 <Link href={`/store/${slug}/admin/marketing`}>
-                    <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm">
-                        <Share2 size={16} />
-                        Marketing
-                    </button>
-                 </Link>
-                 <Link href={`/store/${slug}/admin/settings`}>
-                    <button className="flex items-center gap-2 pl-3 pr-4 py-2.5 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 rounded-xl transition-colors shadow-sm text-sm font-medium" title="Store Settings">
-                        <Settings size={18} /> Settings
-                    </button>
-                 </Link>
-          </div>
+      {/* Quick Actions */}
+      <div className="flex flex-wrap items-center gap-3 mb-8">
+          <StoreStatusToggle tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} />
+          <Link href={`/store/${slug}/board`} target="_blank">
+              <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm">
+                  Order Board
+              </button>
+          </Link>
       </div>
 
-      {/* Recent Orders Header */}
-      <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-4 gap-4">
-         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-3">
-            Recent Orders 
-            <span className="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full text-xs font-bold border border-gray-200">{orders.length}</span>
-         </h2>
-         
-         <div className="flex items-center gap-3">
-             <LanguageSelector slug={slug} currentLanguage={tenant.language} />
-             <Link href={`/store/${slug}/admin`}>
-                <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:text-indigo-600 hover:border-indigo-200 transition-colors" title="Refresh list">
-                    <RefreshCw size={16} />
-                    <span className="hidden md:inline">Refresh</span>
-                </button>
-             </Link>
-         </div>
-      </div>
-
-      {/* Orders List */}
-      <OrderList orders={orders} slug={slug} currency={tenant?.currency} />
+      {/* Orders Quick-Link Card */}
+      <Link href={`/store/${slug}/admin/orders`} className="block mb-8 group">
+          <div className="p-6 bg-white rounded-2xl border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all">
+              <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <ShoppingBag size={24} />
+                      </div>
+                      <div>
+                          <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">Orders</h3>
+                          <p className="text-gray-500 text-sm">
+                              {analytics ? `${analytics.totalOrders} total orders` : 'View and manage all orders'}
+                          </p>
+                      </div>
+                  </div>
+                  <ArrowRight size={20} className="text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+              </div>
+          </div>
+      </Link>
     </main>
   );
 }
