@@ -591,6 +591,82 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ─── Custom Development CTA ─── */}
+      <section className="py-20 md:py-24 bg-white border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-6">
+          <ScrollFadeIn>
+            <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+              {/* Decorative */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl" />
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl" />
+
+              <div className="relative grid md:grid-cols-2 gap-8 items-center">
+                {/* Left — Copy */}
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold mb-4">
+                    <Sparkles size={12} /> CUSTOM DEVELOPMENT
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-extrabold mb-3 leading-tight">
+                    Need Something{" "}
+                    <span className="text-indigo-400">More Custom?</span>
+                  </h2>
+                  <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                    Whether you need a full mobile app, a custom website, or a WhatsApp chatbot — our team builds tailored solutions at amazingly discounted rates.
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="flex items-center gap-2.5 text-sm text-slate-300">
+                      <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
+                        <Globe size={14} className="text-blue-400" />
+                      </div>
+                      Web Apps
+                    </div>
+                    <div className="flex items-center gap-2.5 text-sm text-slate-300">
+                      <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
+                        <Smartphone size={14} className="text-purple-400" />
+                      </div>
+                      Mobile Apps
+                    </div>
+                    <div className="flex items-center gap-2.5 text-sm text-slate-300">
+                      <div className="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center shrink-0">
+                        <MessageCircle size={14} className="text-green-400" />
+                      </div>
+                      WhatsApp Bots
+                    </div>
+                    <div className="flex items-center gap-2.5 text-sm text-slate-300">
+                      <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+                        <Zap size={14} className="text-amber-400" />
+                      </div>
+                      E-commerce
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right — CTA */}
+                <div className="text-center md:text-left">
+                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+                    <p className="text-lg font-bold text-white mb-1">Free Consultation</p>
+                    <p className="text-slate-400 text-sm mb-5">Tell us your idea — we&apos;ll give you a quote within hours</p>
+                    <a
+                      href={`https://wa.me/923224609117?text=${encodeURIComponent("Hi! I found you on OrderViaChat. I have a custom development requirement and would love to discuss. Can you help?")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2.5 transition-all hover:scale-[1.02] active:scale-95"
+                    >
+                      <MessageCircle size={18} />
+                      Chat on WhatsApp
+                    </a>
+                    <p className="text-xs text-slate-500 mt-3">
+                      Discounted rates • Fast delivery • Satisfaction guaranteed
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ScrollFadeIn>
+        </div>
+      </section>
+
       {/* ─── Final CTA ─── */}
       <section className="py-20 md:py-28 bg-gradient-mesh text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(99,102,241,0.3),transparent_60%)]" />

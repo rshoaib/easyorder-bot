@@ -8,6 +8,7 @@ import Link from "next/link";
 import { DomainSettings } from "@/components/admin/DomainSettings";
 import { TrendingUp, ShoppingBag, DollarSign, AlertCircle, ArrowRight } from 'lucide-react';
 import RevenueChart from "@/components/admin/RevenueChart";
+import CustomDevCard from "@/components/admin/CustomDevCard";
 
 
 export const dynamic = 'force-dynamic';
@@ -94,7 +95,10 @@ export default async function AdminPage({ params }: Props) {
       </div>
 
       {productCount === 0 && (
+        <>
           <OnboardingWizard slug={slug} />
+          <CustomDevCard />
+        </>
       )}
 
       <QuickStartGuide tenant={tenant} productCount={productCount} slug={slug} />
