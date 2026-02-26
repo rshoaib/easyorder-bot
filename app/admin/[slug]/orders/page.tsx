@@ -1,15 +1,18 @@
 import { getOrderRepository, getTenantRepository } from "@/lib/repository";
 import OrderBoard from "@/components/board/OrderBoard";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function OrdersPage({ params }: { params: { slug: string } }) {
     const { slug } = await params;
-    const tenantRepo = getTenantRepository();
+    const supabase = await createClient();
+    const tenantRepo = getTenantRepository(supabase);
     const tenant = await tenantRepo.getTenantBySlug(slug);
 
     if (!tenant) return <div>Store not found</div>;
 
-    const orderRepo = getOrderRepository();
+    const orderRepo = getOrderRepository(supabase);
     const orders = await orderRepo.getOrders(tenant.id);
+
 
     return (
         <div className="max-w-7xl mx-auto">

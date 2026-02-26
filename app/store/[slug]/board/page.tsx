@@ -1,5 +1,6 @@
 import { getOrderRepository, getTenantRepository } from "@/lib/repository";
 import OrderBoard from "@/components/board/OrderBoard";
+import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
 
@@ -12,16 +13,15 @@ interface Props {
 export default async function OrderBoardPage({ params }: Props) {
     const { slug } = await params;
     
-    // Auth Check (Same as admin)
-    // In a real app we'd use middleware, but for now we assume this path is secure-ish
-    
-    const tenantRepo = getTenantRepository();
+    const supabase = await createClient();
+    const tenantRepo = getTenantRepository(supabase);
     const tenant = await tenantRepo.getTenantBySlug(slug);
     
     if (!tenant) return <div>Store not found</div>;
 
-    const repo = getOrderRepository();
+    const repo = getOrderRepository(supabase);
     const allOrders = await repo.getOrders(tenant.id);
+
     
     // Filter for active orders only
     const activeOrders = allOrders

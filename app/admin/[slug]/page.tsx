@@ -1,16 +1,19 @@
 import { getAnalyticsRepository, getTenantRepository } from "@/lib/repository";
 import { DollarSign, ShoppingBag, TrendingUp, ArrowRight, ClipboardList } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function DashboardPage({ params }: { params: { slug: string } }) {
     const { slug } = await params;
-    const tenantRepo = getTenantRepository();
+    const supabase = await createClient();
+    const tenantRepo = getTenantRepository(supabase);
     const tenant = await tenantRepo.getTenantBySlug(slug);
 
     if (!tenant) return <div>Store not found</div>;
 
-    const analyticsRepo = getAnalyticsRepository();
+    const analyticsRepo = getAnalyticsRepository(supabase);
     const summary = await analyticsRepo.getSummary(tenant.id);
+
 
     return (
         <div className="max-w-5xl mx-auto space-y-8">
