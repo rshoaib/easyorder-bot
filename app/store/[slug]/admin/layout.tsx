@@ -51,7 +51,7 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-gray-50 pb-28">
       {/* Admin Top Navigation */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-30">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-30 overflow-x-hidden">
         <div className="container mx-auto px-4 h-12 flex items-center gap-4">
           <Link href={`/store/${slug}/admin`} className="font-bold flex items-center gap-2 shrink-0">
               <span className="bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-lg text-sm">

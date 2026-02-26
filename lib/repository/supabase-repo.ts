@@ -65,7 +65,7 @@ export class SupabaseOrderRepository implements OrderRepository {
     }
 
     async getOrderById(id: string): Promise<Order | null> {
-        const { data, error } = await supabase
+        const { data, error } = await this.client
             .from('orders')
             .select('*')
             .eq('id', id)
@@ -89,7 +89,7 @@ export class SupabaseOrderRepository implements OrderRepository {
     }
 
     async updateOrderStatus(id: string, status: OrderStatus): Promise<void> {
-        const { error } = await supabase
+        const { error } = await this.client
             .from('orders')
             .update({ status })
             .eq('id', id);
