@@ -3,6 +3,7 @@ import { Order } from "@/lib/repository/types";
 import Link from "next/link";
 import { RefreshCw, ShoppingBag } from 'lucide-react';
 import OrderList from '@/components/admin/OrderList';
+import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = 'force-dynamic';
 
@@ -13,11 +14,12 @@ interface Props {
 }
 
 async function getOrders(slug: string) {
-  const tenantRepo = getTenantRepository();
+  const supabase = await createClient();
+  const tenantRepo = getTenantRepository(supabase);
   const tenant = await tenantRepo.getTenantBySlug(slug);
   if (!tenant) return { orders: [], tenant: null };
   
-  const repo = getOrderRepository();
+  const repo = getOrderRepository(supabase);
   const orders = await repo.getOrders(tenant.id);
   
   // Ensure strict date sorting desc
@@ -25,6 +27,7 @@ async function getOrders(slug: string) {
   
   return { orders: sortedOrders, tenant };
 }
+
 
 export default async function AdminOrdersPage({ params }: Props) {
   const { slug } = await params;
