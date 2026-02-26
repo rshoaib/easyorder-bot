@@ -52,12 +52,14 @@ export const generateInvoicePDF = async (order: Order) => {
     const tableColumn = ["Item", "Quantity", "Price", "Total"];
     const tableRows: any[] = [];
 
-    order.items.forEach((item) => {
+    order.items.forEach((item: any) => {
+        const qty = Number(item.quantity || item.qty || 1);
+        const price = Number(item.price || 0);
         const itemData = [
             item.name,
-            item.quantity,
-            `$${item.price.toFixed(2)}`,
-            `$${(item.price * item.quantity).toFixed(2)}`,
+            qty.toString(),
+            `$${price.toFixed(2)}`,
+            `$${(price * qty).toFixed(2)}`,
         ];
         tableRows.push(itemData);
     });
@@ -132,12 +134,14 @@ export const generateInvoiceBuffer = async (order: Order): Promise<Buffer> => {
     const tableColumn = ["Item", "Quantity", "Price", "Total"];
     const tableRows: any[] = [];
 
-    order.items.forEach((item) => {
+    order.items.forEach((item: any) => {
+        const qty = Number(item.quantity || item.qty || 1);
+        const price = Number(item.price || 0);
         const itemData = [
             item.name,
-            item.quantity,
-            `$${item.price.toFixed(2)}`,
-            `$${(item.price * item.quantity).toFixed(2)}`,
+            qty.toString(),
+            `$${price.toFixed(2)}`,
+            `$${(price * qty).toFixed(2)}`,
         ];
         tableRows.push(itemData);
     });
