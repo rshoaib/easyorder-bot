@@ -24,6 +24,16 @@ export default function OrderList({ orders, slug, currency }: OrderListProps) {
         setMounted(true);
     }, []);
 
+    // Compute counts per status
+    const statusCounts = useMemo(() => {
+        const counts: Record<string, number> = { all: orders.length };
+        for (const order of orders) {
+            const s = order.status || 'pending';
+            counts[s] = (counts[s] || 0) + 1;
+        }
+        return counts;
+    }, [orders]);
+
     const filteredOrders = useMemo(() => {
         return orders.filter(order => {
             // 1. Status Filter
@@ -51,16 +61,26 @@ export default function OrderList({ orders, slug, currency }: OrderListProps) {
                         <button
                             key={s}
                             onClick={() => setFilter(s)}
-                            className={`px-3 py-1.5 rounded-lg text-sm font-medium capitalize whitespace-nowrap transition-colors ${
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium capitalize whitespace-nowrap transition-colors flex items-center gap-1.5 ${
                                 filter === s 
                                     ? 'bg-slate-900 text-white' 
                                     : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                             }`}
                         >
                             {s}
+                            {(statusCounts[s] || 0) > 0 && (
+                                <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold min-w-[20px] text-center ${
+                                    filter === s 
+                                        ? 'bg-white/20 text-white' 
+                                        : 'bg-gray-200 text-gray-700'
+                                }`}>
+                                    {statusCounts[s] || 0}
+                                </span>
+                            )}
                         </button>
                     ))}
                 </div>
+
 
                 {/* Search */}
                 <div className="relative">
