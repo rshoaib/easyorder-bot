@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import { createClient as createAdminClient } from '@supabase/supabase-js';
 import OnboardingWizard from "@/components/admin/OnboardingWizard";
 import QuickStartGuide from "@/components/admin/QuickStartGuide";
 import StoreStatusToggle from "@/components/admin/StoreStatusToggle";
@@ -20,9 +21,11 @@ interface Props {
 }
 
 async function getDashboardData(slug: string) {
-  // For demo store, use raw client (bypasses RLS) so anonymous users can see data
+  // For demo store, use service-role client (bypasses RLS) so anonymous users can see data
   const isDemo = slug === 'demo';
-  const supabase = isDemo ? undefined : await createClient();
+  const supabase = isDemo
+    ? createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+    : await createClient();
   const tenantRepo = getTenantRepository(supabase);
   const tenant = await tenantRepo.getTenantBySlug(slug);
   if (!tenant) return { tenant: null, analytics: null, productCount: 0, chartOrders: [] as { date: string; total: number; status: string }[] };

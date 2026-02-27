@@ -4,6 +4,7 @@ import Link from "next/link";
 import { RefreshCw, ShoppingBag } from 'lucide-react';
 import OrderList from '@/components/admin/OrderList';
 import { createClient } from "@/utils/supabase/server";
+import { createClient as createAdminClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,9 +15,11 @@ interface Props {
 }
 
 async function getOrders(slug: string) {
-  // For demo store, use raw client (bypasses RLS) so anonymous users can see data
+  // For demo store, use service-role client (bypasses RLS) so anonymous users can see data
   const isDemo = slug === 'demo';
-  const supabase = isDemo ? undefined : await createClient();
+  const supabase = isDemo
+    ? createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+    : await createClient();
   const tenantRepo = getTenantRepository(supabase);
   const tenant = await tenantRepo.getTenantBySlug(slug);
   if (!tenant) return { orders: [], tenant: null };
