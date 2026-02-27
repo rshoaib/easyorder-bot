@@ -126,6 +126,17 @@ function LoginForm() {
                     </p>
                 </div>
 
+                {/* Friendly redirect message when coming from admin pages */}
+                {!isSignUp && (next.includes('/admin') || next.includes('/store')) && (
+                    <div className="bg-indigo-50 text-indigo-700 p-4 rounded-xl text-sm mb-6 border border-indigo-100 flex items-start gap-3">
+                        <span className="text-lg shrink-0">🔒</span>
+                        <div>
+                            <p className="font-bold">Please sign in to access your store dashboard</p>
+                            <p className="text-indigo-500 mt-0.5 text-xs">You need to be logged in to manage products, orders, and settings.</p>
+                        </div>
+                    </div>
+                )}
+
                 {error && (
                     <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm mb-6 border border-red-100 flex items-start gap-2">
                         <AlertCircle size={18} className="shrink-0 mt-0.5" />
