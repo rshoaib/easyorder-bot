@@ -70,9 +70,10 @@ interface Props {
     paypalLink?: string;
     stripeLink?: string;
     codEnabled?: boolean;
+    deliveryFee?: number;
 }
 
-export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled }: Props) {
+export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp }: Props) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', email: '', locationLink: '' });
@@ -99,8 +100,8 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
     const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [appliedPromo, setAppliedPromo] = useState<Pick<PromoCode, 'code' | 'discountType' | 'value'> | null>(null);
 
-    // Get Delivery Fee from env (this is client side, so we only see NEXT_PUBLIC)
-    const deliveryFee = parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
+    // Use per-store delivery fee from tenant settings (falls back to env var for backward compat)
+    const deliveryFee = deliveryFeeProp ?? parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
     const finalTotal = Math.max(0, total + deliveryFee - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0));
 
     const handleLocationClick = () => {

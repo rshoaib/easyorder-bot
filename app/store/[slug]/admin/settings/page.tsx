@@ -45,6 +45,8 @@ async function updateSettings(formData: FormData) {
         const paypalLink = formData.get('paypalLink') as string;
         const stripeLink = formData.get('stripeLink') as string;
         const codEnabled = formData.get('codEnabled') === 'true';
+        const deliveryFeeRaw = formData.get('deliveryFee') as string;
+        const deliveryFee = deliveryFeeRaw ? parseFloat(deliveryFeeRaw) : 0;
         
         // Checkbox is "true" if checked, null if unchecked
         const isOpen = formData.get('isOpen') === 'true';
@@ -69,7 +71,7 @@ async function updateSettings(formData: FormData) {
         // Use authenticated server client for RLS compliance
         const supabase = await createClient();
         const tenantRepo = getTenantRepository(supabase);
-        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType, paypalLink, stripeLink, codEnabled);
+        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType, paypalLink, stripeLink, codEnabled, deliveryFee);
         success = true;
     } catch (err: any) {
         // Re-throw Next.js redirect/notFound errors — they use throw internally
@@ -195,6 +197,25 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                             </select>
                             <p className="text-xs text-gray-500 mt-2">
                                 This symbol will be shown next to all your prices.
+                            </p>
+                        </div>
+
+                        {/* Delivery Fee */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                🚚 Delivery Fee
+                            </label>
+                            <input 
+                                name="deliveryFee" 
+                                type="number" 
+                                step="0.01" 
+                                min="0" 
+                                defaultValue={tenant.deliveryFee || 0} 
+                                placeholder="0.00"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium bg-white" 
+                            />
+                            <p className="text-xs text-gray-500 mt-2">
+                                Set to 0 for free delivery. This fee will be added to every order at checkout.
                             </p>
                         </div>
 

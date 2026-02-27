@@ -231,7 +231,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             paypalLink: data.paypal_link,
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
-            plan: data.plan || 'free'
+            plan: data.plan || 'free',
+            deliveryFee: parseFloat(data.delivery_fee) || 0
         };
     }
 
@@ -364,7 +365,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number): Promise<void> {
         const updateData: any = {
             owner_phone: ownerPhone,
             instagram_url: instagramUrl,
@@ -391,6 +392,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (paypalLink !== undefined) { updateData.paypal_link = paypalLink || null; }
         if (stripeLink !== undefined) { updateData.stripe_link = stripeLink || null; }
         if (codEnabled !== undefined) { updateData.cod_enabled = codEnabled; }
+        if (deliveryFee !== undefined) { updateData.delivery_fee = deliveryFee; }
 
         const { error } = await this.client
             .from('tenants')
@@ -430,7 +432,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             paypalLink: data.paypal_link,
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
-            plan: data.plan || 'free'
+            plan: data.plan || 'free',
+            deliveryFee: parseFloat(data.delivery_fee) || 0
         };
     }
 
@@ -467,7 +470,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             paypalLink: data.paypal_link,
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
-            plan: data.plan || 'free'
+            plan: data.plan || 'free',
+            deliveryFee: parseFloat(data.delivery_fee) || 0
         };
     }
 
