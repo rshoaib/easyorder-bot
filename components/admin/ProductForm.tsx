@@ -7,6 +7,7 @@ import { useFormStatus } from "react-dom";
 import { uploadProductImage } from "@/lib/storage";
 import { useState } from "react";
 import { getPreset } from "@/lib/presets";
+import { createClient } from "@/utils/supabase/client";
 
 interface Props {
     tenantId: string;
@@ -41,13 +42,14 @@ export default function ProductForm({ tenantId, slug, storeType, storeName }: Pr
         setUploading(true);
         const file = e.target.files[0];
         try {
-            const url = await uploadProductImage(file, tenantId);
+            const supabase = createClient();
+            const url = await uploadProductImage(file, tenantId, supabase);
             if (url) {
                 setImageUrl(url);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            alert('Upload failed');
+            alert(error?.message || 'Upload failed');
         } finally {
             setUploading(false);
         }

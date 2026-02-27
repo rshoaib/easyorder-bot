@@ -16,23 +16,23 @@ function validateFile(file: File, maxSize: number, allowedTypes?: string[]): voi
     }
 }
 
-export async function uploadProductImage(file: File, tenantId: string): Promise<string | null> {
+export async function uploadProductImage(file: File, tenantId: string, client: SupabaseClient = supabase): Promise<string | null> {
     validateFile(file, MAX_IMAGE_SIZE, ALLOWED_IMAGE_TYPES);
 
     const fileExt = file.name.split('.').pop();
     const fileName = `${tenantId}/${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `${fileName}`;
 
-    const { error } = await supabase.storage
+    const { error } = await client.storage
         .from('product-images')
         .upload(filePath, file);
 
     if (error) {
         console.error('Error uploading image:', error);
-        return null;
+        throw new Error('Image upload failed. Please try again.');
     }
 
-    const { data } = supabase.storage
+    const { data } = client.storage
         .from('product-images')
         .getPublicUrl(filePath);
 

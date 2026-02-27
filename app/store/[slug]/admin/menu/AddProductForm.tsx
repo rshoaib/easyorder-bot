@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { uploadProductImage, uploadDigitalFile } from '@/lib/storage';
 import { addProduct } from './actions';
 import { Plus, Loader2, Upload } from 'lucide-react';
+import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 
 import { generateProductDescription } from '@/app/actions/ai-actions';
@@ -60,12 +61,13 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
         setFeedback(null);
         try {
             const file = formData.get('imageFile') as File;
-            let imageUrl = formData.get('image') as string;
+            let imageUrl = '';
             const submitData = new FormData();
             
-            // If a file was selected, upload it
+            // If a file was selected, upload it using authenticated client
             if (file && file.size > 0) {
-                const uploadedUrl = await uploadProductImage(file, tenantId);
+                const supabase = createClient();
+                const uploadedUrl = await uploadProductImage(file, tenantId, supabase);
                 if (uploadedUrl) {
                     imageUrl = uploadedUrl;
                 }
@@ -177,7 +179,7 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                 {/* Image Upload — Camera + Gallery */}
                 <div>
                     <label className="form-label">Product Image</label>
-                    <input type="hidden" name="image" value={preview || ''} /> 
+                    <input type="hidden" name="image" value="" /> 
                     
                     {preview ? (
                         /* Preview with remove button */
