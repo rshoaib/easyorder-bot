@@ -30,7 +30,9 @@ export class SupabaseOrderRepository implements OrderRepository {
                 discount: order.discount || 0,
                 promo_code: order.promoCode || null,
                 total: order.total,
-                status: order.status
+                status: order.status,
+                notes: order.notes || null,
+                payment_method: order.paymentMethod || null
             });
 
         if (error) {
@@ -60,7 +62,9 @@ export class SupabaseOrderRepository implements OrderRepository {
             subtotal: row.subtotal || 0,
             deliveryFee: row.deliveryFee || 0,
             total: row.total,
-            status: row.status
+            status: row.status as OrderStatus,
+            notes: row.notes || undefined,
+            paymentMethod: row.payment_method || undefined
         }));
     }
 
@@ -84,7 +88,9 @@ export class SupabaseOrderRepository implements OrderRepository {
             subtotal: data.subtotal || 0,
             deliveryFee: data.deliveryFee || 0,
             total: data.total,
-            status: data.status as OrderStatus
+            status: data.status as OrderStatus,
+            notes: data.notes || undefined,
+            paymentMethod: data.payment_method || undefined
         };
     }
 
@@ -232,7 +238,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
-            deliveryFee: parseFloat(data.delivery_fee) || 0
+            deliveryFee: parseFloat(data.delivery_fee) || 0,
+            minOrderAmount: parseFloat(data.min_order_amount) || 0
         };
     }
 
@@ -365,7 +372,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number): Promise<void> {
         const updateData: any = {
             owner_phone: ownerPhone,
             instagram_url: instagramUrl,
@@ -393,6 +400,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (stripeLink !== undefined) { updateData.stripe_link = stripeLink || null; }
         if (codEnabled !== undefined) { updateData.cod_enabled = codEnabled; }
         if (deliveryFee !== undefined) { updateData.delivery_fee = deliveryFee; }
+        if (minOrderAmount !== undefined) { updateData.min_order_amount = minOrderAmount; }
 
         const { error } = await this.client
             .from('tenants')
@@ -433,7 +441,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
-            deliveryFee: parseFloat(data.delivery_fee) || 0
+            deliveryFee: parseFloat(data.delivery_fee) || 0,
+            minOrderAmount: parseFloat(data.min_order_amount) || 0
         };
     }
 
@@ -471,7 +480,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
-            deliveryFee: parseFloat(data.delivery_fee) || 0
+            deliveryFee: parseFloat(data.delivery_fee) || 0,
+            minOrderAmount: parseFloat(data.min_order_amount) || 0
         };
     }
 

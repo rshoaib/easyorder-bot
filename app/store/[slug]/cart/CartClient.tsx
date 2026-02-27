@@ -71,12 +71,14 @@ interface Props {
     stripeLink?: string;
     codEnabled?: boolean;
     deliveryFee?: number;
+    minOrderAmount?: number;
 }
 
-export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp }: Props) {
+export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp, minOrderAmount }: Props) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', email: '', locationLink: '' });
+    const [notes, setNotes] = useState('');
 
     // Build available payment methods dynamically
     const availableMethods: { id: string; label: string; icon: React.ReactNode }[] = [];
@@ -103,6 +105,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
     // Use per-store delivery fee from tenant settings (falls back to env var for backward compat)
     const deliveryFee = deliveryFeeProp ?? parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
     const finalTotal = Math.max(0, total + deliveryFee - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0));
+    const belowMinimum = (minOrderAmount || 0) > 0 && total < (minOrderAmount || 0);
 
     const handleLocationClick = () => {
         setLocationStatus('loading');
@@ -184,7 +187,8 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 customer,
                 slug, // Pass slug so API knows which tenant!
                 promoCode: appliedPromo?.code,
-                paymentMethod
+                paymentMethod,
+                notes: notes.trim() || undefined
             });
 
             if (response.data.success) {
@@ -374,8 +378,16 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 </div>
             </div>
 
+            {/* Minimum Order Warning */}
+            {belowMinimum && (
+                <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-6 text-center">
+                    <h3 className="font-bold text-amber-800">Minimum Order: {formatPrice(minOrderAmount || 0, currency)}</h3>
+                    <p className="text-sm text-amber-600 mt-1">Add {formatPrice((minOrderAmount || 0) - total, currency)} more to place your order.</p>
+                </div>
+            )}
+
             {/* Checkout Form */}
-            <form onSubmit={handleSubmit} className={`space-y-4 ${!isOpen ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
+            <form onSubmit={handleSubmit} className={`space-y-4 ${!isOpen || belowMinimum ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
                 <h2 className="font-bold text-lg">Your Details</h2>
                 
                 <div>
@@ -472,15 +484,30 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     </div>
                 </div>
 
+                {/* Special Instructions / Notes */}
+                <div>
+                    <label className="form-label">Special Instructions (Optional)</label>
+                    <textarea 
+                        className="form-input"
+                        rows={2}
+                        placeholder="e.g. No onions, extra sauce, ring the doorbell..."
+                        value={notes}
+                        onChange={e => setNotes(e.target.value)}
+                        maxLength={500}
+                    />
+                </div>
+
                 <button 
                     type="submit" 
-                    disabled={isSubmitting || !isOpen}
+                    disabled={isSubmitting || !isOpen || belowMinimum}
                     className="btn-primary w-full mt-4 flex items-center justify-center gap-2 py-4 text-base shadow-lg shadow-blue-500/20 disabled:bg-gray-300 disabled:shadow-none"
                 >
                     {isSubmitting ? (
                         'Sending Order...'
                     ) : !isOpen ? (
                         'Store Closed'
+                    ) : belowMinimum ? (
+                        `Min. order: ${formatPrice(minOrderAmount || 0, currency)}`
                     ) : (
                         <>
                             Place Order via WhatsApp <Send size={18} />

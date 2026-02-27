@@ -15,5 +15,5 @@ export default async function CartPage({ params }: Props) {
 
     if (!tenant) return <div>Store not found</div>;
 
-    return <CartClient tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} currency={tenant.currency} paypalLink={tenant.paypalLink} stripeLink={tenant.stripeLink} codEnabled={tenant.codEnabled} deliveryFee={tenant.deliveryFee} />;
+    return <CartClient tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} currency={tenant.currency} paypalLink={tenant.paypalLink} stripeLink={tenant.stripeLink} codEnabled={tenant.codEnabled} deliveryFee={tenant.deliveryFee} minOrderAmount={tenant.minOrderAmount} />;
 }

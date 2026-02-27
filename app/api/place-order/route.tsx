@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { items, total, customer, slug, promoCode, paymentMethod } = body;
+        const { items, total, customer, slug, promoCode, paymentMethod, notes } = body;
 
         if (!slug) {
             return NextResponse.json({ error: 'Missing store slug' }, { status: 400 });
@@ -100,7 +100,8 @@ export async function POST(req: NextRequest) {
             promoCode,
             total: finalTotal,
             paymentMethod,
-            status: 'pending'
+            status: 'pending',
+            notes: notes ? String(notes).slice(0, 500) : undefined
         };
 
         const orderRepo = getOrderRepository();
@@ -117,7 +118,9 @@ export async function POST(req: NextRequest) {
             `*Items:*\n${itemsList}\n\n` +
             `*Total:* ${currencySymbol}${finalTotal.toFixed(2)}\n` +
             `*Payment:* ${paymentMethod}\n` +
-            (customer.locationLink ? `\n*Location:* ${customer.locationLink}` : '');
+            (notes ? `\n*Notes:* ${notes}\n` : '') +
+            (customer.locationLink ? `\n*Location:* ${customer.locationLink}` : '') +
+            `\n\n*Track Order:* ${process.env.NEXT_PUBLIC_SITE_URL || 'https://easyorder-bot.vercel.app'}/store/${slug}/order/${orderId}`;
 
         // --- Send Email Receipt (non-blocking) ---
         if (customer.email && process.env.RESEND_API_KEY) {
@@ -165,7 +168,8 @@ export async function POST(req: NextRequest) {
             success: true,
             orderId,
             whatsappNumber,
-            message: encodeURIComponent(message)
+            message: encodeURIComponent(message),
+            trackingUrl: `/store/${slug}/order/${orderId}`
         });
 
     } catch (error: any) {

@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Order } from '@/lib/repository/types';
 import StatusSelector from '@/components/admin/StatusSelector';
-import { FileText, Cloud, Search, Filter } from 'lucide-react';
+import { FileText, Cloud, Search, Filter, MessageSquare, Link2 } from 'lucide-react';
 import Link from 'next/link';
 import { formatPrice } from '@/lib/currency';
 
@@ -133,21 +133,38 @@ export default function OrderList({ orders, slug, currency }: OrderListProps) {
                                     <div className="font-medium text-gray-900">{order.customer.name}</div>
                                     <div className="text-xs text-gray-500 font-mono">{order.customer.phone}</div>
                                     <div className="text-xs text-gray-400 truncate max-w-[150px]">{order.customer.address}</div>
+                                    {order.notes && (
+                                        <div className="flex items-center gap-1 mt-1 text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full w-fit" title={order.notes}>
+                                            <MessageSquare size={10} /> Note
+                                        </div>
+                                    )}
                                 </td>
                                 <td className="py-4 px-6 font-bold text-gray-900">{formatPrice(order.total, currency)}</td>
                                 <td className="py-4 px-6 text-center">
                                     <StatusSelector orderId={order.id} currentStatus={order.status || 'pending'} slug={slug} />
                                 </td>
                                 <td className="py-4 px-6 text-center">
-                                    <a
-                                        href={`/api/invoice/${order.id}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"
-                                        title="View PDF Invoice"
-                                    >
-                                        <FileText size={18} />
-                                    </a>
+                                    <div className="flex items-center justify-center gap-1">
+                                        <a
+                                            href={`/api/invoice/${order.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"
+                                            title="View PDF Invoice"
+                                        >
+                                            <FileText size={18} />
+                                        </a>
+                                        <button
+                                            onClick={() => {
+                                                const url = `${window.location.origin}/store/${slug}/order/${order.id}`;
+                                                navigator.clipboard.writeText(url);
+                                            }}
+                                            className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all"
+                                            title="Copy Tracking Link"
+                                        >
+                                            <Link2 size={16} />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

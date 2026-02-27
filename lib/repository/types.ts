@@ -26,6 +26,7 @@ export interface Tenant {
     codEnabled?: boolean; // Cash on Delivery toggle
     plan?: 'free' | 'pro'; // Subscription plan
     deliveryFee?: number; // Per-store delivery fee
+    minOrderAmount?: number; // Minimum order amount
 }
 
 export interface Order {
@@ -47,6 +48,7 @@ export interface Order {
     total: number;
     paymentMethod?: string;
     status: OrderStatus;
+    notes?: string; // Customer special instructions
 }
 
 export interface OrderRepository {
@@ -115,7 +117,7 @@ export interface TenantRepository {
     updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void>;
     updateTenantLanguage(id: string, language: string): Promise<void>;
     updateTenantDomain(id: string, domain: string): Promise<void>;
-    updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number): Promise<void>;
+    updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number): Promise<void>;
     getTenantByDomain(domain: string): Promise<Tenant | null>;
     getTenantById(id: string): Promise<Tenant | null>;
     getTenantByUserId(userId: string): Promise<Tenant | null>;

@@ -47,6 +47,8 @@ async function updateSettings(formData: FormData) {
         const codEnabled = formData.get('codEnabled') === 'true';
         const deliveryFeeRaw = formData.get('deliveryFee') as string;
         const deliveryFee = deliveryFeeRaw ? parseFloat(deliveryFeeRaw) : 0;
+        const minOrderRaw = formData.get('minOrderAmount') as string;
+        const minOrderAmount = minOrderRaw ? parseFloat(minOrderRaw) : 0;
         
         // Checkbox is "true" if checked, null if unchecked
         const isOpen = formData.get('isOpen') === 'true';
@@ -71,7 +73,7 @@ async function updateSettings(formData: FormData) {
         // Use authenticated server client for RLS compliance
         const supabase = await createClient();
         const tenantRepo = getTenantRepository(supabase);
-        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType, paypalLink, stripeLink, codEnabled, deliveryFee);
+        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType, paypalLink, stripeLink, codEnabled, deliveryFee, minOrderAmount);
         success = true;
     } catch (err: any) {
         // Re-throw Next.js redirect/notFound errors — they use throw internally
@@ -219,6 +221,24 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                             </p>
                         </div>
 
+                        {/* Minimum Order Amount */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                📋 Minimum Order Amount
+                            </label>
+                            <input 
+                                name="minOrderAmount" 
+                                type="number" 
+                                step="0.01" 
+                                min="0" 
+                                defaultValue={tenant.minOrderAmount || 0} 
+                                placeholder="0.00"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium bg-white" 
+                            />
+                            <p className="text-xs text-gray-500 mt-2">
+                                Set to 0 for no minimum. Customers won&apos;t be able to checkout below this amount.
+                            </p>
+                        </div>
                         {/* Store Status Toggle */}
                         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                             <div>
