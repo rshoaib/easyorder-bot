@@ -1,4 +1,5 @@
 import { getTenantRepository, getOrderRepository } from "@/lib/repository";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { formatPrice, getCurrencySymbol } from "@/lib/currency";
 import Link from "next/link";
 import { ArrowLeft, Package, Clock, ChefHat, CheckCircle, Truck, MapPin, Phone, FileText, StickyNote } from "lucide-react";
@@ -23,7 +24,13 @@ const STEPS = [
 export default async function OrderTrackingPage({ params }: Props) {
     const { slug, id: orderId } = await params;
 
-    const tenantRepo = getTenantRepository();
+    // Use service-role client to bypass RLS (tracking pages are public)
+    const serviceClient = createAdminClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const tenantRepo = getTenantRepository(serviceClient);
     const tenant = await tenantRepo.getTenantBySlug(slug);
 
     if (!tenant) {
@@ -37,7 +44,7 @@ export default async function OrderTrackingPage({ params }: Props) {
         );
     }
 
-    const orderRepo = getOrderRepository();
+    const orderRepo = getOrderRepository(serviceClient);
     const order = await orderRepo.getOrderById(orderId);
 
     if (!order || order.tenantId !== tenant.id) {
