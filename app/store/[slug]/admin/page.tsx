@@ -45,19 +45,21 @@ export default async function AdminPage({ params }: Props) {
 
   if (!tenant) return <div className="p-10">Store not found</div>;
 
-  // Owner-only access check
-  const supabaseAuth = await createClient();
-  const { data: { user } } = await supabaseAuth.auth.getUser();
-  if (!user || tenant.userId !== user.id) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center p-10 max-w-md">
-          <h1 className="text-2xl font-bold text-red-600 mb-3">⛔ Access Denied</h1>
-          <p className="text-gray-600 mb-6">You don&apos;t have permission to manage this store. Only the store owner can access the admin panel.</p>
-          <a href="/" className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors inline-block">Go to Homepage</a>
+  // Owner-only access check (skip for demo store — public showcase)
+  if (slug !== 'demo') {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    if (!user || tenant.userId !== user.id) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center p-10 max-w-md">
+            <h1 className="text-2xl font-bold text-red-600 mb-3">⛔ Access Denied</h1>
+            <p className="text-gray-600 mb-6">You don&apos;t have permission to manage this store. Only the store owner can access the admin panel.</p>
+            <a href="/" className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors inline-block">Go to Homepage</a>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 
   return (
