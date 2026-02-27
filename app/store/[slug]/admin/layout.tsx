@@ -18,32 +18,37 @@ export default async function AdminLayout({
 
   if (!tenant) return <div>Store not found</div>;
 
-  // Supabase Auth Check
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const isDemo = slug === 'demo';
 
-  if (!user) {
-      redirect(`/login?next=/store/${slug}/admin`);
-  }
+  // Skip auth for demo store — it's a public showcase
+  if (!isDemo) {
+    // Supabase Auth Check
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-  // Check Ownership
-  if (tenant.userId && tenant.userId !== user.id) {
-       return (
-          <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-              <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md text-center">
-                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
-                      <Settings size={32} />
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
-                  <p className="text-gray-500 mb-6">You do not have permission to manage this store.</p>
-                  <Link href="/admin">
-                      <button className="bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition-colors">
-                          Go to Dashboard
-                      </button>
-                  </Link>
-              </div>
-          </div>
-       );
+    if (!user) {
+        redirect(`/login?next=/store/${slug}/admin`);
+    }
+
+    // Check Ownership
+    if (tenant.userId && tenant.userId !== user.id) {
+         return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+                <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md text-center">
+                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
+                        <Settings size={32} />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
+                    <p className="text-gray-500 mb-6">You do not have permission to manage this store.</p>
+                    <Link href="/admin">
+                        <button className="bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition-colors">
+                            Go to Dashboard
+                        </button>
+                    </Link>
+                </div>
+            </div>
+         );
+    }
   }
 
 
@@ -178,7 +183,32 @@ export default async function AdminLayout({
         </div>
       </nav>
 
-      {children}
+      {/* Demo Mode Banner */}
+      {isDemo && (
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+          <div className="container mx-auto px-4 py-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-lg">👀</span>
+              <span className="font-bold">Demo Mode</span>
+              <span className="hidden sm:inline text-indigo-100">— This is a preview of the merchant dashboard. All features are view-only.</span>
+            </div>
+            <Link href="/register" className="bg-white text-indigo-700 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-50 transition-colors shrink-0">
+              Create Your Store →
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Content: read-only for demo, interactive for real stores */}
+      {isDemo ? (
+        <div className="relative">
+          <div style={{ pointerEvents: 'none', userSelect: 'none' }}>
+            {children}
+          </div>
+        </div>
+      ) : (
+        children
+      )}
 
       {/* Floating WhatsApp Support Button */}
       <WhatsAppSupportButton storeName={tenant.name} />

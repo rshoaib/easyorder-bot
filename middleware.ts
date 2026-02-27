@@ -21,6 +21,12 @@ export async function middleware(request: NextRequest) {
         const hasSuperAuthCookie = isSuperAdmin && request.cookies.get('super_auth')?.value === 'true';
 
         if (!isLoginPage && !user && !hasSuperAuthCookie) {
+            // Allow unauthenticated access to demo store admin (public showcase)
+            const isDemoAdmin = storeAdminMatch && storeAdminMatch[1] === 'demo';
+            if (isDemoAdmin) {
+                return supabaseResponse;
+            }
+
             if (isSuperAdmin) {
                 return NextResponse.redirect(new URL('/super-admin/login', request.url));
             }
