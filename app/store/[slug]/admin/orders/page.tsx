@@ -14,7 +14,9 @@ interface Props {
 }
 
 async function getOrders(slug: string) {
-  const supabase = await createClient();
+  // For demo store, use raw client (bypasses RLS) so anonymous users can see data
+  const isDemo = slug === 'demo';
+  const supabase = isDemo ? undefined : await createClient();
   const tenantRepo = getTenantRepository(supabase);
   const tenant = await tenantRepo.getTenantBySlug(slug);
   if (!tenant) return { orders: [], tenant: null };

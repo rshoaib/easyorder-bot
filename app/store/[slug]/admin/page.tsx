@@ -20,7 +20,9 @@ interface Props {
 }
 
 async function getDashboardData(slug: string) {
-  const supabase = await createClient();
+  // For demo store, use raw client (bypasses RLS) so anonymous users can see data
+  const isDemo = slug === 'demo';
+  const supabase = isDemo ? undefined : await createClient();
   const tenantRepo = getTenantRepository(supabase);
   const tenant = await tenantRepo.getTenantBySlug(slug);
   if (!tenant) return { tenant: null, analytics: null, productCount: 0, chartOrders: [] as { date: string; total: number; status: string }[] };
