@@ -3,10 +3,17 @@
 import { getTenantRepository } from "@/lib/repository";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 
 const SUPER_ADMIN_EMAIL = "segmentibi@gmail.com";
 
 async function verifySuperAdmin(): Promise<void> {
+    // Check cookie-based auth first (set by /super-admin/login)
+    const cookiesInfo = await cookies();
+    const hasSuperAuth = cookiesInfo.get('super_auth')?.value === 'true';
+    if (hasSuperAuth) return;
+
+    // Fallback: Check Supabase Auth
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
