@@ -35,7 +35,7 @@ export async function verifyTenantOwnership(slug: string) {
         throw new AuthenticationError("You must be logged in to perform this action.");
     }
 
-    const tenantRepo = getTenantRepository();
+    const tenantRepo = getTenantRepository(supabase);
     const tenant = await tenantRepo.getTenantBySlug(slug);
 
     if (!tenant) {
