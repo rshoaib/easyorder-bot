@@ -7,6 +7,12 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl;
     const hostname = request.headers.get('host')!;
 
+    // 0. Canonical Domain Redirect
+    // Prevents cross-domain PKCE Supabase auth failures when accessing via the Vercel default domain
+    if (hostname.includes('easyorder-bot.vercel.app')) {
+        return NextResponse.redirect(`https://orderviachat.com${url.pathname}${url.search}`);
+    }
+
     // 1. Admin Protection (Supabase Auth)
     const isGlobalAdmin = url.pathname.startsWith('/admin');
     const isSuperAdmin = url.pathname.startsWith('/super-admin');
