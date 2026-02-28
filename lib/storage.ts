@@ -23,18 +23,24 @@ export async function uploadProductImage(file: File, tenantId: string, client: S
     const fileName = `${tenantId}/${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `${fileName}`;
 
-    const { error } = await client.storage
+    console.log('[uploadProductImage] Uploading to product-images:', filePath, 'size:', file.size, 'type:', file.type);
+
+    const { data: uploadData, error } = await client.storage
         .from('product-images')
-        .upload(filePath, file);
+        .upload(filePath, file, { upsert: true });
 
     if (error) {
-        console.error('Error uploading image:', error);
-        throw new Error('Image upload failed. Please try again.');
+        console.error('[uploadProductImage] Upload error:', error.message, error);
+        throw new Error('Image upload failed: ' + error.message);
     }
+
+    console.log('[uploadProductImage] Upload success:', uploadData);
 
     const { data } = client.storage
         .from('product-images')
         .getPublicUrl(filePath);
+
+    console.log('[uploadProductImage] Public URL:', data.publicUrl);
 
     return data.publicUrl;
 }

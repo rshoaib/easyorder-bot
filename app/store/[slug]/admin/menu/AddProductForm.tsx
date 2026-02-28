@@ -60,7 +60,9 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
         setIsUploading(true);
         setFeedback(null);
         try {
-            const file = formData.get('imageFile') as File;
+            // Get the file that actually has content (there are 2 inputs: camera + gallery)
+            const files = formData.getAll('imageFile') as File[];
+            const file = files.find(f => f && f.size > 0) || null;
             let imageUrl = '';
             const submitData = new FormData();
             
