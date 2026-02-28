@@ -6,10 +6,11 @@ import { toggleProductAvailability } from '@/app/actions/product-actions';
 interface Props {
     products: any[];
     slug: string;
+    tenantId: string;
     currency?: string;
 }
 
-export default function ProductListClient({ products, slug, currency }: Props) {
+export default function ProductListClient({ products, slug, tenantId, currency }: Props) {
     const handleToggle = async (id: string, newAvailability: boolean) => {
         try {
             await toggleProductAvailability(id, newAvailability, slug);
@@ -25,6 +26,7 @@ export default function ProductListClient({ products, slug, currency }: Props) {
                     key={product.id}
                     product={product}
                     slug={slug}
+                    tenantId={tenantId}
                     currency={currency}
                     onToggle={handleToggle}
                 />

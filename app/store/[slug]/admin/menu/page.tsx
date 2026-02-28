@@ -52,8 +52,15 @@ export default async function AdminMenuPage({ params }: Props) {
 
                 {/* Product List */}
                 <div className="lg:col-span-3 space-y-4 min-w-0">
-                    <h2 className="text-lg font-bold px-2">Current Products ({products.length})</h2>
-                    <ProductListClient products={products} slug={slug} currency={tenant.currency} />
+                    {/* Bug Fix Notification */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex items-start gap-3">
+                        <span className="text-lg flex-shrink-0">🔧</span>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-blue-800">Image Upload Fixed!</p>
+                            <p className="text-xs text-blue-600 mt-0.5">We fixed a bug with product images. If your images are missing, please click <strong>Edit</strong> on each product to re-upload them. Sorry for the inconvenience!</p>
+                        </div>
+                    </div>
+                    <ProductListClient products={products} slug={slug} tenantId={tenant.id} currency={tenant.currency} />
                     {products.length === 0 && (
                         <div className="text-center py-10 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
                             No items in the menu. Add one!

@@ -82,7 +82,7 @@ export async function importProducts(slug: string, products: Omit<Product, 'id' 
     revalidatePath(`/store/${slug}`);
 }
 
-export async function updateProduct(slug: string, productId: string, data: { name?: string; price?: number; category?: string; description?: string }) {
+export async function updateProduct(slug: string, productId: string, data: { name?: string; price?: number; category?: string; description?: string; image?: string }) {
     // Security Check
     await verifyTenantOwnership(slug);
 
@@ -92,6 +92,7 @@ export async function updateProduct(slug: string, productId: string, data: { nam
     if (data.price !== undefined) sanitized.price = validatePrice(data.price);
     if (data.category !== undefined) sanitized.category = sanitizeCategory(data.category);
     if (data.description !== undefined) sanitized.description = sanitizeDescription(data.description);
+    if (data.image !== undefined) sanitized.image = data.image;
 
     const supabase = await createClient();
     const repo = getProductRepository(supabase);
