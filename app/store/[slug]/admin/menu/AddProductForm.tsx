@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { uploadProductImage, uploadDigitalFile } from '@/lib/storage';
 import { addProduct } from './actions';
 import { Plus, Loader2, Upload } from 'lucide-react';
@@ -27,9 +27,11 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
     const [productType, setProductType] = useState<'physical' | 'digital' | 'service'>('physical');
     const [digitalFileName, setDigitalFileName] = useState<string | null>(null);
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+    
+    // Store the selected image file in a ref so it survives form submission
+    const selectedFileRef = useRef<File | null>(null);
 
     async function handleAIGenerate() {
-        // Get current name/category from form inputs by ID since we don't control them with state for simplicity
         const form = document.getElementById('addProductForm') as HTMLFormElement;
         const formData = new FormData(form);
         const name = formData.get('name') as string;
@@ -60,19 +62,21 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
         setIsUploading(true);
         setFeedback(null);
         try {
-            // Get the file that actually has content (there are 2 inputs: camera + gallery)
-            const files = formData.getAll('imageFile') as File[];
-            const file = files.find(f => f && f.size > 0) || null;
             let imageUrl = '';
             const submitData = new FormData();
             
-            // If a file was selected, upload it using authenticated client
+            // Use the file from our ref (not from FormData which has dual-input issues)
+            const file = selectedFileRef.current;
             if (file && file.size > 0) {
+                console.log('[AddProductForm] Uploading file:', file.name, file.size, file.type);
                 const supabase = createClient();
                 const uploadedUrl = await uploadProductImage(file, tenantId, supabase);
+                console.log('[AddProductForm] Upload result:', uploadedUrl);
                 if (uploadedUrl) {
                     imageUrl = uploadedUrl;
                 }
+            } else {
+                console.log('[AddProductForm] No file selected, selectedFileRef is:', file);
             }
 
             // Handle Digital File Upload
@@ -93,6 +97,7 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
             submitData.set('image', imageUrl);
             submitData.set('type', productType);
 
+            console.log('[AddProductForm] Submitting with image URL:', imageUrl);
             await addProduct(slug, submitData);
             
             // Success — reset form
@@ -100,12 +105,13 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
             setDescription('');
             setDigitalFileName(null);
             setProductType('physical');
+            selectedFileRef.current = null;
             setFeedback({ type: 'success', message: '✅ Product added successfully!' });
             (document.getElementById('addProductForm') as HTMLFormElement)?.reset();
             setTimeout(() => setFeedback(null), 4000);
 
         } catch (error: any) {
-            console.error(error);
+            console.error('[AddProductForm] Error:', error);
             const msg = error?.message || 'Failed to add product';
             if (msg.includes('logged in') || msg.includes('Unauthenticated') || msg.includes('authenticate')) {
                 setFeedback({ type: 'error', message: '🔒 Session expired. Redirecting to login...' });
@@ -122,6 +128,8 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            console.log('[AddProductForm] File selected:', file.name, file.size, file.type);
+            selectedFileRef.current = file;
             const objectUrl = URL.createObjectURL(file);
             setPreview(objectUrl);
         }
@@ -178,10 +186,9 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                     </div>
                 </div>
                 
-                {/* Image Upload — Camera + Gallery */}
+                {/* Image Upload — Single input, triggered by Camera or Gallery buttons */}
                 <div>
                     <label className="form-label">Product Image</label>
-                    <input type="hidden" name="image" value="" /> 
                     
                     {preview ? (
                         /* Preview with remove button */
@@ -189,14 +196,17 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                             <Image src={preview} alt="Preview" fill className="object-cover" />
                             <button
                                 type="button"
-                                onClick={() => { setPreview(null); }}
+                                onClick={() => { 
+                                    setPreview(null); 
+                                    selectedFileRef.current = null;
+                                }}
                                 className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white text-xs font-bold px-2.5 py-1 rounded-lg transition-colors backdrop-blur-sm"
                             >
                                 ✕ Remove
                             </button>
                         </div>
                     ) : (
-                        /* Dual buttons: Camera + Gallery */
+                        /* Dual buttons: Camera + Gallery — both use a SINGLE hidden input */
                         <div className="grid grid-cols-2 gap-2 mt-1">
                             <label htmlFor="camera-capture" className="flex flex-col items-center justify-center h-28 border-2 border-dashed border-green-300 rounded-xl cursor-pointer bg-green-50/50 hover:bg-green-50 hover:border-green-400 transition-all group">
                                 <span className="text-2xl mb-1 group-hover:scale-110 transition-transform">📸</span>
@@ -204,7 +214,6 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                                 <span className="text-[10px] text-green-600 mt-0.5">Opens Camera</span>
                                 <input 
                                     id="camera-capture" 
-                                    name="imageFile" 
                                     type="file" 
                                     accept="image/*" 
                                     capture="environment"
@@ -218,7 +227,6 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                                 <span className="text-[10px] text-gray-500 mt-0.5">Upload File</span>
                                 <input 
                                     id="gallery-upload" 
-                                    name="imageFile" 
                                     type="file" 
                                     accept="image/*" 
                                     className="hidden" 
