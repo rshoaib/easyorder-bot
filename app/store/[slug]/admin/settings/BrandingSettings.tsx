@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { updateBranding } from '@/app/actions/branding-actions';
-import { Upload, Save, Loader2, Palette, Image as ImageIcon } from 'lucide-react';
+import { Upload, Save, Loader2, Palette, Image as ImageIcon, Type } from 'lucide-react';
 import Image from 'next/image';
 
 interface BrandingSettingsProps {
@@ -56,6 +56,24 @@ export default function BrandingSettings({ tenantId, slug, initialName, initialT
             <form action={handleSubmit} className="p-6 space-y-8">
                 <input type="hidden" name="tenantId" value={tenantId} />
                 <input type="hidden" name="slug" value={slug} />
+
+                {/* Brand Name */}
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                        <Type size={16} className="text-indigo-600" /> Brand Name
+                    </label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        value={name} 
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="e.g. My Awesome Store"
+                        required
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium bg-white" 
+                    />
+                </div>
+
+                <div className="h-px bg-gray-100 w-full"></div>
 
                 {/* Logo Upload */}
                 <div>
