@@ -31,6 +31,9 @@ import HeroDemo from "@/components/landing/HeroDemo";
 import FAQ from "@/components/landing/FAQ";
 import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
 import { getAllPosts } from "@/lib/blog";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import { getTenantRepository } from "@/lib/repository";
 
 const WHATSAPP_SHARE_URL = `https://wa.me/?text=${encodeURIComponent(
   "Check out OrderViaChat — a free tool to create a digital menu and get orders on WhatsApp! 🚀\nhttps://orderviachat.com"
@@ -39,6 +42,17 @@ const WHATSAPP_SHARE_URL = `https://wa.me/?text=${encodeURIComponent(
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  // If logged-in user already has a store, redirect to their admin dashboard
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    const repo = getTenantRepository();
+    const tenant = await repo.getTenantByUserId(user.id);
+    if (tenant) {
+      redirect(`/store/${tenant.slug}/admin`);
+    }
+  }
+
   const posts = (await getAllPosts()).slice(0, 4);
 
   return (
