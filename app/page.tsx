@@ -41,7 +41,20 @@ const WHATSAPP_SHARE_URL = `https://wa.me/?text=${encodeURIComponent(
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+
+  // If OAuth redirected here with a ?code= param (instead of /auth/callback),
+  // forward to the callback route to exchange the code for a session
+  if (params.code) {
+    const code = Array.isArray(params.code) ? params.code[0] : params.code;
+    redirect(`/auth/callback?code=${code}&next=/register`);
+  }
+
   // If logged-in user already has a store, redirect to their admin dashboard
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
