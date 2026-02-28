@@ -34,21 +34,35 @@ async function verifySuperAdmin(): Promise<void> {
 export async function createStore(formData: FormData) {
     await verifySuperAdmin();
 
-    const repo = getTenantRepository(getServiceClient());
+    const serviceClient = getServiceClient();
+    const repo = getTenantRepository(serviceClient);
 
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
     const password = formData.get('password') as string;
+    const email = formData.get('email') as string;
 
-    if (!name || !slug || !password) throw new Error("Missing fields");
+    if (!name || !slug || !password || !email) throw new Error("Missing fields");
 
     // Clean slug
     const cleanSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
+    // 1. Create Supabase Auth user so store owner can log in
+    const { data: authData, error: authError } = await serviceClient.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true, // Auto-confirm so they can log in immediately
+    });
+
+    if (authError) throw new Error(`Failed to create user: ${authError.message}`);
+
+    // 2. Create tenant linked to the new user
     await repo.createTenant({
         name,
         slug: cleanSlug,
         password,
+        email,
+        userId: authData.user.id,
         currency: '$',
         themeColor: 'black',
         status: 'active',

@@ -73,6 +73,16 @@ export default async function SuperAdminPage() {
                                         />
                                     </div>
                                     <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Owner Email</label>
+                                        <input 
+                                            name="email" 
+                                            type="email"
+                                            required 
+                                            placeholder="owner@example.com" 
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-gray-400 font-medium" 
+                                        />
+                                    </div>
+                                    <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-1.5">URL Slug</label>
                                         <input 
                                             name="slug" 
@@ -87,7 +97,7 @@ export default async function SuperAdminPage() {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Admin Password</label>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">Login Password</label>
                                         <div className="relative">
                                             <input 
                                                 name="password" 
