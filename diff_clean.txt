@@ -1,0 +1,87 @@
+diff --git a/app/auth/callback/route.ts b/app/auth/callback/route.ts
+index 71a0119..62af84d 100644
+--- a/app/auth/callback/route.ts
++++ b/app/auth/callback/route.ts
+@@ -7,27 +7,30 @@ export async function GET(request: Request) {
+     // if "next" is in param, use it as the redirect URL
+     const next = searchParams.get('next') ?? '/'
+ 
++    // Determine the correct redirect base URL
++    const forwardedHost = request.headers.get('x-forwarded-host')
++    const isLocalEnv = process.env.NODE_ENV === 'development'
++    let redirectBase = origin
++    if (!isLocalEnv && forwardedHost) {
++        redirectBase = `https://${forwardedHost}`
++    }
++
+     if (code) {
+         const supabase = await createClient()
+         const { error } = await supabase.auth.exchangeCodeForSession(code)
+         if (!error) {
+-            const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
+-            const isLocalEnv = process.env.NODE_ENV === 'development'
+-            if (isLocalEnv) {
+-                // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
+-                return NextResponse.redirect(`${origin}${next}`)
+-            } else if (forwardedHost) {
+-                return NextResponse.redirect(`https://${forwardedHost}${next}`)
+-            } else {
+-                return NextResponse.redirect(`${origin}${next}`)
+-            }
++            return NextResponse.redirect(`${redirectBase}${next}`)
+         } else {
+-            console.error('Auth Callback Error:', error);
+-            console.error('Auth Code:', code ? 'Present' : 'Missing');
+-            console.error('Origin:', origin);
++            console.error('Auth Callback Error:', error.message);
++            console.error('Auth Error Code:', error.status);
++            console.error('Origin:', origin, 'ForwardedHost:', forwardedHost);
++            const errorMsg = encodeURIComponent(error.message || 'Code exchange failed')
++            return NextResponse.redirect(`${redirectBase}/login?error=${errorMsg}&next=${encodeURIComponent(next)}`)
+         }
+     }
+ 
+-    // return the user to an error page with instructions
+-    return NextResponse.redirect(`${origin}/login?error=Could not authenticate user`)
++    // No code parameter - check for error from Supabase
++    const errorDescription = searchParams.get('error_description') || searchParams.get('error') || 'No authorization code received'
++    console.error('Auth Callback - No code:', errorDescription);
++    return NextResponse.redirect(`${redirectBase}/login?error=${encodeURIComponent(errorDescription)}&next=${encodeURIComponent(next)}`)
+ }
+diff --git a/app/login/page.tsx b/app/login/page.tsx
+index d2144c7..fb50e96 100644
+--- a/app/login/page.tsx
++++ b/app/login/page.tsx
+@@ -10,12 +10,13 @@ import { Suspense } from 'react';
+ 
+ function LoginForm() {
+     const [loading, setLoading] = useState(false);
+-    const [error, setError] = useState<string | null>(null);
+-    const [message, setMessage] = useState<string | null>(null);
+     const router = useRouter();
+     const searchParams = useSearchParams();
+     const next = searchParams.get('next') || '/register';
+     const view = searchParams.get('view');
++    const urlError = searchParams.get('error');
++    const [error, setError] = useState<string | null>(urlError);
++    const [message, setMessage] = useState<string | null>(null);
+     const supabase = createClient();
+     const [isSignUp, setIsSignUp] = useState(view === 'signup');
+     const [showForgotPassword, setShowForgotPassword] = useState(false);
+diff --git a/middleware.ts b/middleware.ts
+index fa7ac7a..1da2912 100644
+--- a/middleware.ts
++++ b/middleware.ts
+@@ -7,6 +7,12 @@ export async function middleware(request: NextRequest) {
+     const url = request.nextUrl;
+     const hostname = request.headers.get('host')!;
+ 
++    // 0. Canonical Domain Redirect
++    // Prevents cross-domain PKCE Supabase auth failures when accessing via the Vercel default domain
++    if (hostname.includes('easyorder-bot.vercel.app')) {
++        return NextResponse.redirect(`https://orderviachat.com${url.pathname}${url.search}`);
++    }
++
+     // 1. Admin Protection (Supabase Auth)
+     const isGlobalAdmin = url.pathname.startsWith('/admin');
+     const isSuperAdmin = url.pathname.startsWith('/super-admin');

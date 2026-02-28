@@ -373,7 +373,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number, name?: string): Promise<void> {
         const updateData: any = {
             owner_phone: ownerPhone,
             instagram_url: instagramUrl,
@@ -391,6 +391,10 @@ export class SupabaseTenantRepository implements TenantRepository {
 
         if (logoUrl) {
             updateData.logo_url = logoUrl;
+        }
+
+        if (name) {
+            updateData.name = name;
         }
 
         if (isOpen !== undefined) { updateData.is_open = isOpen; }
@@ -610,7 +614,8 @@ export class SupabaseAnalyticsRepository implements AnalyticsRepository {
         const { count, error: countError } = await this.client
             .from('orders')
             .select('*', { count: 'exact', head: true })
-            .eq('tenant_id', tenantId);
+            .eq('tenant_id', tenantId)
+            .neq('status', 'cancelled');
 
         if (countError) throw new Error(countError.message);
 
@@ -619,7 +624,8 @@ export class SupabaseAnalyticsRepository implements AnalyticsRepository {
         const { data: revenueData, error: revenueError } = await this.client
             .from('orders')
             .select('total, date')
-            .eq('tenant_id', tenantId);
+            .eq('tenant_id', tenantId)
+            .neq('status', 'cancelled');
 
         if (revenueError) throw new Error(revenueError.message);
 

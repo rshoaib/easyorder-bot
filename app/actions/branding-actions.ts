@@ -26,6 +26,7 @@ export async function updateBranding(formData: FormData) {
     }
 
     const themeColor = formData.get('themeColor') as string;
+    const name = formData.get('name') as string;
     const logoFile = formData.get('logo') as File;
 
     if (!tenantId || !slug) {
@@ -54,7 +55,15 @@ export async function updateBranding(formData: FormData) {
             undefined, // pixel
             undefined, // currency
             themeColor,
-            logoUrl
+            logoUrl,
+            undefined, // isOpen
+            undefined, // storeType
+            undefined, // paypalLink
+            undefined, // stripeLink
+            undefined, // codEnabled
+            undefined, // deliveryFee
+            undefined, // minOrderAmount
+            name
         );
 
         revalidatePath(`/store/${slug}`);

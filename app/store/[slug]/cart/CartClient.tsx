@@ -29,7 +29,8 @@ function PromoCodeSection({ tenantId, onApply }: { tenantId: string, onApply: (p
     async function handleApply() {
         if(!code) return;
         setLoading(true);
-        const res = await validatePromoCode(code, tenantId);
+        const codeToApply = code.trim().toUpperCase();
+        const res = await validatePromoCode(codeToApply, tenantId);
         setLoading(false);
         if(res.success) {
             setMsg('Applied!');

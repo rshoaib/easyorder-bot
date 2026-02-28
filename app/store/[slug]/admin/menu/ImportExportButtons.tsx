@@ -47,29 +47,42 @@ export default function ImportExportButtons({ slug, products }: Props) {
         setIsImporting(true);
         try {
             const text = await file.text();
-            const lines = text.split('\n');
-            const headers = lines[0].split(',').map(h => h.trim()); // Assume name, category, price...
             
-            // Basic parser (assumes standard CSV, might fail on complex quoted strings but ok for MVP)
+            // Full robust CSV parser to handle newlines inside quoted descriptions
+            const rows: string[][] = [];
+            let currentRow: string[] = [];
+            let currentCell = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentCell.replace(/^"|"$/g, '').replace(/""/g, '"'));
+                    currentCell = '';
+                } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                    if (char === '\r' && text[i+1] === '\n') continue;
+                    currentRow.push(currentCell.replace(/^"|"$/g, '').replace(/""/g, '"'));
+                    if (currentRow.length > 1 || (currentRow.length === 1 && currentRow[0].trim() !== '')) {
+                        rows.push(currentRow);
+                    }
+                    currentRow = [];
+                    currentCell = '';
+                } else {
+                    currentCell += char;
+                }
+            }
+            if (currentCell || currentRow.length > 0) {
+                currentRow.push(currentCell.replace(/^"|"$/g, '').replace(/""/g, '"'));
+                rows.push(currentRow);
+            }
+
             const newProducts: any[] = [];
             
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                
-                // Very naive split, works for simple exports. 
-                // Creating a robust CSV parser logic is complex without a lib like PapaParse.
-                // Let's use a regex that handles quotes reasonably well for this use case.
-                const matches = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                // Actually, let's keep it extremely simple: strict format required. 
-                // Or better: use a tiny parser helper.
-                
-                // Let's try to match: 
-                // name, category, price, description, image, isAvailable
-                // This is risky without a library. 
-                
-                // Plan B: Just tell user to avoid commas in fields if possible, or use a proper lib?
-                // I'll try to use a simple quote-aware split.
-                const row = parseCSVLine(lines[i]);
+            // Start from row 1 to skip headers
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
                 if (row.length < 3) continue; // Skip bad lines
 
                 newProducts.push({
@@ -95,27 +108,6 @@ export default function ImportExportButtons({ slug, products }: Props) {
             e.target.value = ''; // Reset input
         }
     };
-
-    // Helper to handle "quoted strings"
-    const parseCSVLine = (line: string) => {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        
-        for (let i = 0; i < line.length; i++) {
-            const char = line[i];
-            if (char === '"') {
-                inQuotes = !inQuotes;
-            } else if (char === ',' && !inQuotes) {
-                result.push(current.replace(/^"|"$/g, '').replace(/""/g, '"'));
-                current = '';
-            } else {
-                current += char;
-            }
-        }
-        result.push(current.replace(/^"|"$/g, '').replace(/""/g, '"'));
-        return result;
-    }
 
     return (
         <div className="flex gap-2">

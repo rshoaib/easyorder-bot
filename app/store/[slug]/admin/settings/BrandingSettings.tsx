@@ -8,12 +8,14 @@ import Image from 'next/image';
 interface BrandingSettingsProps {
     tenantId: string;
     slug: string;
+    initialName: string;
     initialThemeColor: string;
     initialLogoUrl?: string;
 }
 
-export default function BrandingSettings({ tenantId, slug, initialThemeColor, initialLogoUrl }: BrandingSettingsProps) {
+export default function BrandingSettings({ tenantId, slug, initialName, initialThemeColor, initialLogoUrl }: BrandingSettingsProps) {
     const [themeColor, setThemeColor] = useState(initialThemeColor);
+    const [name, setName] = useState(initialName);
     const [logoPreview, setLogoPreview] = useState<string | null>(initialLogoUrl || null);
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);

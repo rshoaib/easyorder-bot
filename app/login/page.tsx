@@ -10,12 +10,13 @@ import { Suspense } from 'react';
 
 function LoginForm() {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [message, setMessage] = useState<string | null>(null);
     const router = useRouter();
     const searchParams = useSearchParams();
     const next = searchParams.get('next') || '/register';
     const view = searchParams.get('view');
+    const urlError = searchParams.get('error');
+    const [error, setError] = useState<string | null>(urlError);
+    const [message, setMessage] = useState<string | null>(null);
     const supabase = createClient();
     const [isSignUp, setIsSignUp] = useState(view === 'signup');
     const [showForgotPassword, setShowForgotPassword] = useState(false);

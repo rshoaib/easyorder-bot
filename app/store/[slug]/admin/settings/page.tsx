@@ -406,6 +406,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                 <BrandingSettings 
                     tenantId={tenant.id} 
                     slug={slug} 
+                    initialName={tenant.name}
                     initialThemeColor={tenant.themeColor} 
                     initialLogoUrl={tenant.logoUrl} 
                 />
