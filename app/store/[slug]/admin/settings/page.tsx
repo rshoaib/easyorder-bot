@@ -114,7 +114,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                 <Link href={`/store/${slug}/admin`}>
                     <button className="btn-secondary">
                         <ArrowLeft size={16} />
-                        Back to Orders
+                        Back to Dashboard
                     </button>
                 </Link>
             </div>

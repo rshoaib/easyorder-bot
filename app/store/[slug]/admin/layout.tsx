@@ -66,7 +66,7 @@ export default async function AdminLayout({
           </Link>
 
             {/* Desktop Nav Links — fill the middle space */}
-            <div className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+            <div className="hidden lg:flex items-center gap-1.5 flex-1 justify-center">
                 <Link href={`/store/${slug}/admin`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                     <LayoutDashboard size={15} /> Dashboard
                 </Link>
