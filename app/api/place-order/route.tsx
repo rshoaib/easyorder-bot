@@ -109,18 +109,37 @@ export async function POST(req: NextRequest) {
 
         // Construct WhatsApp Message
         const currencySymbol = getCurrencySymbol(tenant.currency);
-        const itemsList = validatedItems.map((item: any) => `- ${item.quantity}x ${item.name} (${currencySymbol}${item.price})`).join('\n');
-        const message = `*New Order #${orderId}*\n\n` +
-            `*Customer:* ${customer.name}\n` +
-            `*Phone:* ${customer.phone}\n` +
-            (customer.email ? `*Email:* ${customer.email}\n` : '') +
-            `*Address:* ${customer.address}\n\n` +
-            `*Items:*\n${itemsList}\n\n` +
-            `*Total:* ${currencySymbol}${finalTotal.toFixed(2)}\n` +
-            `*Payment:* ${paymentMethod}\n` +
-            (notes ? `\n*Notes:* ${notes}\n` : '') +
-            (customer.locationLink ? `\n*Location:* ${customer.locationLink}` : '') +
-            `\n\n*Track Order:* ${process.env.NEXT_PUBLIC_SITE_URL || 'https://easyorder-bot.vercel.app'}/store/${slug}/order/${orderId}`;
+        const itemsList = validatedItems.map((item: any, i: number) => `  ${i + 1}. ${item.name} × ${item.quantity}  —  ${currencySymbol}${(item.price * item.quantity).toFixed(2)}`).join('\n');
+        const deliveryFee = tenant.deliveryFee || 0;
+        const subtotal = finalTotal - deliveryFee;
+        
+        const message = 
+            `🛒 *NEW ORDER*\n` +
+            `━━━━━━━━━━━━━━━━\n` +
+            `📋 *Order #${orderId}*\n` +
+            `🏪 ${tenant.name}\n\n` +
+            `👤 *Customer Details*\n` +
+            `┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n` +
+            `   ${customer.name}\n` +
+            `📞 ${customer.phone}\n` +
+            (customer.email ? `📧 ${customer.email}\n` : '') +
+            `📍 ${customer.address}\n` +
+            (customer.locationLink ? `🗺️ ${customer.locationLink}\n` : '') +
+            `\n` +
+            `🍽️ *Order Items*\n` +
+            `┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n` +
+            `${itemsList}\n\n` +
+            (deliveryFee > 0 ? 
+                `   Subtotal: ${currencySymbol}${subtotal.toFixed(2)}\n` +
+                `   🚗 Delivery: ${currencySymbol}${deliveryFee.toFixed(2)}\n` 
+                : '') +
+            `━━━━━━━━━━━━━━━━\n` +
+            `💰 *TOTAL: ${currencySymbol}${finalTotal.toFixed(2)}*\n` +
+            `💳 Payment: ${paymentMethod}\n` +
+            `━━━━━━━━━━━━━━━━\n` +
+            (notes ? `\n📝 *Notes:* ${notes}\n` : '') +
+            `\n🔗 *Track:* ${process.env.NEXT_PUBLIC_SITE_URL || 'https://easyorder-bot.vercel.app'}/store/${slug}/order/${orderId}\n` +
+            `\n_Powered by OrderViaChat.com_`;
 
         // --- Send Email Receipt (non-blocking) ---
         if (customer.email && process.env.RESEND_API_KEY) {
