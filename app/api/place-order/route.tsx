@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTenantRepository, getOrderRepository, getProductRepository } from '@/lib/repository';
+import { getTenantRepository, getOrderRepository, getProductRepository, getPromoCodeRepository } from '@/lib/repository';
 import { Order, Product } from '@/lib/repository/types';
 import { getCurrencySymbol } from '@/lib/currency';
 import { sanitizeCustomerInput } from '@/lib/sanitize';
@@ -79,8 +79,29 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'No valid items in your order' }, { status: 400 });
         }
 
-        // Overwrite total with calculated one
-        const finalTotal = calculatedTotal;
+        // Overwrite total with calculated one, then apply promo if valid
+        let discount = 0;
+        let validatedPromoCode: string | undefined = undefined;
+
+        if (promoCode && typeof promoCode === 'string' && promoCode.trim()) {
+            const promoRepo = getPromoCodeRepository();
+            const promo = await promoRepo.getPromo(promoCode.trim().toUpperCase(), tenant.id);
+            if (promo && promo.isActive) {
+                if (promo.discountType === 'percent') {
+                    discount = calculatedTotal * (promo.value / 100);
+                } else {
+                    discount = promo.value;
+                }
+                // Ensure discount doesn't exceed the total
+                discount = Math.min(discount, calculatedTotal);
+                validatedPromoCode = promo.code;
+                // Increment usage count
+                await promoRepo.incrementUsage(promo.id);
+            }
+        }
+
+        const deliveryFeeSetting = tenant.deliveryFee || 0;
+        const finalTotal = Math.max(0, calculatedTotal + deliveryFeeSetting - discount);
 
         // Generate Order ID (simple unique ID)
         const orderId = `ORD-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`;
@@ -94,10 +115,10 @@ export async function POST(req: NextRequest) {
             date: new Date().toISOString(),
             customer: safeCustomer,
             items: validatedItems,
-            subtotal: finalTotal,
-            deliveryFee: 0,
-            discount: 0,
-            promoCode,
+            subtotal: calculatedTotal,
+            deliveryFee: deliveryFeeSetting,
+            discount,
+            promoCode: validatedPromoCode,
             total: finalTotal,
             paymentMethod,
             status: 'pending',
@@ -110,8 +131,6 @@ export async function POST(req: NextRequest) {
         // Construct WhatsApp Message
         const currencySymbol = getCurrencySymbol(tenant.currency);
         const itemsList = validatedItems.map((item: any, i: number) => `  ${i + 1}. ${item.name} × ${item.quantity}  —  ${currencySymbol}${(item.price * item.quantity).toFixed(2)}`).join('\n');
-        const deliveryFee = tenant.deliveryFee || 0;
-        const subtotal = finalTotal - deliveryFee;
         
         const message = 
             `🛒 *NEW ORDER*\n` +
@@ -129,9 +148,12 @@ export async function POST(req: NextRequest) {
             `🍽️ *Order Items*\n` +
             `┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n` +
             `${itemsList}\n\n` +
-            (deliveryFee > 0 ? 
-                `   Subtotal: ${currencySymbol}${subtotal.toFixed(2)}\n` +
-                `   🚗 Delivery: ${currencySymbol}${deliveryFee.toFixed(2)}\n` 
+            `   Subtotal: ${currencySymbol}${calculatedTotal.toFixed(2)}\n` +
+            (deliveryFeeSetting > 0 ? 
+                `   🚗 Delivery: ${currencySymbol}${deliveryFeeSetting.toFixed(2)}\n` 
+                : '') +
+            (discount > 0 ? 
+                `   🏷️ Discount${validatedPromoCode ? ` (${validatedPromoCode})` : ''}: -${currencySymbol}${discount.toFixed(2)}\n`
                 : '') +
             `━━━━━━━━━━━━━━━━\n` +
             `💰 *TOTAL: ${currencySymbol}${finalTotal.toFixed(2)}*\n` +
