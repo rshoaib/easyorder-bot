@@ -134,8 +134,9 @@ export default function OrderList({ orders, slug, currency }: OrderListProps) {
                                     <div className="text-xs text-gray-500 font-mono">{order.customer.phone}</div>
                                     <div className="text-xs text-gray-400 truncate max-w-[150px]">{order.customer.address}</div>
                                     {order.notes && (
-                                        <div className="flex items-center gap-1 mt-1 text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full w-fit" title={order.notes}>
-                                            <MessageSquare size={10} /> Note
+                                        <div className="flex items-start gap-1 mt-1 text-xs text-amber-700 bg-amber-50 px-2 py-1 rounded-lg max-w-[200px]">
+                                            <MessageSquare size={10} className="shrink-0 mt-0.5" />
+                                            <span className="line-clamp-2">{order.notes}</span>
                                         </div>
                                     )}
                                 </td>

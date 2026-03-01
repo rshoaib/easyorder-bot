@@ -80,6 +80,15 @@ export default function OrderCard({ order, slug, storeType }: Props) {
                   </li>
               ))}
           </ul>
+          {/* Customer Notes */}
+          {order.notes && (
+              <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl print:border-black print:bg-transparent">
+                  <p className="text-sm font-medium text-amber-800 flex items-start gap-2">
+                      <span className="shrink-0">📝</span>
+                      <span className="whitespace-pre-wrap">{order.notes}</span>
+                  </p>
+              </div>
+          )}
        </div>
 
        {/* Actions (Hidden on Print) */}
