@@ -374,28 +374,16 @@ export class SupabaseTenantRepository implements TenantRepository {
     }
 
     async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number, name?: string): Promise<void> {
-        const updateData: any = {
-            owner_phone: ownerPhone,
-            instagram_url: instagramUrl,
-            facebook_url: facebookUrl,
-            meta_pixel_id: metaPixelId
-        };
+        const updateData: any = {};
 
-        if (currency) {
-            updateData.currency = currency;
-        }
-
-        if (themeColor) {
-            updateData.theme_color = themeColor;
-        }
-
-        if (logoUrl) {
-            updateData.logo_url = logoUrl;
-        }
-
-        if (name) {
-            updateData.name = name;
-        }
+        if (ownerPhone !== undefined) { updateData.owner_phone = ownerPhone; }
+        if (instagramUrl !== undefined) { updateData.instagram_url = instagramUrl; }
+        if (facebookUrl !== undefined) { updateData.facebook_url = facebookUrl; }
+        if (metaPixelId !== undefined) { updateData.meta_pixel_id = metaPixelId; }
+        if (currency !== undefined) { updateData.currency = currency; }
+        if (themeColor !== undefined) { updateData.theme_color = themeColor; }
+        if (logoUrl !== undefined) { updateData.logo_url = logoUrl; }
+        if (name !== undefined) { updateData.name = name; }
 
         if (isOpen !== undefined) { updateData.is_open = isOpen; }
         if (storeType) { updateData.store_type = storeType; }
