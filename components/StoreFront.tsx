@@ -238,7 +238,7 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
             <div>
                  <h3 className="font-bold text-sm mb-0.5 line-clamp-1">{product.name}</h3>
                  {product.description && (
-                   <p className="text-[11px] text-gray-400 line-clamp-2 mb-1">{product.description}</p>
+                   <p className="text-xs text-gray-500 line-clamp-3 mb-1">{product.description}</p>
                  )}
                  <div className="flex items-center gap-2 mb-1">
                      <p className="text-xs text-gray-500 uppercase tracking-wide line-clamp-1">{product.category}</p>
