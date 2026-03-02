@@ -83,7 +83,14 @@ nav>.container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
-  padding-bottom: 6rem;
+  /* Extra bottom padding on mobile so last product row doesn't hide behind sticky cart bar */
+  padding-bottom: 9rem;
+}
+
+@media (min-width: 768px) {
+  .store-container {
+    padding-bottom: 6rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -478,20 +485,50 @@ nav>.container {
 }
 
 /* Category Pills */
+.category-scroll-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+/* Fade gradient hinting more pills to the right on mobile */
+.category-scroll-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 8px;
+  /* aligns with padding-bottom of scroll */
+  width: 48px;
+  background: linear-gradient(to right, transparent, var(--background, #f5f5f7));
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .category-scroll-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  /* Hide gradient on desktop — all pills visible */
+  .category-scroll-wrapper::after {
+    display: none;
+  }
+}
+
 .category-scroll {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 8px;
+  /* Extra right padding so last pill isn't hidden under the gradient */
+  padding-right: 40px;
   scrollbar-width: none;
   /* Firefox */
-  margin-bottom: 1rem;
 }
 
 @media (min-width: 768px) {
   .category-scroll {
     gap: 10px;
-    margin-bottom: 2rem;
+    padding-right: 0;
   }
 }
 
@@ -548,8 +585,15 @@ nav>.container {
 /* Product Grid (Responsive) */
 .product-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* Single column on very small phones (< 480px) */
+  grid-template-columns: 1fr;
   gap: 0.75rem;
+}
+
+@media (min-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (min-width: 768px) {

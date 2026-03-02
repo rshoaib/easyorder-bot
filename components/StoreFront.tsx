@@ -110,17 +110,19 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
       </div>
 
       {/* Categories */}
-      <div className="category-scroll">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setCategory(cat)}
-            className={`category-pill ${category === cat ? "active" : ""}`}
-            style={category === cat ? { backgroundColor: tenant.themeColor || '#000', borderColor: tenant.themeColor || '#000', color: '#fff' } : {}}
-          >
-            {cat}
-          </button>
-        ))}
+      <div className="category-scroll-wrapper">
+        <div className="category-scroll">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setCategory(cat)}
+              className={`category-pill ${category === cat ? "active" : ""}`}
+              style={category === cat ? { backgroundColor: tenant.themeColor || '#000', borderColor: tenant.themeColor || '#000', color: '#fff' } : {}}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Product Grid */}
