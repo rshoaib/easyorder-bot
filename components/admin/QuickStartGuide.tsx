@@ -1,7 +1,7 @@
 'use client';
 
 import { Tenant } from "@/lib/repository/types";
-import { CheckCircle2, Circle, ArrowRight, ExternalLink, MessageSquare } from "lucide-react";
+import { CheckCircle2, Circle, ArrowRight, ExternalLink, PartyPopper } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ interface Props {
 export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
     const [isSharing, setIsSharing] = useState(false);
 
-    // Calculate Progress
+    // Fix 5: Reordered steps — Products before Logo; WhatsApp stays critical at #2
     const steps = [
         {
             id: 'store',
@@ -27,34 +27,34 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
             id: 'whatsapp',
             label: 'Connect WhatsApp',
             completed: !!tenant.ownerPhone,
-            description: '⚠️ Without this, customers CANNOT order! Add your number with country code (e.g. +1 for US, +44 for UK).',
-            icon: !!tenant.ownerPhone ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-red-400 animate-pulse" />,
+            description: '⚠️ Without this, customers CANNOT order! Add your number with country code.',
+            icon: !!tenant.ownerPhone 
+                ? <CheckCircle2 className="text-green-500" /> 
+                : <Circle className="text-red-400 animate-pulse" />,
             action: { label: 'Set Number →', href: `/store/${slug}/admin/settings` }
         },
         {
             id: 'products',
             label: 'Add Products',
-            completed: productCount > 0,
-            description: 'Add at least 1 item or use AI.',
-            icon: productCount > 0 ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-slate-300" />,
-            action: { label: 'Add Items', href: `/store/${slug}/admin/menu` }
-        },
-        {
-            id: 'logo',
-            label: 'Upload Logo',
-            completed: !!tenant.logoUrl,
-            description: 'Make your store look professional.',
-            icon: !!tenant.logoUrl ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-slate-300" />,
-            action: { label: 'Upload', href: `/store/${slug}/admin/settings` }
+            // Fix 5: Only "completed" when productCount >= 5
+            completed: productCount >= 5,
+            // Fix 5: Shows live count nudge
+            description: productCount === 0
+                ? 'Add at least 5 items to have a great-looking store.'
+                : `You have ${productCount} item${productCount === 1 ? '' : 's'}. ${5 - Math.min(productCount, 5) > 0 ? `Add ${5 - productCount} more for a complete store.` : 'Looking great! Consider adding a few more.'}`,
+            icon: productCount >= 5 
+                ? <CheckCircle2 className="text-green-500" /> 
+                : <Circle className="text-slate-300" />,
+            action: { label: productCount === 0 ? 'Add Items →' : `Add More (${productCount}/5) →`, href: `/store/${slug}/admin/menu` }
         },
         {
             id: 'share',
             label: 'Share Store',
-            completed: isSharing, // Simple local state for now, or could check traffic
+            completed: isSharing,
             description: 'Send link to your first customer.',
             icon: isSharing ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-slate-300" />,
             action: { 
-                label: 'Share', 
+                label: 'Share →', 
                 onClick: () => {
                     const url = `${window.location.origin}/store/${slug}`;
                     if (navigator.share) {
@@ -70,16 +70,38 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
                     setIsSharing(true);
                 } 
             }
-        }
+        },
+        {
+            id: 'logo',
+            label: 'Upload Logo',
+            completed: !!tenant.logoUrl,
+            description: 'Make your store look professional.',
+            icon: !!tenant.logoUrl ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-slate-300" />,
+            action: { label: 'Upload →', href: `/store/${slug}/admin/settings` }
+        },
     ];
 
     const completedCount = steps.filter(s => s.completed).length;
     const progress = Math.round((completedCount / steps.length) * 100);
 
-    // If 100% complete, maybe don't show it? Or show a success banner.
-    // For now, if 100%, show a minimized version or success message.
-    if (progress === 100 && !isSharing) { 
-        // Small tweak: keep showing if they just finished sharing to give satisfaction
+    // Fix 5: 100% complete — show celebration banner instead of the full checklist
+    if (progress === 100) {
+        return (
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-8 flex items-center justify-between gap-4 flex-wrap animate-in fade-in duration-500">
+                <div className="flex items-center gap-3">
+                    <PartyPopper size={32} className="text-green-600 shrink-0" />
+                    <div>
+                        <h2 className="font-bold text-green-900 text-lg">🎉 Your store is fully set up!</h2>
+                        <p className="text-sm text-green-700">Share your store link to start receiving orders on WhatsApp.</p>
+                    </div>
+                </div>
+                <Link href={`/store/${slug}`} target="_blank">
+                    <button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-5 py-2.5 rounded-xl transition-colors text-sm shrink-0">
+                        View Your Store <ExternalLink size={14} />
+                    </button>
+                </Link>
+            </div>
+        );
     }
 
     return (
@@ -98,17 +120,17 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
 
             <div className="divide-y divide-slate-50">
                 {steps.map((step) => (
-                    <div key={step.id} className={`p-4 flex items-center justify-between hover:bg-slate-50 transition-colors ${step.completed ? 'opacity-75' : ''}`}>
+                    <div key={step.id} className={`p-4 flex items-center justify-between hover:bg-slate-50 transition-colors ${step.completed ? 'opacity-70' : ''}`}>
                         <div className="flex items-center gap-4">
                             <div className="w-6 h-6 flex items-center justify-center">
                                 {step.icon}
                             </div>
                             <div>
-                                <div className={`font-medium ${step.completed ? 'text-slate-900 decoration-slate-400' : 'text-slate-900'}`}>
+                                <div className={`font-medium ${step.completed ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
                                     {step.label}
                                 </div>
                                 {step.description && !step.completed && (
-                                    <div className="text-xs text-slate-500">{step.description}</div>
+                                    <div className="text-xs text-slate-500 max-w-xs">{step.description}</div>
                                 )}
                             </div>
                         </div>
@@ -132,11 +154,11 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
                             </div>
                         )}
                         
-                         {step.completed && step.id === 'whatsapp' && (
-                             <div className="text-xs text-green-600 font-medium flex items-center gap-1">
-                                 Verified ✓ <Link href={`https://wa.me/${tenant.ownerPhone}?text=Test`} target="_blank" className="underline hover:text-green-700">Send Test</Link>
-                             </div>
-                         )}
+                        {step.completed && step.id === 'whatsapp' && (
+                            <div className="text-xs text-green-600 font-medium flex items-center gap-1">
+                                Verified ✓ <Link href={`https://wa.me/${tenant.ownerPhone}?text=Test`} target="_blank" className="underline hover:text-green-700">Send Test</Link>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>

@@ -3,30 +3,28 @@
 import { createProduct } from "@/app/actions/product-actions";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-
 import { uploadProductImage } from "@/lib/storage";
 import { useState } from "react";
 import { getPreset } from "@/lib/presets";
 import { createClient } from "@/utils/supabase/client";
+import { generateProductDescription } from '@/app/actions/ai-actions';
+import { Sparkles, Save, Loader2, ArrowLeft } from "lucide-react";
 
 interface Props {
     tenantId: string;
     slug: string;
     storeType?: string;
-    storeName: string; // New context
+    storeName: string;
 }
-
-import { generateProductDescription } from '@/app/actions/ai-actions';
-import { Sparkles, Save, Loader2, ArrowLeft } from "lucide-react";
 
 export default function ProductForm({ tenantId, slug, storeType, storeName }: Props) {
     const [uploading, setUploading] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
     const [description, setDescription] = useState('');
+    const [showProModal, setShowProModal] = useState(false);
     
     // Determine labels based on store type
-    // We can extend presets.ts or just handle simple logic here
     const type = storeType || 'restaurant';
     
     const ingredientsLabel = {
@@ -87,6 +85,31 @@ export default function ProductForm({ tenantId, slug, storeType, storeName }: Pr
     }
 
     return (
+        <>
+        {showProModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-in fade-in duration-200" onClick={() => setShowProModal(false)}>
+                <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+                    <div className="text-center mb-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                            <Sparkles size={24} className="text-white" />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900">Upgrade to PRO</h3>
+                        <p className="text-sm text-gray-500 mt-1">Unlock AI-powered descriptions, bulk import, and more.</p>
+                    </div>
+                    <ul className="text-sm text-gray-700 space-y-2 mb-5">
+                        {['✨ AI Auto-Write descriptions', '📦 Bulk CSV import/export', '🎨 Custom domain', '📊 Advanced analytics'].map(f => (
+                            <li key={f}>{f}</li>
+                        ))}
+                    </ul>
+                    <Link href={`/store/${slug}/admin/settings#upgrade`}>
+                        <button className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl hover:opacity-90 transition-opacity">
+                            Upgrade Now →
+                        </button>
+                    </Link>
+                    <button onClick={() => setShowProModal(false)} className="w-full mt-2 py-2 text-sm text-gray-500 hover:text-gray-700">Maybe later</button>
+                </div>
+            </div>
+        )}
         <form action={async (formData) => {
             // If we have an uploaded URL, append it or override the input
             if (imageUrl) {
@@ -136,8 +159,8 @@ export default function ProductForm({ tenantId, slug, storeType, storeName }: Pr
                         <label className="text-sm font-medium text-slate-700">{ingredientsLabel}</label>
                         <button 
                             type="button"
-                            onClick={() => alert('✨ Auto-Write is a PRO feature. Upgrade to unlock AI-powered descriptions!')}
-                            className="text-xs font-bold text-slate-400 flex items-center gap-1 cursor-not-allowed"
+                            onClick={() => setShowProModal(true)}
+                            className="text-xs font-bold text-amber-600 flex items-center gap-1 hover:text-amber-700 transition-colors"
                             title="PRO feature — Upgrade to unlock"
                         >
                             <Sparkles size={12} />
@@ -186,6 +209,7 @@ export default function ProductForm({ tenantId, slug, storeType, storeName }: Pr
                 <SubmitButton />
             </div>
         </form>
+        </>
     );
 }
 

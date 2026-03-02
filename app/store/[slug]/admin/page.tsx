@@ -7,7 +7,7 @@ import StoreStatusToggle from "@/components/admin/StoreStatusToggle";
 import { getProductRepository, getOrderRepository, getTenantRepository, getAnalyticsRepository } from "@/lib/repository";
 import Link from "next/link";
 import { DomainSettings } from "@/components/admin/DomainSettings";
-import { TrendingUp, ShoppingBag, DollarSign, AlertCircle, ArrowRight } from 'lucide-react';
+import { TrendingUp, ShoppingBag, DollarSign, AlertCircle, ArrowRight, Zap, ExternalLink } from 'lucide-react';
 import RevenueChart from "@/components/admin/RevenueChart";
 import CustomDevCard from "@/components/admin/CustomDevCard";
 
@@ -108,6 +108,47 @@ export default async function AdminPage({ params }: Props) {
         </>
       )}
 
+      {/* Fix 2: Keep Going momentum strip — shown when 1-4 products exist */}
+      {productCount > 0 && productCount < 5 && (
+        <div className="mb-6 p-5 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-2xl animate-in fade-in duration-500">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl shrink-0">
+                <Zap size={22} />
+              </div>
+              <div>
+                <h3 className="font-bold text-indigo-900">Great start! Keep going 🚀</h3>
+                <p className="text-sm text-indigo-700 mt-0.5">
+                  You have <strong>{productCount}</strong> item{productCount === 1 ? '' : 's'}. Most successful stores have <strong>5–10 items</strong> before sharing.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2 flex-wrap shrink-0">
+              <Link href={`/store/${slug}/admin/menu`}>
+                <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-colors">
+                  + Add More Items
+                </button>
+              </Link>
+              <Link href={`/store/${slug}`} target="_blank">
+                <button className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 bg-white hover:bg-indigo-50 border border-indigo-200 px-3 py-2.5 rounded-xl transition-colors">
+                  Preview <ExternalLink size={13} />
+                </button>
+              </Link>
+            </div>
+          </div>
+          {/* Mini progress bar */}
+          <div className="mt-4">
+            <div className="flex justify-between text-xs text-indigo-500 mb-1">
+              <span>Catalog completeness</span>
+              <span className="font-bold">{productCount}/5 items</span>
+            </div>
+            <div className="w-full bg-indigo-100 rounded-full h-2">
+              <div className="bg-indigo-600 h-2 rounded-full transition-all duration-700" style={{ width: `${Math.round((productCount / 5) * 100)}%` }} />
+            </div>
+          </div>
+        </div>
+      )}
+
       <QuickStartGuide tenant={tenant} productCount={productCount} slug={slug} />
 
       {/* Missing WhatsApp Number Warning */}
@@ -131,6 +172,22 @@ export default async function AdminPage({ params }: Props) {
                   </div>
               </div>
           </div>
+      )}
+
+      {/* Fix 6: Store too sparse warning (shown for 1-4 products, when WhatsApp IS set) */}
+      {productCount >= 1 && productCount < 5 && !!tenant.ownerPhone && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3">
+          <AlertCircle size={18} className="text-amber-500 shrink-0" />
+          <p className="text-sm text-amber-800 flex-1">
+            <span className="font-bold">Your store only has {productCount} item{productCount === 1 ? '' : 's'}.</span>{' '}
+            Customers expect 5–8 products. Add more before sharing the link!
+          </p>
+          <Link href={`/store/${slug}/admin/menu`} className="shrink-0">
+            <button className="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-3 py-1.5 rounded-lg transition-colors">
+              Add More →
+            </button>
+          </Link>
+        </div>
       )}
 
 

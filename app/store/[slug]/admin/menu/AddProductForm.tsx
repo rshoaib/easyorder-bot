@@ -3,13 +3,21 @@
 import { useState, useRef } from 'react';
 import { uploadProductImage, uploadDigitalFile } from '@/lib/storage';
 import { addProduct } from './actions';
-import { Plus, Loader2, Upload } from 'lucide-react';
+import { Plus, Loader2, CheckCircle2, ArrowRight, Sparkles, ExternalLink } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
-
-import { generateProductDescription } from '@/app/actions/ai-actions';
-import { Sparkles } from 'lucide-react';
+import Link from 'next/link';
 import { getCurrencySymbol } from '@/lib/currency';
+
+// Category presets per store type
+const CATEGORY_PRESETS: Record<string, string[]> = {
+    restaurant: ['Appetizers', 'Main Course', 'Desserts', 'Drinks', 'Sides', 'Specials'],
+    retail:     ['Men', 'Women', 'Kids', 'Accessories', 'Sale', 'New Arrivals'],
+    service:    ['Services', 'Packages', 'Add-ons', 'Consultations'],
+    digital:    ['E-Books', 'Templates', 'Downloads', 'Courses', 'Presets'],
+};
+
+const RECOMMENDED_COUNT = 8;
 
 interface Props {
     slug: string;
@@ -17,46 +25,27 @@ interface Props {
     storeName: string;
     storeType?: string;
     currency?: string;
+    initialProductCount?: number;
 }
 
-export default function AddProductForm({ slug, tenantId, storeName, storeType, currency }: Props) {
+export default function AddProductForm({ slug, tenantId, storeName, storeType, currency, initialProductCount = 0 }: Props) {
     const [isUploading, setIsUploading] = useState(false);
-    const [isGenerating, setIsGenerating] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
     const [description, setDescription] = useState('');
     const [productType, setProductType] = useState<'physical' | 'digital' | 'service'>('physical');
     const [digitalFileName, setDigitalFileName] = useState<string | null>(null);
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+    const [savedProductName, setSavedProductName] = useState<string | null>(null);
+    const [productCount, setProductCount] = useState(initialProductCount);
+    const [showProModal, setShowProModal] = useState(false);
     
     // Store the selected image file in a ref so it survives form submission
     const selectedFileRef = useRef<File | null>(null);
 
-    async function handleAIGenerate() {
-        const form = document.getElementById('addProductForm') as HTMLFormElement;
-        const formData = new FormData(form);
-        const name = formData.get('name') as string;
-        const category = formData.get('category') as string;
+    // Category suggestions based on store type
+    const categoryPresets = CATEGORY_PRESETS[storeType || 'restaurant'] || CATEGORY_PRESETS.restaurant;
+    const datalistId = `category-presets-${tenantId}`;
 
-        if (!name || !category) {
-            alert('Please enter a Name and Category first.');
-            return;
-        }
-
-        setIsGenerating(true);
-        try {
-            const result = await generateProductDescription(name, category, { name: storeName, type: storeType || 'restaurant' });
-            if (result.success && result.description) {
-                setDescription(result.description);
-            } else {
-                alert(result.message || 'Failed to generate description');
-            }
-        } catch (e) {
-            console.error(e);
-            alert('Error generating description');
-        } finally {
-            setIsGenerating(false);
-        }
-    }
 
     async function handleSubmit(formData: FormData) {
         setIsUploading(true);
@@ -98,17 +87,19 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
             submitData.set('type', productType);
 
             console.log('[AddProductForm] Submitting with image URL:', imageUrl);
+            const savedName = (submitData.get('name') as string) || 'Item';
             await addProduct(slug, submitData);
             
-            // Success — reset form
+            // Success — reset form and show post-save CTA state
             setPreview(null);
             setDescription('');
             setDigitalFileName(null);
             setProductType('physical');
             selectedFileRef.current = null;
-            setFeedback({ type: 'success', message: '✅ Product added successfully!' });
+            setSavedProductName(savedName);
+            setProductCount(prev => prev + 1);
+            setFeedback(null);
             (document.getElementById('addProductForm') as HTMLFormElement)?.reset();
-            setTimeout(() => setFeedback(null), 4000);
 
         } catch (error: any) {
             console.error('[AddProductForm] Error:', error);
@@ -135,11 +126,97 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
         }
     };
 
+    // PRO upgrade modal
+    const ProModal = () => (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-in fade-in duration-200" onClick={() => setShowProModal(false)}>
+            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+                <div className="text-center mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                        <Sparkles size={24} className="text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900">Upgrade to PRO</h3>
+                    <p className="text-sm text-gray-500 mt-1">Unlock AI-powered descriptions, bulk import, and more.</p>
+                </div>
+                <ul className="text-sm text-gray-700 space-y-2 mb-5">
+                    {['✨ AI Auto-Write descriptions', '📦 Bulk CSV import/export', '🎨 Custom domain', '📊 Advanced analytics'].map(f => (
+                        <li key={f} className="flex items-center gap-2">{f}</li>
+                    ))}
+                </ul>
+                <Link href={`/store/${slug}/admin/settings#upgrade`}>
+                    <button className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl hover:opacity-90 transition-opacity">
+                        Upgrade Now →
+                    </button>
+                </Link>
+                <button onClick={() => setShowProModal(false)} className="w-full mt-2 py-2 text-sm text-gray-500 hover:text-gray-700">Maybe later</button>
+            </div>
+        </div>
+    );
+
+    // Post-save success state
+    if (savedProductName) {
+        const progressPct = Math.min(100, Math.round((productCount / RECOMMENDED_COUNT) * 100));
+        return (
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-green-200 sticky top-4 animate-in fade-in duration-300">
+                <div className="text-center mb-5">
+                    <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <CheckCircle2 size={32} className="text-green-600" />
+                    </div>
+                    <h2 className="text-lg font-bold text-gray-900">"{ savedProductName }" added! 🎉</h2>
+                    <p className="text-sm text-gray-500 mt-1">
+                        You have <span className="font-bold text-indigo-600">{productCount}</span> of {RECOMMENDED_COUNT} recommended items.
+                    </p>
+                </div>
+
+                {/* Progress bar */}
+                <div className="mb-5">
+                    <div className="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Catalog progress</span>
+                        <span className="font-bold text-indigo-600">{progressPct}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2.5">
+                        <div 
+                            className="bg-indigo-600 h-2.5 rounded-full transition-all duration-700" 
+                            style={{ width: `${progressPct}%` }} 
+                        />
+                    </div>
+                    {productCount < RECOMMENDED_COUNT && (
+                        <p className="text-xs text-gray-400 mt-1.5">{RECOMMENDED_COUNT - productCount} more items recommended before sharing your store.</p>
+                    )}
+                </div>
+
+                <div className="flex flex-col gap-3">
+                    <button
+                        onClick={() => setSavedProductName(null)}
+                        className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                    >
+                        <Plus size={18} /> Add Another Item
+                    </button>
+                    <Link href={`/store/${slug}`} target="_blank" className="w-full">
+                        <button className="w-full py-3 bg-white hover:bg-gray-50 text-gray-700 font-bold rounded-xl border border-gray-200 transition-colors flex items-center justify-center gap-2">
+                            View My Store <ExternalLink size={16} />
+                        </button>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
     return (
+        <>
+        {showProModal && <ProModal />}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-4">
             <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                     <Plus size={18} /> Add New Item
             </h2>
+
+            {/* Progress hint */}
+            {productCount > 0 && productCount < RECOMMENDED_COUNT && (
+                <div className="mb-4 p-3 bg-indigo-50 rounded-xl border border-indigo-100 text-xs text-indigo-700 font-medium flex items-center justify-between">
+                    <span>🎯 {productCount}/{RECOMMENDED_COUNT} items added</span>
+                    <span className="text-indigo-400">{RECOMMENDED_COUNT - productCount} more recommended</span>
+                </div>
+            )}
+
             <form id="addProductForm" action={handleSubmit} className="flex flex-col gap-4">
                 <div>
                     <label className="form-label">Name</label>
@@ -182,7 +259,19 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                     </div>
                     <div>
                         <label className="form-label">Category</label>
-                        <input name="category" required placeholder="e.g. Burgers" className="form-input" />
+                        <input 
+                            name="category" 
+                            required 
+                            placeholder="e.g. Burgers" 
+                            className="form-input"
+                            list={datalistId}
+                            autoComplete="off"
+                        />
+                        <datalist id={datalistId}>
+                            {categoryPresets.map(cat => (
+                                <option key={cat} value={cat} />
+                            ))}
+                        </datalist>
                     </div>
                 </div>
                 
@@ -242,8 +331,8 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                         <label className="form-label mb-0">Description</label>
                         <button 
                             type="button" 
-                            onClick={() => alert('✨ Auto-Write is a PRO feature. Upgrade to unlock AI-powered descriptions!')}
-                            className="text-xs font-bold text-slate-400 flex items-center gap-1 cursor-not-allowed"
+                            onClick={() => setShowProModal(true)}
+                            className="text-xs font-bold text-amber-600 flex items-center gap-1 hover:text-amber-700 transition-colors"
                             title="PRO feature — Upgrade to unlock"
                         >
                             <Sparkles size={12} />
@@ -272,9 +361,10 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                 )}
 
                 <button type="submit" disabled={isUploading} className="btn-block mt-2 flex items-center justify-center gap-2">
-                    {isUploading ? <Loader2 className="animate-spin" size={20} /> : 'Add Item'}
+                    {isUploading ? <Loader2 className="animate-spin" size={20} /> : <><Plus size={18} /> Add Item</>}
                 </button>
             </form>
         </div>
+        </>
     );
 }
