@@ -2,6 +2,7 @@ import { getAnalyticsRepository, getTenantRepository } from "@/lib/repository";
 import { DollarSign, ShoppingBag, TrendingUp, ArrowRight, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
+import SetupHelpBanner from "@/components/admin/SetupHelpBanner";
 
 export default async function DashboardPage({ params }: { params: { slug: string } }) {
     const { slug } = await params;
@@ -21,6 +22,9 @@ export default async function DashboardPage({ params }: { params: { slug: string
                 <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
                 <p className="text-slate-500">Welcome back, {tenant.name}</p>
             </header>
+
+            {/* Help Banner */}
+            <SetupHelpBanner storeName={tenant.name} />
 
             {/* Stats Grid */}
             <div className="grid md:grid-cols-3 gap-6">
