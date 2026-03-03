@@ -86,7 +86,7 @@ Your time is your most valuable asset. Spending hours figuring out software isn'
 
 Let our team handle the tech while you handle the sales.
 
-👉 **[Chat with us on WhatsApp](https://wa.me/923224609117)** to claim your $15 DFY store setup today!
+👉 [**Chat with us on WhatsApp**](https://wa.me/923224609117) to claim your $15 DFY store setup today!
 `
 };
 
