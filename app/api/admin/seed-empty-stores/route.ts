@@ -2,24 +2,30 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { getTenantRepository, getProductRepository } from '@/lib/repository';
 import { PRESET_MENUS, PresetType } from '@/lib/presets';
+import { cookies } from 'next/headers';
 
 /**
  * POST /api/admin/seed-empty-stores
  * 
  * One-time admin endpoint to auto-seed all stores with 0 products.
- * Protected: only the super-admin email can run this.
+ * Protected: same auth as super-admin page (super_auth cookie or Supabase email).
  * 
  * Query params:
  *   ?dryRun=true  → preview which stores would be seeded without making changes
  */
 export async function POST(request: Request) {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
 
-    // Super-admin guard
-    const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL || 'rshoaibmughal@gmail.com';
-    if (!user || user.email !== SUPER_ADMIN_EMAIL) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Auth: same logic as super-admin page
+    const cookiesInfo = await cookies();
+    const hasSuperAuth = cookiesInfo.get('super_auth')?.value === 'true';
+
+    if (!hasSuperAuth) {
+        const { data: { user } } = await supabase.auth.getUser();
+        const SUPER_ADMIN_EMAIL = 'segmentibi@gmail.com';
+        if (!user || user.email !== SUPER_ADMIN_EMAIL) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
     }
 
     const url = new URL(request.url);
