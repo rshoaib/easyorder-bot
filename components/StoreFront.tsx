@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { Plus, ShoppingBag, Search, Check, Clock } from "lucide-react";
 import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getDictionary, detectLocale, isRTL, type Locale } from "@/lib/i18n/dictionaries";
 import { Tenant } from "@/lib/repository/types";
 import { Product } from "@/lib/repository/types";
 import { formatPrice } from "@/lib/currency";
@@ -19,7 +19,19 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
   const [category, setCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const { itemCount, total } = useCart();
-  const dict = getDictionary(tenant.language as any);
+  
+  // Auto-detect locale from browser, fallback to tenant setting, then 'en'
+  const [locale, setLocale] = useState<Locale>((tenant.language as Locale) || 'en');
+  useEffect(() => {
+    const detected = detectLocale();
+    // Only override if tenant hasn't explicitly set a language
+    if (!tenant.language) {
+      setLocale(detected);
+    }
+  }, [tenant.language]);
+  
+  const dict = getDictionary(locale);
+  const rtl = isRTL(locale);
 
   const products = initialProducts;
   const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
@@ -33,7 +45,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
   const isOpen = tenant.isOpen !== false; // default to open
 
   return (
-    <main className="store-container">
+    <main className="store-container" dir={rtl ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <div 
         className="store-hero"
@@ -63,7 +75,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
                     : 'bg-red-100 text-red-600'
                 }`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
-                  {isOpen ? 'Open Now' : 'Closed'}
+                  {isOpen ? dict.openNow : dict.closed}
                 </span>
                 
                 {/* Social icons */}
@@ -161,7 +173,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
             target="_blank" 
             className="powered-by-badge"
         >
-            <span className="text-gray-400">Powered by</span>
+            <span className="text-gray-400">{dict.poweredBy}</span>
             <span className="font-bold text-gray-600">OrderViaChat</span>
         </Link>
       </footer>
@@ -179,7 +191,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
                         className="flex items-center gap-2 bg-white text-gray-900 px-4 py-2 rounded-lg text-sm font-bold"
                         style={{ color: tenant.themeColor || '#000' }}
                       >
-                          View Cart <ShoppingBag size={16} />
+                          {dict.viewCartBtn} <ShoppingBag size={16} />
                       </div>
                   </div>
               </Link>
