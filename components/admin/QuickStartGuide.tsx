@@ -1,7 +1,7 @@
 'use client';
 
 import { Tenant } from "@/lib/repository/types";
-import { CheckCircle2, Circle, ArrowRight, ExternalLink, PartyPopper } from "lucide-react";
+import { CheckCircle2, Circle, ExternalLink, PartyPopper } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ interface Props {
 export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
     const [isSharing, setIsSharing] = useState(false);
 
-    // Fix 5: Reordered steps — Products before Logo; WhatsApp stays critical at #2
+    // Fix 2: Simplified to just 3 steps — Store Created, WhatsApp, Share
     const steps = [
         {
             id: 'store',
@@ -27,31 +27,17 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
             id: 'whatsapp',
             label: 'Connect WhatsApp',
             completed: !!tenant.ownerPhone,
-            description: '⚠️ Without this, customers CANNOT order! Add your number with country code.',
+            description: 'Without this, customers cannot order! Add your number with country code.',
             icon: !!tenant.ownerPhone 
                 ? <CheckCircle2 className="text-green-500" /> 
                 : <Circle className="text-red-400 animate-pulse" />,
             action: { label: 'Set Number →', href: `/store/${slug}/admin/settings` }
         },
         {
-            id: 'products',
-            label: 'Add Products',
-            // Fix 5: Only "completed" when productCount >= 5
-            completed: productCount >= 5,
-            // Fix 5: Shows live count nudge
-            description: productCount === 0
-                ? 'Add at least 5 items to have a great-looking store.'
-                : `You have ${productCount} item${productCount === 1 ? '' : 's'}. ${5 - Math.min(productCount, 5) > 0 ? `Add ${5 - productCount} more for a complete store.` : 'Looking great! Consider adding a few more.'}`,
-            icon: productCount >= 5 
-                ? <CheckCircle2 className="text-green-500" /> 
-                : <Circle className="text-slate-300" />,
-            action: { label: productCount === 0 ? 'Add Items →' : `Add More (${productCount}/5) →`, href: `/store/${slug}/admin/menu` }
-        },
-        {
             id: 'share',
-            label: 'Share Store',
+            label: 'Share Your Store',
             completed: isSharing,
-            description: 'Send link to your first customer.',
+            description: 'Send your store link to your first customer!',
             icon: isSharing ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-slate-300" />,
             action: { 
                 label: 'Share →', 
@@ -71,20 +57,12 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
                 } 
             }
         },
-        {
-            id: 'logo',
-            label: 'Upload Logo',
-            completed: !!tenant.logoUrl,
-            description: 'Make your store look professional.',
-            icon: !!tenant.logoUrl ? <CheckCircle2 className="text-green-500" /> : <Circle className="text-slate-300" />,
-            action: { label: 'Upload →', href: `/store/${slug}/admin/settings` }
-        },
     ];
 
     const completedCount = steps.filter(s => s.completed).length;
     const progress = Math.round((completedCount / steps.length) * 100);
 
-    // Fix 5: 100% complete — show celebration banner instead of the full checklist
+    // 100% complete — celebration banner
     if (progress === 100) {
         return (
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 mb-8 flex items-center justify-between gap-4 flex-wrap animate-in fade-in duration-500">
@@ -137,15 +115,15 @@ export default function QuickStartGuide({ tenant, productCount, slug }: Props) {
 
                         {step.action && !step.completed && (
                             <div>
-                                {step.action.href ? (
+                                {'href' in step.action && step.action.href ? (
                                     <Link href={step.action.href}>
                                         <button className="text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg transition-all flex items-center gap-1">
-                                            {step.action.label} <ArrowRight size={12} />
+                                            {step.action.label}
                                         </button>
                                     </Link>
                                 ) : (
                                     <button 
-                                        onClick={step.action.onClick}
+                                        onClick={'onClick' in step.action ? step.action.onClick : undefined}
                                         className="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 border border-indigo-200"
                                     >
                                         {step.action.label} <ExternalLink size={12} />

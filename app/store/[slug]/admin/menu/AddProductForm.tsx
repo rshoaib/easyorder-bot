@@ -38,6 +38,7 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
     const [savedProductName, setSavedProductName] = useState<string | null>(null);
     const [productCount, setProductCount] = useState(initialProductCount);
     const [showProModal, setShowProModal] = useState(false);
+    const [quickMode, setQuickMode] = useState(true); // Fix 3: Quick Add mode default ON
     
     // Store the selected image file in a ref so it survives form submission
     const selectedFileRef = useRef<File | null>(null);
@@ -205,9 +206,23 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
         <>
         {showProModal && <ProModal />}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-4">
-            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold flex items-center gap-2">
                     <Plus size={18} /> Add New Item
-            </h2>
+                </h2>
+                {/* Fix 3: Quick/Full mode toggle */}
+                <button
+                    type="button"
+                    onClick={() => setQuickMode(!quickMode)}
+                    className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all ${
+                        quickMode
+                            ? 'bg-green-50 text-green-700 border-green-200'
+                            : 'bg-gray-50 text-gray-500 border-gray-200'
+                    }`}
+                >
+                    {quickMode ? '⚡ Quick Mode' : '📝 Full Form'}
+                </button>
+            </div>
 
             {/* Progress hint */}
             {productCount > 0 && productCount < RECOMMENDED_COUNT && (
@@ -223,132 +238,145 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                     <input name="name" required placeholder="e.g. Cheese Burger" className="form-input" />
                 </div>
 
-                <div>
-                    <label className="form-label">Product Type</label>
-                    <div className="flex gap-2">
-                        {(['physical', 'digital', 'service'] as const).map(type => (
-                            <button
-                                key={type}
-                                type="button"
-                                onClick={() => setProductType(type)}
-                                className={`px-4 py-2 rounded-lg text-sm font-bold capitalize transition-all border ${productType === type ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'}`}
-                            >
-                                {type}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                {/* Quick Mode: only Name + Price */}
+                {quickMode ? (
+                    <>
+                        <div>
+                            <label className="form-label">Price ({getCurrencySymbol(currency)})</label>
+                            <input name="price" type="number" step="0.01" required placeholder="10.50" className="form-input" />
+                        </div>
+                        {/* Hidden defaults for quick mode */}
+                        <input type="hidden" name="category" value="General" />
+                        <input type="hidden" name="description" value="" />
+                    </>
+                ) : (
+                    <>
+                        <div>
+                            <label className="form-label">Product Type</label>
+                            <div className="flex gap-2">
+                                {(['physical', 'digital', 'service'] as const).map(type => (
+                                    <button
+                                        key={type}
+                                        type="button"
+                                        onClick={() => setProductType(type)}
+                                        className={`px-4 py-2 rounded-lg text-sm font-bold capitalize transition-all border ${productType === type ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'}`}
+                                    >
+                                        {type}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
 
-                {productType === 'digital' && (
-                    <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 animate-in fade-in zoom-in duration-200">
-                        <label className="form-label text-blue-800">Digital File (PDF, ZIP, etc.)</label>
-                        <input 
-                            type="file" 
-                            name="digitalFile" 
-                            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-                            onChange={(e) => setDigitalFileName(e.target.files?.[0]?.name || null)}
-                        />
-                        {digitalFileName && <p className="text-xs text-green-600 mt-2 font-bold">Selected: {digitalFileName}</p>}
-                        <p className="text-xs text-blue-600 mt-2">Customers will receive a download link via email after purchase.</p>
-                    </div>
+                        {productType === 'digital' && (
+                            <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 animate-in fade-in zoom-in duration-200">
+                                <label className="form-label text-blue-800">Digital File (PDF, ZIP, etc.)</label>
+                                <input 
+                                    type="file" 
+                                    name="digitalFile" 
+                                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+                                    onChange={(e) => setDigitalFileName(e.target.files?.[0]?.name || null)}
+                                />
+                                {digitalFileName && <p className="text-xs text-green-600 mt-2 font-bold">Selected: {digitalFileName}</p>}
+                                <p className="text-xs text-blue-600 mt-2">Customers will receive a download link via email after purchase.</p>
+                            </div>
+                        )}
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <label className="form-label">Price ({getCurrencySymbol(currency)})</label>
+                                <input name="price" type="number" step="0.01" required placeholder="10.50" className="form-input" />
+                            </div>
+                            <div>
+                                <label className="form-label">Category</label>
+                                <input 
+                                    name="category" 
+                                    required 
+                                    placeholder="e.g. Burgers" 
+                                    className="form-input"
+                                    list={datalistId}
+                                    autoComplete="off"
+                                />
+                                <datalist id={datalistId}>
+                                    {categoryPresets.map(cat => (
+                                        <option key={cat} value={cat} />
+                                    ))}
+                                </datalist>
+                            </div>
+                        </div>
+                        
+                        {/* Image Upload */}
+                        <div>
+                            <label className="form-label">Product Image</label>
+                            
+                            {preview ? (
+                                <div className="relative w-full h-36 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                                    <Image src={preview} alt="Preview" fill className="object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={() => { 
+                                            setPreview(null); 
+                                            selectedFileRef.current = null;
+                                        }}
+                                        className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white text-xs font-bold px-2.5 py-1 rounded-lg transition-colors backdrop-blur-sm"
+                                    >
+                                        ✕ Remove
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-2 gap-2 mt-1">
+                                    <label htmlFor="camera-capture" className="flex flex-col items-center justify-center h-28 border-2 border-dashed border-green-300 rounded-xl cursor-pointer bg-green-50/50 hover:bg-green-50 hover:border-green-400 transition-all group">
+                                        <span className="text-2xl mb-1 group-hover:scale-110 transition-transform">📸</span>
+                                        <span className="text-xs font-bold text-green-700">Take Photo</span>
+                                        <span className="text-[10px] text-green-600 mt-0.5">Opens Camera</span>
+                                        <input 
+                                            id="camera-capture" 
+                                            type="file" 
+                                            accept="image/*" 
+                                            capture="environment"
+                                            className="hidden" 
+                                            onChange={handleFileChange} 
+                                        />
+                                    </label>
+                                    <label htmlFor="gallery-upload" className="flex flex-col items-center justify-center h-28 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all group">
+                                        <span className="text-2xl mb-1 group-hover:scale-110 transition-transform">🖼️</span>
+                                        <span className="text-xs font-bold text-gray-700">From Gallery</span>
+                                        <span className="text-[10px] text-gray-500 mt-0.5">Upload File</span>
+                                        <input 
+                                            id="gallery-upload" 
+                                            type="file" 
+                                            accept="image/*" 
+                                            className="hidden" 
+                                            onChange={handleFileChange} 
+                                        />
+                                    </label>
+                                </div>
+                            )}
+                        </div>
+
+                        <div>
+                            <div className="flex justify-between items-center mb-1">
+                                <label className="form-label mb-0">Description</label>
+                                <button 
+                                    type="button" 
+                                    onClick={() => setShowProModal(true)}
+                                    className="text-xs font-bold text-amber-600 flex items-center gap-1 hover:text-amber-700 transition-colors"
+                                    title="PRO feature — Upgrade to unlock"
+                                >
+                                    <Sparkles size={12} />
+                                    Auto-Write
+                                    <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>
+                                </button>
+                            </div>
+                            <textarea 
+                                name="description" 
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="A juicy beef burger..." 
+                                className="form-input" 
+                                rows={2} 
+                            />
+                        </div>
+                    </>
                 )}
-                <div className="grid grid-cols-2 gap-2">
-                    <div>
-                        <label className="form-label">Price ({getCurrencySymbol(currency)})</label>
-                        <input name="price" type="number" step="0.01" required placeholder="10.50" className="form-input" />
-                    </div>
-                    <div>
-                        <label className="form-label">Category</label>
-                        <input 
-                            name="category" 
-                            required 
-                            placeholder="e.g. Burgers" 
-                            className="form-input"
-                            list={datalistId}
-                            autoComplete="off"
-                        />
-                        <datalist id={datalistId}>
-                            {categoryPresets.map(cat => (
-                                <option key={cat} value={cat} />
-                            ))}
-                        </datalist>
-                    </div>
-                </div>
-                
-                {/* Image Upload — Single input, triggered by Camera or Gallery buttons */}
-                <div>
-                    <label className="form-label">Product Image</label>
-                    
-                    {preview ? (
-                        /* Preview with remove button */
-                        <div className="relative w-full h-36 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-                            <Image src={preview} alt="Preview" fill className="object-cover" />
-                            <button
-                                type="button"
-                                onClick={() => { 
-                                    setPreview(null); 
-                                    selectedFileRef.current = null;
-                                }}
-                                className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white text-xs font-bold px-2.5 py-1 rounded-lg transition-colors backdrop-blur-sm"
-                            >
-                                ✕ Remove
-                            </button>
-                        </div>
-                    ) : (
-                        /* Dual buttons: Camera + Gallery — both use a SINGLE hidden input */
-                        <div className="grid grid-cols-2 gap-2 mt-1">
-                            <label htmlFor="camera-capture" className="flex flex-col items-center justify-center h-28 border-2 border-dashed border-green-300 rounded-xl cursor-pointer bg-green-50/50 hover:bg-green-50 hover:border-green-400 transition-all group">
-                                <span className="text-2xl mb-1 group-hover:scale-110 transition-transform">📸</span>
-                                <span className="text-xs font-bold text-green-700">Take Photo</span>
-                                <span className="text-[10px] text-green-600 mt-0.5">Opens Camera</span>
-                                <input 
-                                    id="camera-capture" 
-                                    type="file" 
-                                    accept="image/*" 
-                                    capture="environment"
-                                    className="hidden" 
-                                    onChange={handleFileChange} 
-                                />
-                            </label>
-                            <label htmlFor="gallery-upload" className="flex flex-col items-center justify-center h-28 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all group">
-                                <span className="text-2xl mb-1 group-hover:scale-110 transition-transform">🖼️</span>
-                                <span className="text-xs font-bold text-gray-700">From Gallery</span>
-                                <span className="text-[10px] text-gray-500 mt-0.5">Upload File</span>
-                                <input 
-                                    id="gallery-upload" 
-                                    type="file" 
-                                    accept="image/*" 
-                                    className="hidden" 
-                                    onChange={handleFileChange} 
-                                />
-                            </label>
-                        </div>
-                    )}
-                </div>
-
-                <div>
-                    <div className="flex justify-between items-center mb-1">
-                        <label className="form-label mb-0">Description</label>
-                        <button 
-                            type="button" 
-                            onClick={() => setShowProModal(true)}
-                            className="text-xs font-bold text-amber-600 flex items-center gap-1 hover:text-amber-700 transition-colors"
-                            title="PRO feature — Upgrade to unlock"
-                        >
-                            <Sparkles size={12} />
-                            Auto-Write
-                            <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>
-                        </button>
-                    </div>
-                    <textarea 
-                        name="description" 
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder="A juicy beef burger..." 
-                        className="form-input" 
-                        rows={2} 
-                    />
-                </div>
                 
                 {feedback && (
                     <div className={`p-3 rounded-xl text-sm font-medium animate-in fade-in duration-300 ${

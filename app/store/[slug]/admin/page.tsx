@@ -149,6 +149,31 @@ export default async function AdminPage({ params }: Props) {
         </div>
       )}
 
+      {/* Fix 5: "Your Store is Live!" banner — shown for fresh stores with products but no orders */}
+      {productCount > 0 && analytics.totalOrders === 0 && (
+        <div className="mb-6 p-5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl animate-in fade-in duration-500">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-start gap-3">
+              <div className="text-3xl shrink-0">🎉</div>
+              <div>
+                <h3 className="font-bold text-emerald-900 text-lg">Your store is live!</h3>
+                <p className="text-sm text-emerald-700 mt-0.5">
+                  <span className="font-mono bg-emerald-100 px-2 py-0.5 rounded text-emerald-800 text-xs">
+                    orderviachat.com/store/{slug}
+                  </span>
+                  <span className="ml-2">— share this link to start receiving orders!</span>
+                </p>
+              </div>
+            </div>
+            <Link href={`/store/${slug}`} target="_blank">
+              <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors shadow-sm shrink-0">
+                Preview Your Store <ExternalLink size={14} />
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
+
       <QuickStartGuide tenant={tenant} productCount={productCount} slug={slug} />
 
       {/* Missing WhatsApp Number Warning */}

@@ -259,6 +259,20 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                     </div>
                 </div>
 
+                {/* Fix 4: Collapsible Advanced Settings */}
+                <details className="group">
+                    <summary className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 cursor-pointer hover:bg-gray-50 transition-colors flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xl">⚙️</span>
+                            <div>
+                                <h2 className="font-bold text-gray-900">Advanced Settings</h2>
+                                <p className="text-sm text-gray-500">Social profiles, analytics, payment methods</p>
+                            </div>
+                        </div>
+                        <span className="text-gray-400 group-open:rotate-180 transition-transform duration-200">▼</span>
+                    </summary>
+                    <div className="mt-4 space-y-6">
+
                 {/* ═══════════════════════════════════════════════════════ */}
                 {/* SECTION 3: Social Profiles                            */}
                 {/* ═══════════════════════════════════════════════════════ */}
@@ -392,6 +406,9 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                         </div>
                     </div>
                 </div>
+
+                    </div>{/* end Advanced Settings inner div */}
+                </details>{/* end Fix 4 collapsible */}
 
                 {/* Save Button */}
                 <div>

@@ -23,6 +23,7 @@ export async function registerTenant(formData: FormData) {
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
     const ownerPhone = formData.get('ownerPhone') as string;
+    const storePreset = (formData.get('storePreset') as string) || 'pizza';
     // Email is taken from the authenticated user
     const email = user.email!;
 
@@ -37,6 +38,11 @@ export async function registerTenant(formData: FormData) {
     }
 
     try {
+        // Resolve store type from preset
+        const { PRESET_MENUS } = await import('@/lib/presets');
+        const preset = PRESET_MENUS[storePreset as keyof typeof PRESET_MENUS];
+        const storeType = preset?.storeType || 'restaurant';
+
         // Create Tenant in DB (Active immediately)
         const tenant = await repo.createTenant({
             name,
@@ -50,6 +56,37 @@ export async function registerTenant(formData: FormData) {
             language: 'en',
             userId: user.id
         });
+
+        // Auto-seed store with preset products (Fix 1: skip OnboardingWizard)
+        if (preset) {
+            try {
+                const { getProductRepository } = await import('@/lib/repository');
+                const productRepo = getProductRepository(supabase);
+                for (const item of preset.products) {
+                    await productRepo.addProduct({
+                        id: crypto.randomUUID(),
+                        tenantId: tenant.id,
+                        name: item.name,
+                        description: item.description,
+                        price: item.price,
+                        image: item.image,
+                        category: item.category,
+                        isAvailable: true,
+                        type: item.type || 'physical'
+                    });
+                }
+                // Set store type on tenant
+                const tenantRepo = getTenantRepository(supabase);
+                await tenantRepo.updateTenantSettings(
+                    tenant.id,
+                    undefined, undefined, undefined, undefined, undefined,
+                    undefined, undefined, undefined, storeType
+                );
+            } catch (seedErr) {
+                console.error("Auto-seed warning (non-fatal):", seedErr);
+                // Non-fatal: store is created, user can still add products manually
+            }
+        }
 
         // Send Welcome Email (Fire and forget)
         const { sendWelcomeEmail } = await import('@/lib/email');

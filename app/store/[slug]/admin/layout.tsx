@@ -1,4 +1,4 @@
-import { getTenantRepository } from "@/lib/repository";
+import { getTenantRepository, getProductRepository } from "@/lib/repository";
 import Link from "next/link";
 import { ExternalLink, LayoutDashboard, Menu, Settings, Tag, QrCode, ShoppingBag, BookOpen } from "lucide-react";
 import WhatsAppSupportButton from "@/components/admin/WhatsAppSupportButton";
@@ -17,6 +17,12 @@ export default async function AdminLayout({
   const tenant = await repo.getTenantBySlug(slug);
 
   if (!tenant) return <div>Store not found</div>;
+
+  // Fix 6: Fetch product count for progressive nav reveal
+  const productRepo = getProductRepository();
+  const products = await productRepo.getProducts(tenant.id);
+  const productCount = products.length;
+  const showAdvancedNav = productCount >= 5;
 
   const isDemo = slug === 'demo';
 
@@ -65,8 +71,8 @@ export default async function AdminLayout({
               <span className="hidden sm:inline whitespace-nowrap text-sm font-bold">{tenant.name}</span>
           </Link>
 
-            {/* Desktop Nav Links — fill the middle space */}
-            <div className="hidden lg:flex items-center gap-1.5 flex-1 justify-center">
+                {/* Desktop Nav Links — fill the middle space */}
+                <div className="hidden lg:flex items-center gap-1.5 flex-1 justify-center">
                 <Link href={`/store/${slug}/admin`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                     <LayoutDashboard size={15} /> Dashboard
                 </Link>
@@ -76,23 +82,29 @@ export default async function AdminLayout({
                 <Link href={`/store/${slug}/admin/menu`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                     <Menu size={15} /> Products
                 </Link>
-                <Link href={`/store/${slug}/admin/promos`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
-                    <Tag size={15} /> Promos
-                </Link>
+                {showAdvancedNav && (
+                    <Link href={`/store/${slug}/admin/promos`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                        <Tag size={15} /> Promos
+                    </Link>
+                )}
                 <Link href={`/store/${slug}/admin/settings`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                     <Settings size={15} /> Settings
                 </Link>
                 <Link href={`/store/${slug}/admin/share`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                     <QrCode size={15} /> Share
                 </Link>
-                <Link href={`/store/${slug}/admin/integrations`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
-                    <Tag size={15} /> Integrations
-                    {tenant.plan !== 'pro' && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>}
-                </Link>
-                <Link href={`/store/${slug}/admin/blog`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
-                    <BookOpen size={15} /> Blog
-                    {tenant.plan !== 'pro' && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>}
-                </Link>
+                {showAdvancedNav && (
+                    <>
+                    <Link href={`/store/${slug}/admin/integrations`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                        <Tag size={15} /> Integrations
+                        {tenant.plan !== 'pro' && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>}
+                    </Link>
+                    <Link href={`/store/${slug}/admin/blog`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
+                        <BookOpen size={15} /> Blog
+                        {tenant.plan !== 'pro' && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>}
+                    </Link>
+                    </>
+                )}
             </div>
 
           {/* Mobile: Fill empty header space with status + quick actions */}
@@ -139,21 +151,29 @@ export default async function AdminLayout({
           <Link href={`/store/${slug}/admin/menu`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
             <Menu size={12} /> Products
           </Link>
-          <Link href={`/store/${slug}/admin/promos`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
-            <Tag size={12} /> Promos
-          </Link>
-          <Link href={`/store/${slug}/admin/marketing`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
-            📣 Marketing
-          </Link>
+          {showAdvancedNav && (
+            <Link href={`/store/${slug}/admin/promos`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+              <Tag size={12} /> Promos
+            </Link>
+          )}
+          {showAdvancedNav && (
+            <Link href={`/store/${slug}/admin/marketing`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+              📣 Marketing
+            </Link>
+          )}
           <Link href={`/store/${slug}/admin/settings`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
             <Settings size={12} /> Settings
           </Link>
-          <Link href={`/store/${slug}/admin/integrations`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
-            🔗 Integrations {tenant.plan !== 'pro' && <span className="text-[9px] bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full font-bold leading-none">PRO</span>}
-          </Link>
-          <Link href={`/store/${slug}/admin/blog`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
-            <BookOpen size={12} /> Blog {tenant.plan !== 'pro' && <span className="text-[9px] bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full font-bold leading-none">PRO</span>}
-          </Link>
+          {showAdvancedNav && (
+            <>
+              <Link href={`/store/${slug}/admin/integrations`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+                🔗 Integrations {tenant.plan !== 'pro' && <span className="text-[9px] bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full font-bold leading-none">PRO</span>}
+              </Link>
+              <Link href={`/store/${slug}/admin/blog`} className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors whitespace-nowrap flex items-center gap-1.5">
+                <BookOpen size={12} /> Blog {tenant.plan !== 'pro' && <span className="text-[9px] bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full font-bold leading-none">PRO</span>}
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
