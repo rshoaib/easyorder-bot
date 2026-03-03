@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 /**
  * POST /api/admin/delete-stores
  * Body: { slugs: ["tasty-bites", "bee-buzz"] }
- * Deletes tenants and all related data (products, orders).
+ * Deletes tenants and ALL related data (products, orders, promos, integrations, social_posts).
  */
 export async function POST(request: Request) {
     const supabase = await createClient();
@@ -29,10 +29,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'slugs array required' }, { status: 400 });
     }
 
-    const results: { slug: string; status: string; deleted?: any }[] = [];
+    const results: any[] = [];
 
     for (const slug of slugs) {
-        // Find tenant
         const { data: tenant } = await supabaseAdmin
             .from('tenants')
             .select('id, name, slug')
@@ -44,28 +43,38 @@ export async function POST(request: Request) {
             continue;
         }
 
-        // Delete products
-        const { count: prodCount } = await supabaseAdmin
-            .from('products')
-            .delete({ count: 'exact' })
-            .eq('tenant_id', tenant.id);
+        const errors: string[] = [];
 
-        // Delete orders
-        const { count: orderCount } = await supabaseAdmin
-            .from('orders')
-            .delete({ count: 'exact' })
-            .eq('tenant_id', tenant.id);
+        // Delete ALL dependent tables first (order matters for FK constraints)
+        const tables = ['social_posts', 'integrations', 'promo_codes', 'order_items', 'orders', 'products'];
+        const counts: Record<string, number> = {};
 
-        // Delete tenant
-        await supabaseAdmin
+        for (const table of tables) {
+            const { count, error } = await supabaseAdmin
+                .from(table)
+                .delete({ count: 'exact' })
+                .eq('tenant_id', tenant.id);
+
+            counts[table] = count || 0;
+            if (error) errors.push(`${table}: ${error.message}`);
+        }
+
+        // Now delete the tenant itself
+        const { error: tenantError } = await supabaseAdmin
             .from('tenants')
             .delete()
             .eq('id', tenant.id);
 
+        if (tenantError) {
+            errors.push(`tenants: ${tenantError.message}`);
+        }
+
         results.push({
             slug,
-            status: 'DELETED',
-            deleted: { name: tenant.name, products: prodCount, orders: orderCount }
+            name: tenant.name,
+            status: tenantError ? 'FAILED' : 'DELETED',
+            deletedCounts: counts,
+            errors: errors.length > 0 ? errors : undefined
         });
     }
 
