@@ -109,6 +109,12 @@ export default async function HomePage({
           </Link>
           <div className="flex gap-3 items-center">
             <Link
+              href="/services"
+              className="hidden sm:block text-sm text-slate-500 font-medium hover:text-indigo-600 transition-colors px-3 py-2"
+            >
+              Services
+            </Link>
+            <Link
               href="/store/demo"
               className="hidden sm:block text-sm text-slate-500 font-medium hover:text-indigo-600 transition-colors px-3 py-2"
             >
@@ -678,11 +684,17 @@ export default async function HomePage({
                       href={`https://wa.me/923224609117?text=${encodeURIComponent("Hi! I found you on OrderViaChat. I have a custom development requirement and would love to discuss. Can you help?")}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2.5 transition-all hover:scale-[1.02] active:scale-95"
+                      className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2.5 transition-all hover:scale-[1.02] active:scale-95 mb-3"
                     >
                       <MessageCircle size={18} />
                       Chat on WhatsApp
                     </a>
+                    <Link
+                      href="/services"
+                      className="w-full border border-white/20 text-white/80 hover:text-white hover:border-white/40 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all text-sm"
+                    >
+                      See All Services & Pricing <ArrowRight size={14} />
+                    </Link>
                     <p className="text-xs text-slate-500 mt-3">
                       Discounted rates • Fast delivery • Satisfaction guaranteed
                     </p>
@@ -786,6 +798,14 @@ export default async function HomePage({
                       className="hover:text-white transition-colors"
                     >
                       Blog
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/services"
+                      className="hover:text-white transition-colors"
+                    >
+                      Services
                     </Link>
                   </li>
                   <li>

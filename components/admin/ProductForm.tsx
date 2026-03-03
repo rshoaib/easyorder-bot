@@ -23,6 +23,7 @@ export default function ProductForm({ tenantId, slug, storeType, storeName }: Pr
     const [imageUrl, setImageUrl] = useState('');
     const [description, setDescription] = useState('');
     const [showProModal, setShowProModal] = useState(false);
+    const [uploadError, setUploadError] = useState('');
     
     // Determine labels based on store type
     const type = storeType || 'restaurant';
@@ -34,20 +35,73 @@ export default function ProductForm({ tenantId, slug, storeType, storeName }: Pr
         digital: 'File / Access Details'
     }[type] || 'Ingredients';
 
+    // Compress large mobile camera images before upload
+    async function compressImage(file: File, maxWidth = 1200, quality = 0.8): Promise<File> {
+        // Skip compression for small files (under 1MB) or non-image types
+        if (file.size < 1024 * 1024) return file;
+        
+        return new Promise((resolve, reject) => {
+            const img = new window.Image();
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            img.onload = () => {
+                try {
+                    let { width, height } = img;
+                    
+                    // Only resize if larger than maxWidth
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx?.drawImage(img, 0, 0, width, height);
+                    
+                    canvas.toBlob(
+                        (blob) => {
+                            if (!blob) {
+                                resolve(file); // Fallback to original
+                                return;
+                            }
+                            const compressed = new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now(),
+                            });
+                            console.log(`[compress] ${(file.size / 1024 / 1024).toFixed(1)}MB → ${(compressed.size / 1024 / 1024).toFixed(1)}MB`);
+                            resolve(compressed);
+                        },
+                        'image/jpeg',
+                        quality
+                    );
+                } catch {
+                    resolve(file); // Fallback to original on any error
+                }
+            };
+            
+            img.onerror = () => resolve(file); // Fallback to original
+            img.src = URL.createObjectURL(file);
+        });
+    }
+
     async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length === 0) return;
         
         setUploading(true);
+        setUploadError('');
         const file = e.target.files[0];
         try {
+            // Auto-compress large mobile camera images
+            const processedFile = await compressImage(file);
             const supabase = createClient();
-            const url = await uploadProductImage(file, tenantId, supabase);
+            const url = await uploadProductImage(processedFile, tenantId, supabase);
             if (url) {
                 setImageUrl(url);
             }
         } catch (error: any) {
-            console.error(error);
-            alert(error?.message || 'Upload failed');
+            console.error('[handleImageUpload]', error);
+            setUploadError(error?.message || 'Image upload failed. Please try a smaller image.');
         } finally {
             setUploading(false);
         }
@@ -195,8 +249,9 @@ export default function ProductForm({ tenantId, slug, storeType, storeName }: Pr
                                 className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors"
                             />
                             <input type="hidden" name="image" value={imageUrl} />
-                            {uploading && <p className="text-xs text-indigo-600 mt-1">Uploading...</p>}
-                            <p className="text-xs text-slate-400 mt-1">Upload a JPG or PNG (Max 2MB)</p>
+                            {uploading && <p className="text-xs text-indigo-600 mt-1">Compressing & uploading...</p>}
+                            {uploadError && <p className="text-xs text-red-500 mt-1">⚠️ {uploadError}</p>}
+                            <p className="text-xs text-slate-400 mt-1">JPG, PNG, or WebP. Large photos are auto-compressed.</p>
                         </div>
                     </div>
                 </div>

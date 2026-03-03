@@ -6,6 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 1. Static Routes (SEO-valuable pages only — no auth pages)
     const routes = [
         '',
+        '/services',
         '/privacy-policy',
     ].map((route) => ({
         url: `${baseUrl}${route}`,
