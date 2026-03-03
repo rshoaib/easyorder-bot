@@ -7,6 +7,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
     PKR: 'Rs.',
     AED: 'AED',
     SAR: 'SAR',
+    EGP: 'E£',
 };
 
 /**

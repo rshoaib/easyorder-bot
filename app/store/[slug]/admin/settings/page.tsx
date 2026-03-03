@@ -192,6 +192,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                                 <option value="USD">USD ($)</option>
                                 <option value="EUR">EUR (€)</option>
                                 <option value="GBP">GBP (£)</option>
+                                <option value="EGP">EGP (E£)</option>
                                 <option value="INR">INR (₹)</option>
                                 <option value="PKR">PKR (₨)</option>
                                 <option value="AED">AED (dh)</option>
