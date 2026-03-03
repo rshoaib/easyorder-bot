@@ -2,12 +2,13 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { PRESET_MENUS, PresetType } from '@/lib/presets';
 import { cookies } from 'next/headers';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 /**
  * POST /api/admin/seed-empty-stores
  * 
  * One-time admin endpoint to auto-seed all stores with 0 products.
- * Uses a single SQL query to find empty stores (no sequential loops).
+ * Uses service role key to bypass RLS for cross-tenant writes.
  * 
  * Query params:
  *   ?dryRun=true  → preview without making changes
@@ -15,7 +16,13 @@ import { cookies } from 'next/headers';
  *   ?offset=0     → start from Nth empty store (default: 0)
  */
 export async function POST(request: Request) {
-    const supabase = await createClient();
+    const supabase = await createClient(); // For auth check only
+
+    // Service role client — bypasses RLS for admin operations
+    const supabaseAdmin = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
 
     // Auth: same logic as super-admin page
     const cookiesInfo = await cookies();
@@ -35,15 +42,15 @@ export async function POST(request: Request) {
     const offset = parseInt(url.searchParams.get('offset') || '0', 10);
 
     // Single SQL query: find tenants with zero products (no N+1 queries!)
-    const { data: emptyTenants, error: queryError } = await supabase.rpc('get_empty_tenants_fallback') as any;
+    const { data: emptyTenants, error: queryError } = await supabaseAdmin.rpc('get_empty_tenants_fallback') as any;
 
     // Fallback: if RPC doesn't exist, use a simpler approach
     let tenantsToSeed: any[] = [];
 
     if (queryError || !emptyTenants) {
         // Fallback: get tenants and product counts in 2 queries total
-        const { data: allTenants } = await supabase.from('tenants').select('*');
-        const { data: productCounts } = await supabase
+        const { data: allTenants } = await supabaseAdmin.from('tenants').select('*');
+        const { data: productCounts } = await supabaseAdmin
             .from('products')
             .select('tenant_id');
 
@@ -95,11 +102,11 @@ export async function POST(request: Request) {
             }));
 
             // Batch insert all products in one query
-            await supabase.from('products').insert(productsToInsert);
+            await supabaseAdmin.from('products').insert(productsToInsert);
 
             // Update storeType if not set
             if (!tenant.store_type && !tenant.storeType) {
-                await supabase
+                await supabaseAdmin
                     .from('tenants')
                     .update({ store_type: preset.storeType })
                     .eq('id', tenant.id);
