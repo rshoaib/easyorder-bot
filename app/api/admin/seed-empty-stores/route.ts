@@ -30,6 +30,9 @@ export async function POST(request: Request) {
 
     const url = new URL(request.url);
     const dryRun = url.searchParams.get('dryRun') === 'true';
+    const limit = parseInt(url.searchParams.get('limit') || '5', 10); // Process N stores at a time
+    const offset = parseInt(url.searchParams.get('offset') || '0', 10);
+    const skipDeleted = url.searchParams.get('skipDeleted') !== 'false'; // Skip deleted stores by default
 
     const tenantRepo = getTenantRepository(supabase);
     const productRepo = getProductRepository(supabase);
@@ -43,27 +46,38 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Failed to fetch tenants', details: tenantError?.message }, { status: 500 });
     }
 
-    // 2. Find stores with 0 products
-    const results: {
-        seeded: { slug: string; name: string; phone: string | null; preset: string; productCount: number }[];
-        skipped: { slug: string; name: string; reason: string }[];
-        whatsappMessages: { phone: string; storeName: string; slug: string; message: string }[];
-    } = { seeded: [], skipped: [], whatsappMessages: [] };
+    // 2. Find stores with 0 products (filter first, then paginate)
+    const emptyStores: typeof tenants = [];
+    const skippedStores: { slug: string; name: string; reason: string }[] = [];
 
     for (const tenant of tenants) {
-        // Skip demo store
         if (tenant.slug === 'demo') {
-            results.skipped.push({ slug: tenant.slug, name: tenant.name, reason: 'Demo store' });
+            skippedStores.push({ slug: tenant.slug, name: tenant.name, reason: 'Demo store' });
+            continue;
+        }
+        if (skipDeleted && tenant.slug.includes('-deleted-')) {
+            skippedStores.push({ slug: tenant.slug, name: tenant.name, reason: 'Deleted store' });
             continue;
         }
 
-        // Check product count
         const products = await productRepo.getProducts(tenant.id);
-
         if (products.length > 0) {
-            results.skipped.push({ slug: tenant.slug, name: tenant.name, reason: `Already has ${products.length} products` });
+            skippedStores.push({ slug: tenant.slug, name: tenant.name, reason: `Already has ${products.length} products` });
             continue;
         }
+
+        emptyStores.push(tenant);
+    }
+
+    // Apply pagination to empty stores only
+    const batch = emptyStores.slice(offset, offset + limit);
+
+    const results: {
+        seeded: { slug: string; name: string; phone: string | null; preset: string; productCount: number }[];
+        whatsappMessages: { phone: string; storeName: string; slug: string; message: string }[];
+    } = { seeded: [], whatsappMessages: [] };
+
+    for (const tenant of batch) {
 
         // Map storeType to a preset
         const presetKey = mapStoreTypeToPreset(tenant.storeType);
@@ -122,12 +136,19 @@ export async function POST(request: Request) {
         mode: dryRun ? 'DRY RUN — no changes made' : 'LIVE — stores seeded',
         summary: {
             totalTenants: tenants.length,
-            seeded: results.seeded.length,
-            skipped: results.skipped.length,
+            totalEmpty: emptyStores.length,
+            batchSeeded: results.seeded.length,
+            skipped: skippedStores.length,
             whatsappMessages: results.whatsappMessages.length
         },
+        pagination: {
+            offset,
+            limit,
+            remaining: Math.max(0, emptyStores.length - offset - limit),
+            nextOffset: offset + limit < emptyStores.length ? offset + limit : null
+        },
         seeded: results.seeded,
-        skipped: results.skipped,
+        skipped: skippedStores,
         whatsappMessages: results.whatsappMessages
     });
 }
