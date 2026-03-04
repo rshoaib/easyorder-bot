@@ -60,9 +60,9 @@ export default async function AdminMenuPage({ params }: Props) {
                             <p className="text-4xl mb-3">📦</p>
                             <p className="font-bold text-gray-700 mb-1">No products yet</p>
                             <p className="text-sm text-gray-400 mb-4">Add your first item using the form on the left.</p>
-                            <Link href="#" onClick={(e) => { e.preventDefault(); document.getElementById('addProductForm')?.scrollIntoView({ behavior: 'smooth' }); }}>
+                            <a href="#addProductForm">
                                 <button className="btn-primary text-sm px-4 py-2">+ Add First Item</button>
-                            </Link>
+                            </a>
                         </div>
                     )}
                 </div>
