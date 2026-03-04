@@ -9,6 +9,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
     SAR: 'SAR',
     EGP: 'E£',
     MRU: 'UM',
+    MUR: '₨',
 };
 
 /**
