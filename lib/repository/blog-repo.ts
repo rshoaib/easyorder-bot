@@ -27,6 +27,12 @@ interface BlogPostRow {
     updated_at: string;
 }
 
+function generateDynamicCoverUrl(title: string, category: string): string {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://orderviachat.com';
+    const params = new URLSearchParams({ title, category });
+    return `${baseUrl}/api/og/blog?${params.toString()}`;
+}
+
 function mapRowToPost(row: BlogPostRow): BlogPost {
     return {
         slug: row.slug,
@@ -35,7 +41,7 @@ function mapRowToPost(row: BlogPostRow): BlogPost {
         date: row.date,
         author: row.author,
         category: row.category,
-        coverImage: row.cover_image || undefined,
+        coverImage: row.cover_image || generateDynamicCoverUrl(row.title, row.category),
         content: row.content,
     };
 }

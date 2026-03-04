@@ -197,6 +197,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                                 <option value="PKR">PKR (₨)</option>
                                 <option value="AED">AED (dh)</option>
                                 <option value="SAR">SAR (﷼)</option>
+                                <option value="MRU">MRU (UM)</option>
                             </select>
                             <p className="text-xs text-gray-500 mt-2">
                                 This symbol will be shown next to all your prices.
