@@ -1,8 +1,8 @@
 import { getTenantRepository } from "@/lib/repository";
 import Link from "next/link";
 import { createStore, activateTenant, deactivateTenant } from "./actions";
-import { Building2, Plus, ExternalLink, Lock, Mail, Phone } from "lucide-react";
-import CopyableField from "@/components/admin/CopyableField";
+import { Building2, Plus, ExternalLink, Lock } from "lucide-react";
+import CopyAllButton from "@/components/admin/CopyableField";
 
 export const dynamic = 'force-dynamic';
 
@@ -182,18 +182,9 @@ export default async function SuperAdminPage() {
                                         </div>
                                     </div>
 
-                                    {/* Email & WhatsApp — copyable */}
-                                    <div className="flex flex-col gap-1.5 mb-4">
-                                        {tenant.email ? (
-                                            <CopyableField value={tenant.email} label="email" icon={<Mail size={12} className="text-gray-400 flex-shrink-0" />} />
-                                        ) : (
-                                            <span className="flex items-center gap-1.5 text-xs text-gray-300"><Mail size={12} /> No email</span>
-                                        )}
-                                        {tenant.ownerPhone ? (
-                                            <CopyableField value={tenant.ownerPhone} label="WhatsApp" icon={<Phone size={12} className="text-gray-400 flex-shrink-0" />} />
-                                        ) : (
-                                            <span className="flex items-center gap-1.5 text-xs text-gray-300"><Phone size={12} /> No phone</span>
-                                        )}
+                                    {/* Copy store name + email + WhatsApp in one click */}
+                                    <div className="mb-4">
+                                        <CopyAllButton storeName={tenant.name} email={tenant.email} phone={tenant.ownerPhone} />
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-3">
