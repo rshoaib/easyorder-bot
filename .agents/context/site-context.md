@@ -32,14 +32,14 @@ description: Brand voice, internal links, and target keywords for orderviachat.c
 ### High Priority
 | Keyword | Status |
 |---------|--------|
-| whatsapp ordering system | 🆕 Need content |
-| online ordering for restaurants | 🆕 Need content |
+| whatsapp ordering system | ✅ Blog exists |
+| online ordering for restaurants | ✅ Blog exists |
 | whatsapp menu for business | ✅ Blog exists |
 | free online ordering system | 🆕 Need content |
-| how to take orders on whatsapp | 🆕 Need content |
+| how to take orders on whatsapp | ✅ Blog exists |
 
 ### Content Calendar
-1. "How to Set Up WhatsApp Ordering for Your Restaurant (2026)"
+1. ~~"How to Set Up WhatsApp Ordering for Your Restaurant (2026)"~~ ✅ Published 2026-03-07
 2. "WhatsApp vs Traditional POS: Which Is Better for Small Restaurants?"
-3. "5 Ways to Increase Online Orders Without a Website"
+3. ~~"5 Ways to Increase Online Orders Without a Website"~~ ✅ Published 2026-03-06
 4. "Free Online Ordering Systems Compared: OrderViaChat vs Alternatives"
