@@ -11,6 +11,7 @@ import { TrendingUp, ShoppingBag, DollarSign, AlertCircle, ArrowRight, Zap, Exte
 import RevenueChart from "@/components/admin/RevenueChart";
 import CustomDevCard from "@/components/admin/CustomDevCard";
 import TimezoneAutoDetect from "@/components/admin/TimezoneAutoDetect";
+import PricingAnnouncementBanner from "@/components/admin/PricingAnnouncementBanner";
 
 
 export const dynamic = 'force-dynamic';
@@ -72,6 +73,10 @@ export default async function AdminPage({ params }: Props) {
     <main className="container pt-1 pb-10" style={{ maxWidth: '900px' }}>
       {/* Silent timezone auto-detection — no UI, runs once */}
       <TimezoneAutoDetect tenantId={tenant.id} slug={slug} currentTimezone={tenant.timezone} />
+      
+      {/* Pricing announcement for existing store owners */}
+      {slug !== 'demo' && <PricingAnnouncementBanner />}
+      
       {/* Header Section */}
       <div className="flex justify-between items-start mb-4">
         <div>

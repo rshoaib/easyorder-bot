@@ -69,10 +69,11 @@ function PricingContent() {
             <div className="text-center">
                 <h3 className="text-xl font-bold text-gray-900">Pro Plan</h3>
                 <div className="mt-4 flex justify-center items-baseline">
-                    <span className="text-5xl font-extrabold text-gray-900">$15</span>
+                    <span className="text-5xl font-extrabold text-gray-900">$10</span>
                     <span className="ml-1 text-xl font-medium text-gray-500">/mo</span>
                 </div>
-                <p className="mt-4 text-gray-500 text-sm">Everything you need to run your store.</p>
+                <p className="mt-2 text-indigo-600 text-sm font-semibold">14-day free trial included</p>
+                <p className="mt-2 text-gray-500 text-sm">Everything you need to run your store.</p>
             </div>
 
             <ul className="mt-6 space-y-4">
@@ -96,9 +97,7 @@ function PricingContent() {
         </div>
         
         <div className="mt-6 text-center">
-            <button onClick={() => router.push('/admin/dashboard')} className="text-sm text-gray-500 hover:text-gray-900">
-                Skip for now (Demo Mode)
-            </button>
+            <p className="text-sm text-gray-400">No credit card required to start your trial</p>
         </div>
       </div>
     </div>

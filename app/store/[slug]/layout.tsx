@@ -69,7 +69,7 @@ export default async function StoreLayout({
             href="/login?view=signup" 
             className="underline underline-offset-2 font-bold hover:text-indigo-200 transition-colors"
           >
-            Create Your Own Free Store →
+            Start Your 14-Day Free Trial →
           </a>
         </div>
       )}

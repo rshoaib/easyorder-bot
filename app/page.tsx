@@ -36,7 +36,7 @@ import { redirect } from "next/navigation";
 import { getTenantRepository } from "@/lib/repository";
 
 const WHATSAPP_SHARE_URL = `https://wa.me/?text=${encodeURIComponent(
-  "Check out OrderViaChat — a free tool to create a digital menu and get orders on WhatsApp! 🚀\nhttps://orderviachat.com"
+  "Check out OrderViaChat — an easy tool to create a digital menu and get orders on WhatsApp! 14-day free trial 🚀\nhttps://orderviachat.com"
 )}`;
 
 export const dynamic = "force-dynamic";
@@ -83,10 +83,16 @@ export default async function HomePage({
             "operatingSystem": "Web",
             "offers": {
               "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
+              "price": "10",
+              "priceCurrency": "USD",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "10",
+                "priceCurrency": "USD",
+                "unitText": "MONTH"
+              }
             },
-            "description": "Free WhatsApp ordering system for restaurants and small businesses. Create a digital menu, share your store link, and receive orders on WhatsApp.",
+            "description": "WhatsApp ordering system for restaurants and small businesses. 14-day free trial, then $10/month. Create a digital menu, share your store link, and receive orders on WhatsApp.",
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "4.8",
@@ -133,7 +139,7 @@ export default async function HomePage({
             </Link>
             <Link href="/login?view=signup">
               <button className="bg-indigo-600 text-white px-5 py-2.5 rounded-full font-semibold hover:bg-indigo-700 transition-all text-sm shadow-md shadow-indigo-500/20">
-                Get Started Free
+                Start Free Trial
               </button>
             </Link>
           </div>
@@ -152,7 +158,7 @@ export default async function HomePage({
             <div className="text-center lg:text-left space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold border border-indigo-100 animate-fade-in">
                 <Zap size={12} fill="currentColor" />
-                <span>100% Free — Forever</span>
+                <span>Try Free for 14 Days</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] text-slate-900 animate-fade-in delay-100">
@@ -162,14 +168,14 @@ export default async function HomePage({
 
               <p className="text-lg text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fade-in delay-200">
                 Your customers are already on WhatsApp. Give them a beautiful
-                store to order from — no app downloads, no commissions, no
-                technical skills needed.
+                store to order from — no app downloads, no commissions. Just
+                $10/month after your free trial.
               </p>
 
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 animate-fade-in delay-300">
                 <Link href="/login?view=signup">
                   <button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white text-base font-bold py-3.5 px-7 rounded-xl shadow-lg shadow-indigo-500/25 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 animate-pulse-subtle">
-                    Create Your Free Store <ArrowRight size={18} />
+                    Start 14-Day Free Trial <ArrowRight size={18} />
                   </button>
                 </Link>
                 <Link href="/store/demo">
@@ -270,7 +276,7 @@ export default async function HomePage({
                 number={1}
                 icon={<ShoppingBag size={22} />}
                 title="Add Your Products"
-                description="Sign up free and add your items. Or let our AI generate your entire menu in seconds."
+                description="Sign up and add your items. Or let our AI generate your entire menu in seconds."
                 color="indigo"
               />
             </ScrollFadeIn>
@@ -727,8 +733,8 @@ export default async function HomePage({
 
           <ScrollFadeIn delay={200}>
             <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-xl mx-auto leading-relaxed">
-              Be among the first to launch your online store. Early adopters get
-              access to upcoming premium features — completely free.
+              Start your 14-day free trial today. Just $10/month after that —
+              no contracts, cancel anytime.
             </p>
           </ScrollFadeIn>
 
@@ -736,7 +742,7 @@ export default async function HomePage({
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/login?view=signup">
                 <button className="bg-white text-slate-900 text-lg font-bold py-4 px-10 rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all inline-flex items-center gap-2 animate-pulse-subtle">
-                  Create Your Free Store <ArrowRight size={20} />
+                  Start Free Trial <ArrowRight size={20} />
                 </button>
               </Link>
               <Link href="/store/demo">
@@ -750,8 +756,8 @@ export default async function HomePage({
           <ScrollFadeIn delay={400}>
             <div className="flex items-center justify-center gap-6 mt-8 text-slate-400 text-sm">
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-green-400" /> Free
-                forever
+                <CheckCircle2 size={14} className="text-green-400" /> 14-day
+                free trial
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 size={14} className="text-green-400" /> No credit
@@ -777,7 +783,7 @@ export default async function HomePage({
               </div>
               <p className="text-sm max-w-xs leading-relaxed">
                 The simplest way for small businesses to accept orders on
-                WhatsApp. Free forever.
+                WhatsApp. Start free, $10/month.
               </p>
             </div>
             <div className="flex gap-12 text-sm">

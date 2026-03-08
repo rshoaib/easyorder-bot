@@ -245,18 +245,19 @@ export default function RegisterForm({ userEmail }: { userEmail: string }) {
                     <p className="text-xs text-gray-400 mt-1">Orders will be sent to this number via WhatsApp.</p>
                 </div>
 
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100 mt-4">
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-xl border border-indigo-100 mt-4">
                     <div className="flex justify-between items-center mb-2">
-                        <h3 className="font-bold text-green-900 flex items-center gap-1.5">
-                            <Sparkles size={14} className="text-green-600" />
-                            Free Forever Plan
+                        <h3 className="font-bold text-indigo-900 flex items-center gap-1.5">
+                            <Sparkles size={14} className="text-indigo-600" />
+                            14-Day Free Trial
                         </h3>
-                        <span className="text-green-700 font-bold">$0<span className="text-sm font-normal">/mo</span></span>
+                        <span className="text-indigo-700 font-bold">$10<span className="text-sm font-normal">/mo after trial</span></span>
                     </div>
-                    <ul className="space-y-1.5 text-sm text-green-800">
-                        <li className="flex items-center gap-2"><CheckCircle size={14} className="text-green-500 shrink-0"/> Unlimited Orders</li>
-                        <li className="flex items-center gap-2"><CheckCircle size={14} className="text-green-500 shrink-0"/> WhatsApp Integration</li>
-                        <li className="flex items-center gap-2"><CheckCircle size={14} className="text-green-500 shrink-0"/> Pre-filled product catalog</li>
+                    <ul className="space-y-1.5 text-sm text-indigo-800">
+                        <li className="flex items-center gap-2"><CheckCircle size={14} className="text-indigo-500 shrink-0"/> Unlimited Orders</li>
+                        <li className="flex items-center gap-2"><CheckCircle size={14} className="text-indigo-500 shrink-0"/> WhatsApp Integration</li>
+                        <li className="flex items-center gap-2"><CheckCircle size={14} className="text-indigo-500 shrink-0"/> Pre-filled product catalog</li>
+                        <li className="flex items-center gap-2"><CheckCircle size={14} className="text-indigo-500 shrink-0"/> No credit card required</li>
                     </ul>
                 </div>
 
@@ -265,7 +266,7 @@ export default function RegisterForm({ userEmail }: { userEmail: string }) {
                     disabled={isPending || slugStatus === 'taken' || !phoneValid}
                     className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                    {isPending ? <Loader2 className="animate-spin" /> : <>🚀 Launch My Free Store <ArrowRight size={18} /></>}
+                    {isPending ? <Loader2 className="animate-spin" /> : <>🚀 Start My Free Trial <ArrowRight size={18} /></>}
                 </button>
             </form>
         </div>
