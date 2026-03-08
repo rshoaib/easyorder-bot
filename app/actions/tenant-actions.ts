@@ -51,3 +51,39 @@ export async function deleteStore(slug: string, tenantId: string) {
         throw error;
     }
 }
+
+/**
+ * Silently auto-detect and save the store's timezone from the owner's browser.
+ * Only writes if no timezone is currently set — never overrides a manual choice.
+ */
+export async function autoDetectTimezone(tenantId: string, slug: string, detectedTimezone: string) {
+    try {
+        // Validate it's a real IANA timezone
+        Intl.DateTimeFormat(undefined, { timeZone: detectedTimezone });
+    } catch {
+        return; // invalid timezone string, skip silently
+    }
+
+    try {
+        await verifyTenantOwnership(slug);
+
+        const supabase = await createClient();
+        const repo = getTenantRepository(supabase);
+        const tenant = await repo.getTenantById(tenantId);
+
+        // Only set if not already configured (never override manual choice)
+        if (tenant && !tenant.timezone) {
+            await repo.updateTenantSettings(
+                tenantId,
+                undefined, undefined, undefined, undefined,
+                undefined, undefined, undefined, undefined,
+                undefined, undefined, undefined, undefined,
+                undefined, undefined, undefined,
+                detectedTimezone // timezone
+            );
+            revalidatePath(`/store/${slug}`);
+        }
+    } catch {
+        // Fail silently — this is a background enhancement, not critical
+    }
+}
