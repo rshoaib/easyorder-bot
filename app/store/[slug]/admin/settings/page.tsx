@@ -49,6 +49,7 @@ async function updateSettings(formData: FormData) {
         const deliveryFee = deliveryFeeRaw ? parseFloat(deliveryFeeRaw) : 0;
         const minOrderRaw = formData.get('minOrderAmount') as string;
         const minOrderAmount = minOrderRaw ? parseFloat(minOrderRaw) : 0;
+        const timezone = formData.get('timezone') as string;
         
         // Checkbox is "true" if checked, null if unchecked
         const isOpen = formData.get('isOpen') === 'true';
@@ -73,7 +74,7 @@ async function updateSettings(formData: FormData) {
         // Use authenticated server client for RLS compliance
         const supabase = await createClient();
         const tenantRepo = getTenantRepository(supabase);
-        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType, paypalLink, stripeLink, codEnabled, deliveryFee, minOrderAmount);
+        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType, paypalLink, stripeLink, codEnabled, deliveryFee, minOrderAmount, undefined, timezone);
         success = true;
     } catch (err: any) {
         // Re-throw Next.js redirect/notFound errors — they use throw internally
@@ -202,6 +203,59 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                             </select>
                             <p className="text-xs text-gray-500 mt-2">
                                 This symbol will be shown next to all your prices.
+                            </p>
+                        </div>
+
+                        {/* Timezone */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                🕐 Store Timezone
+                            </label>
+                            <select 
+                                name="timezone" 
+                                defaultValue={tenant.timezone || ''} 
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium bg-white"
+                            >
+                                <option value="">Auto (UTC)</option>
+                                <optgroup label="Africa">
+                                    <option value="Africa/Johannesburg">South Africa (SAST, UTC+2)</option>
+                                    <option value="Africa/Cairo">Egypt (EET, UTC+2)</option>
+                                    <option value="Africa/Lagos">Nigeria (WAT, UTC+1)</option>
+                                    <option value="Africa/Nairobi">Kenya (EAT, UTC+3)</option>
+                                    <option value="Africa/Casablanca">Morocco (WET, UTC+0/+1)</option>
+                                </optgroup>
+                                <optgroup label="Americas">
+                                    <option value="America/New_York">Eastern US (EST/EDT)</option>
+                                    <option value="America/Chicago">Central US (CST/CDT)</option>
+                                    <option value="America/Denver">Mountain US (MST/MDT)</option>
+                                    <option value="America/Los_Angeles">Pacific US (PST/PDT)</option>
+                                    <option value="America/Sao_Paulo">Brazil (BRT, UTC-3)</option>
+                                    <option value="America/Mexico_City">Mexico City (CST, UTC-6)</option>
+                                    <option value="America/Toronto">Canada Eastern (EST/EDT)</option>
+                                </optgroup>
+                                <optgroup label="Asia">
+                                    <option value="Asia/Dubai">UAE (GST, UTC+4)</option>
+                                    <option value="Asia/Riyadh">Saudi Arabia (AST, UTC+3)</option>
+                                    <option value="Asia/Karachi">Pakistan (PKT, UTC+5)</option>
+                                    <option value="Asia/Kolkata">India (IST, UTC+5:30)</option>
+                                    <option value="Asia/Jakarta">Indonesia West (WIB, UTC+7)</option>
+                                    <option value="Asia/Singapore">Singapore (SGT, UTC+8)</option>
+                                    <option value="Asia/Tokyo">Japan (JST, UTC+9)</option>
+                                    <option value="Asia/Shanghai">China (CST, UTC+8)</option>
+                                </optgroup>
+                                <optgroup label="Europe">
+                                    <option value="Europe/London">UK (GMT/BST)</option>
+                                    <option value="Europe/Paris">France/Germany (CET/CEST)</option>
+                                    <option value="Europe/Istanbul">Turkey (TRT, UTC+3)</option>
+                                    <option value="Europe/Moscow">Russia Moscow (MSK, UTC+3)</option>
+                                </optgroup>
+                                <optgroup label="Oceania">
+                                    <option value="Australia/Sydney">Australia Eastern (AEST/AEDT)</option>
+                                    <option value="Pacific/Auckland">New Zealand (NZST/NZDT)</option>
+                                </optgroup>
+                            </select>
+                            <p className="text-xs text-gray-500 mt-2">
+                                All order timestamps will display in this timezone.
                             </p>
                         </div>
 

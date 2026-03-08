@@ -29,5 +29,5 @@ export default async function OrderBoardPage({ params }: Props) {
         // Oldest first (FIFO)
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    return <OrderBoard orders={activeOrders} slug={slug} storeType={tenant.storeType || 'restaurant'} />;
+    return <OrderBoard orders={activeOrders} slug={slug} storeType={tenant.storeType || 'restaurant'} timezone={tenant.timezone} />;
 }

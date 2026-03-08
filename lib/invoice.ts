@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import fs from "fs";
 import path from "path";
+import { formatOrderDateTime } from "./date-utils";
 
 // Define the Order interface locally to avoid circular deps, or import if shared properly
 interface OrderItem {
@@ -22,6 +23,7 @@ interface Order {
     subtotal?: number;
     deliveryFee?: number;
     total: number;
+    timezone?: string;
 }
 
 export const generateInvoicePDF = async (order: Order) => {
@@ -35,7 +37,7 @@ export const generateInvoicePDF = async (order: Order) => {
     doc.setFontSize(10);
     doc.setTextColor(100);
     doc.text(`Invoice ID: ${order.id}`, 20, 30);
-    doc.text(`Date: ${new Date(order.date).toLocaleString()}`, 20, 35);
+    doc.text(`Date: ${formatOrderDateTime(order.date, order.timezone)}`, 20, 35);
 
     // --- Customer Details ---
     doc.setFontSize(14);
@@ -117,7 +119,7 @@ export const generateInvoiceBuffer = async (order: Order): Promise<Buffer> => {
     doc.setFontSize(10);
     doc.setTextColor(100);
     doc.text(`Invoice ID: ${order.id}`, 20, 30);
-    doc.text(`Date: ${new Date(order.date).toLocaleString()}`, 20, 35);
+    doc.text(`Date: ${formatOrderDateTime(order.date, order.timezone)}`, 20, 35);
 
     // --- Customer Details ---
     doc.setFontSize(14);

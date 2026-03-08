@@ -240,7 +240,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
             deliveryFee: parseFloat(data.delivery_fee) || 0,
-            minOrderAmount: parseFloat(data.min_order_amount) || 0
+            minOrderAmount: parseFloat(data.min_order_amount) || 0,
+            timezone: data.timezone || undefined
         };
     }
 
@@ -274,7 +275,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             paypalLink: row.paypal_link,
             stripeLink: row.stripe_link,
             codEnabled: row.cod_enabled ?? true,
-            plan: row.plan || 'free'
+            plan: row.plan || 'free',
+            timezone: row.timezone || undefined
         }));
     }
 
@@ -355,7 +357,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeCustomerId: data.stripe_customer_id,
             password: data.password,
             language: data.language || 'en',
-            customDomain: data.custom_domain
+            customDomain: data.custom_domain,
+            timezone: data.timezone || undefined
         };
     }
 
@@ -373,7 +376,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number, name?: string): Promise<void> {
+    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number, name?: string, timezone?: string): Promise<void> {
         const updateData: any = {};
 
         if (ownerPhone !== undefined) { updateData.owner_phone = ownerPhone; }
@@ -394,6 +397,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (codEnabled !== undefined) { updateData.cod_enabled = codEnabled; }
         if (deliveryFee !== undefined) { updateData.delivery_fee = deliveryFee; }
         if (minOrderAmount !== undefined) { updateData.min_order_amount = minOrderAmount; }
+        if (timezone !== undefined) { updateData.timezone = timezone || null; }
 
         const { error } = await this.client
             .from('tenants')
@@ -435,7 +439,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
             deliveryFee: parseFloat(data.delivery_fee) || 0,
-            minOrderAmount: parseFloat(data.min_order_amount) || 0
+            minOrderAmount: parseFloat(data.min_order_amount) || 0,
+            timezone: data.timezone || undefined
         };
     }
 
@@ -474,7 +479,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
             deliveryFee: parseFloat(data.delivery_fee) || 0,
-            minOrderAmount: parseFloat(data.min_order_amount) || 0
+            minOrderAmount: parseFloat(data.min_order_amount) || 0,
+            timezone: data.timezone || undefined
         };
     }
 

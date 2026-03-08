@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { formatPrice } from '@/lib/currency';
+import { formatOrderDate } from '@/lib/date-utils';
 
 interface OrderReceiptEmailProps {
   orderId: string;
@@ -14,6 +15,7 @@ interface OrderReceiptEmailProps {
   date: string;
   storeName?: string;
   currency?: string;
+  timezone?: string;
 }
 
 export const OrderReceiptEmail: React.FC<OrderReceiptEmailProps> = ({
@@ -24,6 +26,7 @@ export const OrderReceiptEmail: React.FC<OrderReceiptEmailProps> = ({
   date,
   storeName = 'Our Store',
   currency,
+  timezone,
 }) => (
   <div style={{ fontFamily: 'sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', border: '1px solid #e5e5e5', borderRadius: '8px' }}>
     <h1 style={{ color: '#333', textAlign: 'center' }}>{storeName}</h1>
@@ -33,7 +36,7 @@ export const OrderReceiptEmail: React.FC<OrderReceiptEmailProps> = ({
     
     <div style={{ margin: '20px 0', padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
       <p><strong>Order ID:</strong> {orderId}</p>
-      <p><strong>Date:</strong> {new Date(date).toLocaleDateString()}</p>
+      <p><strong>Date:</strong> {formatOrderDate(date, timezone)}</p>
     </div>
 
     <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>

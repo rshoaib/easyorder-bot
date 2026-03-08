@@ -6,16 +6,18 @@ import StatusSelector from '@/components/admin/StatusSelector';
 import { FileText, Cloud, Search, Filter, MessageSquare, Link2 } from 'lucide-react';
 import Link from 'next/link';
 import { formatPrice } from '@/lib/currency';
+import { formatOrderDate, formatOrderTime } from '@/lib/date-utils';
 
 interface OrderListProps {
     orders: Order[];
     slug: string;
     currency?: string;
+    timezone?: string;
 }
 
 type FilterStatus = 'all' | 'pending' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
 
-export default function OrderList({ orders, slug, currency }: OrderListProps) {
+export default function OrderList({ orders, slug, currency, timezone }: OrderListProps) {
     const [filter, setFilter] = useState<FilterStatus>('all');
     const [search, setSearch] = useState('');
     const [mounted, setMounted] = useState(false);
@@ -123,10 +125,10 @@ export default function OrderList({ orders, slug, currency }: OrderListProps) {
                                 </td>
                                 <td className="py-4 px-6 text-sm text-gray-600">
                                     <div className="font-medium text-gray-900">
-                                        {mounted ? new Date(order.date).toLocaleDateString() : order.date.split('T')[0]}
+                                        {mounted ? formatOrderDate(order.date, timezone) : order.date.split('T')[0]}
                                     </div>
                                     <div className="text-xs text-gray-400">
-                                        {mounted ? new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                                        {mounted ? formatOrderTime(order.date, timezone) : ''}
                                     </div>
                                 </td>
                                 <td className="py-4 px-6">

@@ -182,6 +182,7 @@ export async function POST(req: NextRequest) {
                             date={order.date}
                             storeName={tenant.name}
                             currency={tenant.currency}
+                            timezone={tenant.timezone}
                         />
                     )
                 });

@@ -63,7 +63,7 @@ export default async function AdminOrdersPage({ params }: Props) {
       </div>
 
       {/* Orders Table with Search & Filter */}
-      <OrderList orders={orders} slug={slug} currency={tenant?.currency} />
+      <OrderList orders={orders} slug={slug} currency={tenant?.currency} timezone={tenant?.timezone} />
     </main>
   );
 }

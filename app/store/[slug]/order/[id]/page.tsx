@@ -3,6 +3,7 @@ import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { formatPrice, getCurrencySymbol } from "@/lib/currency";
 import Link from "next/link";
 import { ArrowLeft, Package, Clock, ChefHat, CheckCircle, Truck, MapPin, Phone, FileText, StickyNote } from "lucide-react";
+import { formatOrderDateFull, formatOrderTime } from "@/lib/date-utils";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 30; // Auto-refresh every 30 seconds
@@ -89,9 +90,9 @@ export default async function OrderTrackingPage({ params }: Props) {
                     <p className="text-sm text-gray-500">Order</p>
                     <h2 className="text-xl font-bold font-mono text-gray-900">#{orderId.replace('ORD-', '')}</h2>
                     <p className="text-sm text-gray-400 mt-1">
-                        {new Date(order.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+                        {formatOrderDateFull(order.date, tenant.timezone)}
                         {' · '}
-                        {new Date(order.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                        {formatOrderTime(order.date, tenant.timezone)}
                     </p>
                 </div>
 

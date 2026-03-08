@@ -6,14 +6,16 @@ import { Clock, CheckCircle2, Printer, ArrowRight, Play } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { getPreset } from "@/lib/presets";
+import { formatOrderTime } from "@/lib/date-utils";
 
 interface Props {
   order: Order;
   slug: string;
   storeType: string;
+  timezone?: string;
 }
 
-export default function OrderCard({ order, slug, storeType }: Props) {
+export default function OrderCard({ order, slug, storeType, timezone }: Props) {
   const [loading, setLoading] = useState(false);
   const preset = getPreset(storeType);
 
@@ -61,7 +63,7 @@ export default function OrderCard({ order, slug, storeType }: Props) {
                   <Clock size={14} /> {timeElapsed()}
               </div>
               <div className="text-xs text-gray-400 print:hidden" suppressHydrationWarning>
-                  {new Date(order.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                  {formatOrderTime(order.date, timezone)}
               </div>
           </div>
        </div>

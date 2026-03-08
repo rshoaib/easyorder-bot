@@ -27,6 +27,7 @@ export interface Tenant {
     plan?: 'free' | 'pro'; // Subscription plan
     deliveryFee?: number; // Per-store delivery fee
     minOrderAmount?: number; // Minimum order amount
+    timezone?: string; // IANA timezone e.g. 'Africa/Johannesburg'
 }
 
 export interface Order {
@@ -117,7 +118,7 @@ export interface TenantRepository {
     updateTenantStatus(id: string, status: 'active' | 'pending_payment' | 'disabled', stripeCustomerId?: string): Promise<void>;
     updateTenantLanguage(id: string, language: string): Promise<void>;
     updateTenantDomain(id: string, domain: string): Promise<void>;
-    updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number, name?: string): Promise<void>;
+    updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number, name?: string, timezone?: string): Promise<void>;
     getTenantByDomain(domain: string): Promise<Tenant | null>;
     getTenantById(id: string): Promise<Tenant | null>;
     getTenantByUserId(userId: string): Promise<Tenant | null>;

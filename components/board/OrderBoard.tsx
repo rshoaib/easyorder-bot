@@ -11,9 +11,10 @@ interface Props {
     orders: Order[];
     slug: string;
     storeType: string;
+    timezone?: string;
 }
 
-export default function OrderBoard({ orders, slug, storeType }: Props) {
+export default function OrderBoard({ orders, slug, storeType, timezone }: Props) {
     const router = useRouter();
     const preset = getPreset(storeType);
 
@@ -59,7 +60,7 @@ export default function OrderBoard({ orders, slug, storeType }: Props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {/* Prioritize Preparing, then Pending */}
                     {[...preparingOrders, ...pendingOrders].map(order => (
-                        <OrderCard key={order.id} order={order} slug={slug} storeType={storeType} />
+                        <OrderCard key={order.id} order={order} slug={slug} storeType={storeType} timezone={timezone} />
                     ))}
                 </div>
             )}

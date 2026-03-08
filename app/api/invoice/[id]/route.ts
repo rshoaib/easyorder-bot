@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getOrderRepository } from '@/lib/repository';
+import { getOrderRepository, getTenantRepository } from '@/lib/repository';
 import { generateInvoiceBuffer } from '@/lib/invoice';
 import { createClient } from '@/utils/supabase/server';
 
@@ -21,8 +21,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             return new NextResponse('Order not found', { status: 404 });
         }
 
-        // Generate PDF in memory
-        const pdfBuffer = await generateInvoiceBuffer(order);
+        // Fetch tenant to get timezone for correct date display on invoice
+        const tenantRepo = getTenantRepository(supabase);
+        const tenant = await tenantRepo.getTenantById(order.tenantId);
+
+        // Generate PDF in memory (pass timezone for correct date formatting)
+        const pdfBuffer = await generateInvoiceBuffer({ ...order, timezone: tenant?.timezone });
 
         // Return as PDF file
         return new NextResponse(pdfBuffer as any, {
