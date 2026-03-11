@@ -1,6 +1,6 @@
 import { getTenantRepository, getProductRepository } from "@/lib/repository";
 import Link from "next/link";
-import { ExternalLink, LayoutDashboard, Menu, Settings, Tag, QrCode, ShoppingBag, BookOpen } from "lucide-react";
+import { ExternalLink, LayoutDashboard, Menu, Settings, Tag, QrCode, ShoppingBag, BookOpen, Crown } from "lucide-react";
 import WhatsAppSupportButton from "@/components/admin/WhatsAppSupportButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -127,7 +127,16 @@ export default async function AdminLayout({
               </Link>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+              {/* Upgrade button — only for non-pro merchants */}
+              {!isDemo && tenant.plan !== 'pro' && (
+                <Link href={`/register/pricing?tenantId=${tenant.id}`}>
+                  <button className="flex items-center gap-1.5 text-sm font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-2 rounded-lg transition-colors">
+                    <Crown size={14} className="text-amber-500" />
+                    <span className="hidden sm:inline">Upgrade</span>
+                  </button>
+                </Link>
+              )}
              <Link href={`/store/${slug}`} target="_blank">
                 <button className="flex items-center gap-2 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-lg transition-colors">
                     <span className="hidden sm:inline">View Store</span>
