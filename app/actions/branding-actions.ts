@@ -47,24 +47,11 @@ export async function updateBranding(formData: FormData) {
     }
 
     try {
-        await repo.updateTenantSettings(
-            tenantId,
-            undefined, // ownerPhone
-            undefined, // instagram
-            undefined, // facebook
-            undefined, // pixel
-            undefined, // currency
+        await repo.updateTenantSettings(tenantId, {
             themeColor,
             logoUrl,
-            undefined, // isOpen
-            undefined, // storeType
-            undefined, // paypalLink
-            undefined, // stripeLink
-            undefined, // codEnabled
-            undefined, // deliveryFee
-            undefined, // minOrderAmount
             name
-        );
+        });
 
         revalidatePath(`/store/${slug}`);
         revalidatePath(`/store/${slug}/admin/settings`);

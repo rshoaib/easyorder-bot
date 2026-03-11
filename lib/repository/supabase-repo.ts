@@ -376,28 +376,33 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (error) throw new Error(error.message);
     }
 
-    async updateTenantSettings(id: string, ownerPhone?: string, instagramUrl?: string, facebookUrl?: string, metaPixelId?: string, currency?: string, themeColor?: string, logoUrl?: string, isOpen?: boolean, storeType?: string, paypalLink?: string, stripeLink?: string, codEnabled?: boolean, deliveryFee?: number, minOrderAmount?: number, name?: string, timezone?: string): Promise<void> {
+    async updateTenantSettings(id: string, settings: Partial<Omit<Tenant, 'id' | 'slug' | 'status' | 'userId' | 'stripeCustomerId' | 'password'>>): Promise<void> {
         const updateData: any = {};
 
-        if (ownerPhone !== undefined) { updateData.owner_phone = ownerPhone; }
-        if (instagramUrl !== undefined) { updateData.instagram_url = instagramUrl; }
-        if (facebookUrl !== undefined) { updateData.facebook_url = facebookUrl; }
-        if (metaPixelId !== undefined) { updateData.meta_pixel_id = metaPixelId; }
-        if (currency !== undefined) { updateData.currency = currency; }
-        if (themeColor !== undefined) { updateData.theme_color = themeColor; }
-        if (logoUrl !== undefined) { updateData.logo_url = logoUrl; }
-        if (name !== undefined) { updateData.name = name; }
+        if (settings.ownerPhone !== undefined) { updateData.owner_phone = settings.ownerPhone; }
+        if (settings.instagramUrl !== undefined) { updateData.instagram_url = settings.instagramUrl; }
+        if (settings.facebookUrl !== undefined) { updateData.facebook_url = settings.facebookUrl; }
+        if (settings.metaPixelId !== undefined) { updateData.meta_pixel_id = settings.metaPixelId; }
+        if (settings.currency !== undefined) { updateData.currency = settings.currency; }
+        if (settings.themeColor !== undefined) { updateData.theme_color = settings.themeColor; }
+        if (settings.logoUrl !== undefined) { updateData.logo_url = settings.logoUrl; }
+        if (settings.name !== undefined) { updateData.name = settings.name; }
 
-        if (isOpen !== undefined) { updateData.is_open = isOpen; }
-        if (storeType) { updateData.store_type = storeType; }
+        if (settings.isOpen !== undefined) { updateData.is_open = settings.isOpen; }
+        if (settings.storeType) { updateData.store_type = settings.storeType; }
 
-        // Payment methods — allow setting to empty string to clear
-        if (paypalLink !== undefined) { updateData.paypal_link = paypalLink || null; }
-        if (stripeLink !== undefined) { updateData.stripe_link = stripeLink || null; }
-        if (codEnabled !== undefined) { updateData.cod_enabled = codEnabled; }
-        if (deliveryFee !== undefined) { updateData.delivery_fee = deliveryFee; }
-        if (minOrderAmount !== undefined) { updateData.min_order_amount = minOrderAmount; }
-        if (timezone !== undefined) { updateData.timezone = timezone || null; }
+        if (settings.paypalLink !== undefined) { updateData.paypal_link = settings.paypalLink || null; }
+        if (settings.stripeLink !== undefined) { updateData.stripe_link = settings.stripeLink || null; }
+        if (settings.codEnabled !== undefined) { updateData.cod_enabled = settings.codEnabled; }
+        if (settings.deliveryFee !== undefined) { updateData.delivery_fee = settings.deliveryFee; }
+        if (settings.minOrderAmount !== undefined) { updateData.min_order_amount = settings.minOrderAmount; }
+        if (settings.timezone !== undefined) { updateData.timezone = settings.timezone || null; }
+        if (settings.language !== undefined) { updateData.language = settings.language; }
+        if (settings.customDomain !== undefined) { updateData.custom_domain = settings.customDomain; }
+        if (settings.plan !== undefined) { updateData.plan = settings.plan; }
+        if (settings.email !== undefined) { updateData.email = settings.email; }
+
+        if (Object.keys(updateData).length === 0) return;
 
         const { error } = await this.client
             .from('tenants')
@@ -604,7 +609,24 @@ export class SupabaseAnalyticsRepository implements AnalyticsRepository {
     }
 
     async getSummary(tenantId: string): Promise<AnalyticsSummary> {
-        // Total Orders
+        // Use RPC for high performance aggregation (avoids downloading all rows to Node.js)
+        const { data, error } = await this.client.rpc('get_tenant_revenue_summary', { t_id: tenantId });
+
+        if (error) {
+            console.error("Failed to fetch analytics summary via RPC:", error);
+            // Fallback for local dev if RPC hasn't been pushed yet
+            return this.getSummaryFallback(tenantId);
+        }
+
+        return {
+            totalOrders: data.totalOrders,
+            totalRevenue: data.totalRevenue,
+            recentRevenue: data.recentRevenue
+        };
+    }
+
+    private async getSummaryFallback(tenantId: string): Promise<AnalyticsSummary> {
+        // Fallback for when RPC is missing (Development)
         const { count, error: countError } = await this.client
             .from('orders')
             .select('*', { count: 'exact', head: true })
@@ -613,8 +635,6 @@ export class SupabaseAnalyticsRepository implements AnalyticsRepository {
 
         if (countError) throw new Error(countError.message);
 
-        // Revenue Calculation (This is heavy for client-side if many orders, but okay for MVP)
-        // Ideally, we would use a Supabase Database Function (RPC) for this aggregation.
         const { data: revenueData, error: revenueError } = await this.client
             .from('orders')
             .select('total, date')
@@ -625,7 +645,6 @@ export class SupabaseAnalyticsRepository implements AnalyticsRepository {
 
         const totalRevenue = revenueData.reduce((sum: number, order: any) => sum + (order.total || 0), 0);
 
-        // Recent Revenue (Last 30 days)
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -709,18 +728,12 @@ export class SupabasePromoCodeRepository implements PromoCodeRepository {
     }
 
     async incrementUsage(id: string): Promise<void> {
-        // Supabase doesn't support atomic increment easily via simple client without RPC or manual update
-        // For MVP, we'll read and write, or use rpc if we had one. 
-        // Let's just ignore precise race conditions for now or use a raw query if possible?
-        // Actually, let's keep it simple: we aren't enforcing limits yet.
+        // Use atomic RPC designed to prevent race conditions during high-traffic checkouts
         const { error } = await supabase.rpc('increment_promo_usage', { row_id: id });
-        // If RPC doesn't exist, this will fail. Let's fallback to manual update if RPC fails? 
-        // Or simpler: just don't increment for now to avoid complexity, OR assume the user didn't run the RPC SQL.
-        // Wait, I can't assume RPC exists. I'll do a read-update for now.
 
-        const { data } = await supabase.from('promo_codes').select('usage_count').eq('id', id).single();
-        if (data) {
-            await supabase.from('promo_codes').update({ usage_count: (data.usage_count || 0) + 1 }).eq('id', id);
+        if (error) {
+            console.error("Failed to increment promo usage atomically:", error);
+            throw new Error("Could not increment promo usage");
         }
     }
 }

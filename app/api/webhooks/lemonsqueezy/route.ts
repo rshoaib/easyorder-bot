@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
         const repo = getTenantRepository();
 
-        if (eventName === 'subscription_created' || eventName === 'subscription_updated' || eventName === 'order_created') {
+        if (['subscription_created', 'subscription_updated', 'subscription_cancelled', 'subscription_expired', 'order_created'].includes(eventName)) {
             const attributes = payload.data.attributes;
             const customerId = attributes.customer_id;
             const subscriptionId = payload.data.id; // For subscription events, data.id is the sub ID

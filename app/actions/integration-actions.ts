@@ -15,6 +15,6 @@ export async function saveIntegration(slug: string, tenantId: string, provider: 
         pageId
     });
 
-    revalidatePath(`/admin/${slug}/integrations`);
+    revalidatePath(`/store/${slug}/admin/integrations`);
     return { success: true };
 }

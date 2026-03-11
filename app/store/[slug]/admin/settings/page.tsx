@@ -74,7 +74,21 @@ async function updateSettings(formData: FormData) {
         // Use authenticated server client for RLS compliance
         const supabase = await createClient();
         const tenantRepo = getTenantRepository(supabase);
-        await tenantRepo.updateTenantSettings(id, ownerPhone, instagram, facebook, metaPixelId, currency, undefined, undefined, isOpen, storeType, paypalLink, stripeLink, codEnabled, deliveryFee, minOrderAmount, undefined, timezone);
+        await tenantRepo.updateTenantSettings(id, {
+            ownerPhone, 
+            instagramUrl: instagram, 
+            facebookUrl: facebook, 
+            metaPixelId, 
+            currency, 
+            isOpen, 
+            storeType: storeType as "restaurant" | "retail" | "service" | "digital", 
+            paypalLink, 
+            stripeLink, 
+            codEnabled, 
+            deliveryFee, 
+            minOrderAmount, 
+            timezone
+        });
         success = true;
     } catch (err: any) {
         // Re-throw Next.js redirect/notFound errors — they use throw internally

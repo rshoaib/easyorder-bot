@@ -14,20 +14,9 @@ export async function toggleStoreStatus(tenantId: string, slug: string, isOpen: 
     // In real app, verify user permission here
 
     // We update only the is_open field
-    // Since updateTenantSettings takes all args, we might need a specific method or just pass undefined for others if the repo supports partial updates (which it seems to, based on previous edits).
-    // Let's check supabase-repo implementation again. It allows undefined.
-
-    await repo.updateTenantSettings(
-        tenantId,
-        undefined, // ownerPhone
-        undefined, // instagram
-        undefined, // facebook
-        undefined, // pixel
-        undefined, // currency
-        undefined, // themeColor
-        undefined, // logoUrl
+    await repo.updateTenantSettings(tenantId, {
         isOpen
-    );
+    });
 
     revalidatePath(`/store/${slug}/admin/settings`);
 
@@ -73,14 +62,9 @@ export async function autoDetectTimezone(tenantId: string, slug: string, detecte
 
         // Only set if not already configured (never override manual choice)
         if (tenant && !tenant.timezone) {
-            await repo.updateTenantSettings(
-                tenantId,
-                undefined, undefined, undefined, undefined,
-                undefined, undefined, undefined, undefined,
-                undefined, undefined, undefined, undefined,
-                undefined, undefined, undefined,
-                detectedTimezone // timezone
-            );
+            await repo.updateTenantSettings(tenantId, {
+                timezone: detectedTimezone
+            });
             revalidatePath(`/store/${slug}`);
         }
     } catch {

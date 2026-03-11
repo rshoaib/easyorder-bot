@@ -53,18 +53,9 @@ export async function seedStore(slug: string, type: PresetType) {
         }
 
         // 3. Update Tenant Store Type
-        await tenantRepo.updateTenantSettings(
-            tenant.id,
-            undefined, // ownerPhone
-            undefined, // instagram
-            undefined, // facebook
-            undefined, // pixel
-            undefined, // currency
-            undefined, // theme
-            undefined, // logo
-            undefined, // isOpen
-            preset.storeType // storeType
-        );
+        await tenantRepo.updateTenantSettings(tenant.id, {
+            storeType: preset.storeType
+        });
 
         revalidatePath(`/store/${slug}/admin`);
         revalidatePath(`/store/${slug}/menu`);

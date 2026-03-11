@@ -166,18 +166,7 @@ export async function generateMenu(slug: string, businessDescription: string) {
         }
 
         // Update Tenant Store Type
-        await tenantRepo.updateTenantSettings(
-            tenant.id,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            inferredType
-        );
+        await tenantRepo.updateTenantSettings(tenant.id, { storeType: inferredType as "restaurant" | "retail" | "service" | "digital" });
 
         revalidatePath(`/store/${slug}/menu`);
         revalidatePath(`/store/${slug}/admin`);

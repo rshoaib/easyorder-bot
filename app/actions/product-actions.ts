@@ -18,7 +18,7 @@ export async function toggleProductAvailability(id: string, newState: boolean, s
     const repo = getProductRepository(supabase);
     await repo.toggleAvailability(id, newState);
     revalidatePath(`/store/${slug}/admin/menu`);
-    revalidatePath(`/admin/${slug}/menu`);
+    revalidatePath(`/store/${slug}/admin/menu`);
     revalidatePath(`/store/${slug}`);
     return { success: true };
 }
@@ -67,7 +67,7 @@ export async function createProduct(formData: FormData, tenantId: string, slug: 
         });
     }).catch(err => console.error("Background auto-post failed", err));
 
-    revalidatePath(`/admin/${slug}/menu`);
+    revalidatePath(`/store/${slug}/admin/menu`);
     revalidatePath(`/store/${slug}`);
-    redirect(`/admin/${slug}/menu`);
+    redirect(`/store/${slug}/admin/menu`);
 }

@@ -23,7 +23,12 @@ export default function StoreStatusToggle({ tenantId, slug, isOpen }: Props) {
         setLocalIsOpen(newState); // Optimistic UI
         
         startTransition(async () => {
-            await toggleStoreStatus(tenantId, slug, newState);
+            try {
+                await toggleStoreStatus(tenantId, slug, newState);
+            } catch (error) {
+                console.error("Failed to update store status:", error);
+                setLocalIsOpen(!newState); // Revert optimistic update
+            }
         });
     };
 

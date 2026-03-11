@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useCart } from "@/context/CartContext";
 import { Plus, ShoppingBag, Search, Check, Clock } from "lucide-react";
 import Link from "next/link";
@@ -36,11 +36,13 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
   const products = initialProducts;
   const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
   
-  const filteredProducts = products.filter((p) => {
-      const matchesCategory = category === "All" || p.category === category;
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-  });
+  const filteredProducts = useMemo(() => {
+      return products.filter((p) => {
+          const matchesCategory = category === "All" || p.category === category;
+          const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchesCategory && matchesSearch;
+      });
+  }, [products, category, searchQuery]);
 
   const isOpen = tenant.isOpen !== false; // default to open
 

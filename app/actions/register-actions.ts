@@ -77,11 +77,9 @@ export async function registerTenant(formData: FormData) {
                 }
                 // Set store type on tenant
                 const tenantRepo = getTenantRepository(supabase);
-                await tenantRepo.updateTenantSettings(
-                    tenant.id,
-                    undefined, undefined, undefined, undefined, undefined,
-                    undefined, undefined, undefined, storeType
-                );
+                await tenantRepo.updateTenantSettings(tenant.id, {
+                    storeType: storeType as "restaurant" | "retail" | "service" | "digital"
+                });
             } catch (seedErr) {
                 console.error("Auto-seed warning (non-fatal):", seedErr);
                 // Non-fatal: store is created, user can still add products manually
