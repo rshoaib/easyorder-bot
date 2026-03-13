@@ -8,6 +8,8 @@ import { formatPrice } from '@/lib/currency';
 import { uploadProductImage } from '@/lib/storage';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Props {
     product: any;
@@ -37,8 +39,14 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
         setIsAvailable(newState);
         try {
             await onToggle(product.id, newState);
-        } catch (e) {
+        } catch (e: any) {
             setIsAvailable(!newState);
+            const msg = e.message || 'Failed to toggle';
+            if (e?.digest === 'tenant_ownership_verification_failed' || msg.includes('Unauthorized')) {
+                toast.info("Feature disabled in demo mode.");
+            } else {
+                toast.error(msg);
+            }
         } finally {
             setIsToggling(false);
         }
@@ -67,8 +75,14 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
             setIsEditing(false);
             setEditPreview(null);
             editFileRef.current = null;
+            toast.success("Product updated successfully!");
         } catch (e: any) {
-            alert(e.message || 'Failed to update');
+            const msg = e.message || 'Failed to update';
+            if (e?.digest === 'tenant_ownership_verification_failed' || msg.includes('Unauthorized')) {
+                toast.info("Feature disabled in demo mode. Changes aren't saved.");
+            } else {
+                toast.error(msg);
+            }
         } finally {
             setIsSaving(false);
         }
@@ -79,8 +93,14 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
         setIsDeleting(true);
         try {
             await deleteProduct(slug, product.id);
+            toast.success("Product deleted successfully!");
         } catch (e: any) {
-            alert(e.message || 'Failed to delete');
+            const msg = e.message || 'Failed to delete';
+            if (e?.digest === 'tenant_ownership_verification_failed' || msg.includes('Unauthorized')) {
+                toast.info("Feature disabled in demo mode.");
+            } else {
+                toast.error(msg);
+            }
             setIsDeleting(false);
         }
     };
@@ -245,43 +265,55 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
                 </div>
             </div>
 
-            {/* Custom Delete Confirmation Modal */}
+            <AnimatePresence>
             {showDeleteConfirm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-in fade-in duration-200" onClick={() => setShowDeleteConfirm(false)}>
-                    <div
-                        className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-in zoom-in-95 duration-200"
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" 
+                    onClick={() => setShowDeleteConfirm(false)}
+                >
+                    <motion.div
+                        initial={{ scale: 0.95, opacity: 0, y: 10 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.95, opacity: 0, y: 10 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                        className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 overflow-hidden relative"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                                <AlertTriangle size={20} className="text-red-600" />
+                            <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                                <AlertTriangle size={22} className="text-red-500" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-gray-900">Delete Product</h3>
+                                <h3 className="font-bold text-gray-900 text-lg">Delete Product</h3>
                                 <p className="text-sm text-gray-500">This action cannot be undone.</p>
                             </div>
                         </div>
-                        <p className="text-sm text-gray-600 mb-6">
+                        <p className="text-sm text-gray-600 mb-8">
                             Are you sure you want to delete <strong>&quot;{product.name}&quot;</strong>? This will permanently remove it from your store.
                         </p>
-                        <div className="flex gap-3 justify-end">
+                        <div className="flex gap-3 justify-end mt-2">
                             <button
                                 onClick={() => setShowDeleteConfirm(false)}
-                                className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                className="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleDelete}
-                                className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors flex items-center gap-1.5"
+                                className="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-red-500 hover:bg-red-600 active:scale-95 transition-all flex items-center gap-1.5 shadow-sm shadow-red-500/20"
                             >
-                                <Trash2 size={14} />
+                                <Trash2 size={16} />
                                 Delete
                             </button>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
+            </AnimatePresence>
         </>
     );
 }

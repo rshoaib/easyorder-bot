@@ -122,7 +122,7 @@ export interface TenantRepository {
     getTenantByDomain(domain: string): Promise<Tenant | null>;
     getTenantById(id: string): Promise<Tenant | null>;
     getTenantByUserId(userId: string): Promise<Tenant | null>;
-    updateTenantBilling(id: string, billingData: { lemonsqueezy_customer_id?: string; lemonsqueezy_subscription_id?: string; lemonsqueezy_variant_id?: string; subscription_status?: string }): Promise<void>;
+    updateTenantBilling(id: string, billingData: { paddle_customer_id?: string; paddle_subscription_id?: string; paddle_price_id?: string; subscription_status?: string }): Promise<void>;
     deleteTenant(id: string): Promise<void>;
 
     // Integrations

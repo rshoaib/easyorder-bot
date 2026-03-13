@@ -1,7 +1,13 @@
 
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllPosts } from '@/lib/blog';
 import { ArrowRight, BookOpen, ShoppingBag } from 'lucide-react';
+
+export const metadata: Metadata = {
+    title: '15+ WhatsApp Ordering Guides & Restaurant Success Stories [2026]',
+    description: 'Proven tips, step-by-step tutorials, and real success stories to help you 10x your restaurant sales with WhatsApp ordering. Discover the secrets today.',
+};
 
 export default async function BlogIndex() {
     const posts = await getAllPosts();

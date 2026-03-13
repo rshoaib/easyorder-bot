@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { ArrowLeft, Plus, Tag, ToggleLeft, ToggleRight } from 'lucide-react';
 import { createPromoCode, togglePromoAction } from "@/app/actions/promo-actions";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import ToastHandler from "@/components/admin/ToastHandler";
 
 export const dynamic = 'force-dynamic';
 
@@ -24,18 +26,29 @@ export default async function AdminPromosPage({ params }: Props) {
 
   async function create(formData: FormData) {
       'use server';
-      await createPromoCode(formData, tenant!.id, slug);
-      revalidatePath(`/store/${slug}/admin/promos`);
+      try {
+          await createPromoCode(formData, tenant!.id, slug);
+          revalidatePath(`/store/${slug}/admin/promos`);
+      } catch (e: any) {
+          redirect(`/store/${slug}/admin/promos?error=${encodeURIComponent(e.message || 'Failed to create')}`);
+      }
+      redirect(`/store/${slug}/admin/promos?saved=Promo code created successfully!`);
   }
 
   async function toggle(id: string, currentState: boolean) {
       'use server';
-      await togglePromoAction(id, !currentState, slug);
-      revalidatePath(`/store/${slug}/admin/promos`);
+      try {
+          await togglePromoAction(id, !currentState, slug);
+          revalidatePath(`/store/${slug}/admin/promos`);
+      } catch (e: any) {
+          redirect(`/store/${slug}/admin/promos?error=${encodeURIComponent(e.message || 'Failed to update')}`);
+      }
+      redirect(`/store/${slug}/admin/promos?saved=Promo code updated successfully!`);
   }
 
   return (
     <main className="container pt-1 pb-10" style={{ maxWidth: '800px' }}>
+      <ToastHandler />
       {/* Header */}
       <div className="flex justify-between mb-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
         <div>
@@ -91,7 +104,7 @@ export default async function AdminPromosPage({ params }: Props) {
               </thead>
               <tbody className="divide-y divide-gray-100">
                   {promos.map(promo => (
-                      <tr key={promo.id} className={!promo.isActive ? 'bg-gray-50 opacity-60' : ''}>
+                      <tr key={promo.id} className={`hover:bg-gray-50 transition-colors ${!promo.isActive ? 'bg-gray-50 opacity-60 hover:opacity-100' : ''}`}>
                           <td className="py-4 px-6 font-mono font-bold text-gray-900 flex items-center gap-2">
                               <Tag size={14} className="text-indigo-500" />
                               {promo.code}

@@ -835,6 +835,30 @@ export default async function HomePage({
                       Privacy Policy
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      href="/terms"
+                      className="hover:text-white transition-colors"
+                    >
+                      Terms of Service
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/refund"
+                      className="hover:text-white transition-colors"
+                    >
+                      Refund Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <a
+                      href="mailto:support@orderviachat.com"
+                      className="hover:text-white transition-colors"
+                    >
+                      Contact Us
+                    </a>
+                  </li>
                 </ul>
               </div>
 

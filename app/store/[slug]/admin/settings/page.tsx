@@ -110,6 +110,7 @@ import BrandingSettings from "./BrandingSettings";
 import { DomainSettings } from "@/components/admin/DomainSettings";
 import DeleteStoreButton from "@/components/admin/DeleteStoreButton";
 import PhoneNumberInput from "@/components/admin/PhoneNumberInput";
+import ToastHandler from "@/components/admin/ToastHandler";
 
 export default async function SettingsPage({ params, searchParams }: Props) {
     const { slug } = await params;
@@ -121,6 +122,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
 
     return (
         <main className="container pt-1 pb-10" style={{ maxWidth: '800px' }}>
+            <ToastHandler />
             <div className="flex justify-between mb-4 items-center">
                 <div>
                     <h1 className="text-2xl font-bold mb-1">Store Settings</h1>
@@ -133,19 +135,6 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                     </button>
                 </Link>
             </div>
-
-            {saved && (
-                <div className="mb-6 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-5 py-4 rounded-xl animate-fade-in">
-                    <CheckCircle size={20} className="text-green-600 flex-shrink-0" />
-                    <span className="font-medium">Settings saved successfully!</span>
-                </div>
-            )}
-
-            {error && (
-                <div className="mb-6 flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 px-5 py-4 rounded-xl">
-                    <span className="font-medium">Error: {decodeURIComponent(error)}</span>
-                </div>
-            )}
 
             <ServiceStatus />
 

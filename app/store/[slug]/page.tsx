@@ -22,11 +22,11 @@ export async function generateMetadata({ params }: Props) {
     }
 
     return {
-        title: `${tenant.name} | Order Online`,
-        description: `Order from ${tenant.name} on WhatsApp. View menu and prices.`,
+        title: `${tenant.name} Menu - Order Online in Seconds ⚡`,
+        description: `View the full ${tenant.name} menu and prices. Order directly on WhatsApp in under 10 seconds. Fast, easy, and hassle-free.`,
         openGraph: {
-            title: `${tenant.name} | Order Online`,
-            description: `Order from ${tenant.name} on WhatsApp. View menu and prices.`,
+            title: `${tenant.name} Menu - Order Online in Seconds ⚡`,
+            description: `View the full ${tenant.name} menu and prices. Order directly on WhatsApp in under 10 seconds. Fast, easy, and hassle-free.`,
             type: 'website',
             images: tenant.logoUrl ? [{ url: tenant.logoUrl }] : [],
         },

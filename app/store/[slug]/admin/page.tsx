@@ -227,7 +227,7 @@ export default async function AdminPage({ params }: Props) {
 
 
       {/* Analytics & Revenue Chart */}
-      {analytics && (
+      {analytics && analytics.totalOrders > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Left Col: KPI Cards */}
             <div className="space-y-4">
@@ -259,7 +259,24 @@ export default async function AdminPage({ params }: Props) {
                 <RevenueChart orders={chartOrders} currency={tenant.currency} />
             </div>
         </div>
-      )}
+      ) : analytics && productCount > 0 ? (
+        <div className="mb-8 p-10 bg-white border-2 border-dashed border-gray-200 rounded-3xl text-center flex flex-col items-center justify-center space-y-4 animate-in fade-in duration-500">
+          <div className="w-20 h-20 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mb-2 mx-auto">
+            <ShoppingBag size={36} className="animate-bounce" style={{ animationDuration: '2s' }} />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">Waiting for your first order! 🚀</h3>
+            <p className="text-gray-500 max-w-md mx-auto mt-2">
+              Share your store link on WhatsApp, Instagram, or Facebook to get your first customer. Your analytics will appear here once orders start rolling in.
+            </p>
+          </div>
+          <Link href={`/store/${slug}`} target="_blank">
+            <button className="mt-4 px-6 py-3 bg-white border-2 border-indigo-100 text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 hover:border-indigo-200 transition-all flex items-center gap-2">
+              Preview Store <ExternalLink size={16} />
+            </button>
+          </Link>
+        </div>
+      ) : null}
 
       {/* Domain Settings */}
       <DomainSettings slug={slug} currentDomain={tenant.customDomain} />

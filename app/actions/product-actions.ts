@@ -69,5 +69,5 @@ export async function createProduct(formData: FormData, tenantId: string, slug: 
 
     revalidatePath(`/store/${slug}/admin/menu`);
     revalidatePath(`/store/${slug}`);
-    redirect(`/store/${slug}/admin/menu`);
+    redirect(`/store/${slug}/admin/menu?saved=${encodeURIComponent('Product added successfully!')}`);
 }

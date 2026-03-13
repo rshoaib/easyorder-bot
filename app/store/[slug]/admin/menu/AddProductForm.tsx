@@ -8,6 +8,7 @@ import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getCurrencySymbol } from '@/lib/currency';
+import { toast } from 'sonner';
 
 // Category presets per store type
 const CATEGORY_PRESETS: Record<string, string[]> = {
@@ -99,18 +100,19 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
             selectedFileRef.current = null;
             setSavedProductName(savedName);
             setProductCount(prev => prev + 1);
-            setFeedback(null);
+            toast.success('Product added successfully!');
             (document.getElementById('addProductForm') as HTMLFormElement)?.reset();
 
         } catch (error: any) {
             console.error('[AddProductForm] Error:', error);
             const msg = error?.message || 'Failed to add product';
             if (msg.includes('logged in') || msg.includes('Unauthenticated') || msg.includes('authenticate')) {
-                setFeedback({ type: 'error', message: '🔒 Session expired. Redirecting to login...' });
+                toast.error('🔒 Session expired. Redirecting to login...');
                 setTimeout(() => { window.location.href = `/store/${slug}/admin/login`; }, 2000);
+            } else if (error?.digest === 'tenant_ownership_verification_failed' || msg.includes('Unauthorized')) {
+                toast.info("Feature disabled in demo mode. Changes aren't saved.");
             } else {
-                setFeedback({ type: 'error', message: `❌ ${msg}` });
-                setTimeout(() => setFeedback(null), 5000);
+                toast.error(`❌ ${msg}`);
             }
         } finally {
             setIsUploading(false);
@@ -238,17 +240,32 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                     <input name="name" required placeholder="e.g. Cheese Burger" className="form-input" />
                 </div>
 
-                {/* Quick Mode: only Name + Price */}
+                {/* Quick Mode: only Name + Price + Category */}
                 {quickMode ? (
-                    <>
+                    <div className="grid grid-cols-2 gap-2">
                         <div>
                             <label className="form-label">Price ({getCurrencySymbol(currency)})</label>
                             <input name="price" type="number" step="0.01" required placeholder="10.50" className="form-input" />
                         </div>
+                        <div>
+                            <label className="form-label">Category</label>
+                            <input 
+                                name="category" 
+                                required 
+                                placeholder="e.g. Burgers" 
+                                className="form-input"
+                                list={datalistId}
+                                autoComplete="off"
+                            />
+                            <datalist id={datalistId}>
+                                {categoryPresets.map(cat => (
+                                    <option key={cat} value={cat} />
+                                ))}
+                            </datalist>
+                        </div>
                         {/* Hidden defaults for quick mode */}
-                        <input type="hidden" name="category" value="General" />
                         <input type="hidden" name="description" value="" />
-                    </>
+                    </div>
                 ) : (
                     <>
                         <div>
@@ -378,16 +395,6 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                     </>
                 )}
                 
-                {feedback && (
-                    <div className={`p-3 rounded-xl text-sm font-medium animate-in fade-in duration-300 ${
-                        feedback.type === 'success' 
-                            ? 'bg-green-50 text-green-800 border border-green-200' 
-                            : 'bg-red-50 text-red-800 border border-red-200'
-                    }`}>
-                        {feedback.message}
-                    </div>
-                )}
-
                 <button type="submit" disabled={isUploading} className="btn-block mt-2 flex items-center justify-center gap-2">
                     {isUploading ? <Loader2 className="animate-spin" size={20} /> : <><Plus size={18} /> Add Item</>}
                 </button>

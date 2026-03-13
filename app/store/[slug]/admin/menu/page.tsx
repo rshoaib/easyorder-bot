@@ -4,6 +4,7 @@ import Link from "next/link";
 import AddProductForm from "./AddProductForm";
 import ImportExportButtons from "./ImportExportButtons";
 import ProductListClient from "./ProductListClient";
+import ToastHandler from "@/components/admin/ToastHandler";
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,7 @@ export default async function AdminMenuPage({ params }: Props) {
 
     return (
         <main className="container pt-1 pb-10" style={{ maxWidth: '1100px' }}>
+            <ToastHandler />
             {/* Header */}
             <div className="flex justify-between mb-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-wrap gap-4">
                 <div>

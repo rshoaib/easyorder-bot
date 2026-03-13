@@ -15,7 +15,6 @@ export const metadata: Metadata = {
   title: "OrderViaChat — WhatsApp Ordering for Small Businesses",
   description: "Create a beautiful digital menu and accept orders on WhatsApp. 14-day free trial, then $10/month. No commissions, setup in 2 minutes.",
   keywords: ["WhatsApp Ordering", "Digital Menu", "Online Store Builder", "No Commission Food Delivery", "Instagram Menu", "WhatsApp Store Builder"],
-  manifest: "/manifest.json",
   alternates: {
     canonical: 'https://orderviachat.com',
   },

@@ -108,12 +108,21 @@ export default function SocialAssetGenerator({ storeName, storeUrl, themeColor, 
         <div className="bg-white p-6 rounded-2xl border shadow-sm flex flex-col md:flex-row gap-8">
             {/* Controls */}
             <div className="flex-1 space-y-6">
-                <div>
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                        <Palette size={20} className="text-pink-500" />
-                        Story Generator
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-1">Create instant social media assets.</p>
+                <div className="flex justify-between items-start gap-4">
+                    <div>
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                            <Palette size={20} className="text-pink-500" />
+                            Story Generator
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">Create instant social media assets.</p>
+                    </div>
+                    <button
+                        onClick={handleDownload}
+                        className="p-2 sm:px-4 sm:py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors flex items-center justify-center gap-2 font-medium shrink-0"
+                        title="Download Story"
+                    >
+                        <Download size={16} /> <span className="hidden sm:inline">Download</span>
+                    </button>
                 </div>
 
                 <div className="space-y-4">

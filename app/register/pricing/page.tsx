@@ -17,6 +17,7 @@ import {
   Sparkles,
   MessageCircle,
 } from 'lucide-react';
+import { initializePaddle, Paddle } from '@paddle/paddle-js';
 
 const features = [
   {
@@ -102,8 +103,19 @@ function PricingContent() {
   const tenantId = searchParams.get('tenantId');
   const canceled = searchParams.get('canceled');
 
+  const [paddle, setPaddle] = useState<Paddle>();
+
   useEffect(() => {
     setIsVisible(true);
+    // Initialize Paddle using the client-side token
+    initializePaddle({ 
+      environment: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox',
+      token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN || '' 
+    }).then(
+      (paddleInstance: Paddle | undefined) => {
+        if (paddleInstance) setPaddle(paddleInstance);
+      }
+    );
   }, []);
 
   const handleSubscribe = async () => {
@@ -111,26 +123,39 @@ function PricingContent() {
       alert('No Store ID found. Please register first.');
       return;
     }
-    setLoading(true);
-    try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tenantId }),
-      });
-
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Failed to start checkout: ' + (data.error || 'Unknown error'));
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Something went wrong.');
-      setLoading(false);
+    const priceId = process.env.NEXT_PUBLIC_PADDLE_PRICE_ID;
+    if (!priceId) {
+      alert('Paddle Price ID is not configured.');
+      return;
     }
+
+    if (!paddle) {
+      alert('Paddle checkout is still loading. Please try again in a moment.');
+      return;
+    }
+
+    setLoading(true);
+    
+    // Open Paddle Checkout Overlay
+    paddle.Checkout.open({
+      items: [
+        {
+          priceId: priceId,
+          quantity: 1
+        }
+      ],
+      customData: {
+        tenantId: tenantId
+      },
+      settings: {
+        displayMode: 'overlay',
+        theme: 'light',
+        successUrl: `${window.location.origin}/admin/dashboard?success=true`
+      }
+    });
+    
+    // Reset loading state after a slight delay so user sees the action registered
+    setTimeout(() => setLoading(false), 1000);
   };
 
   return (

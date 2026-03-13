@@ -20,11 +20,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (!post) return {};
 
     return {
-        title: `${post.title} | OrderViaChat Blog`,
-        description: post.excerpt,
+        title: `${post.title} | Free Guide [2026]`,
+        description: post.excerpt.endsWith('.') 
+            ? `${post.excerpt} Click to learn the secrets to scaling your WhatsApp restaurant orders.`
+            : `${post.excerpt}. Click to learn the secrets to scaling your WhatsApp restaurant orders.`,
         openGraph: {
-            title: post.title,
-            description: post.excerpt,
+            title: `${post.title} | Free Guide [2026]`,
+            description: post.excerpt.endsWith('.') 
+                ? `${post.excerpt} Click to learn the secrets to scaling your WhatsApp restaurant orders.`
+                : `${post.excerpt}. Click to learn the secrets to scaling your WhatsApp restaurant orders.`,
             type: 'article',
             images: post.coverImage ? [post.coverImage] : [],
         }
