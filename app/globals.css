@@ -582,17 +582,16 @@ nav>.container {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Product Grid (Responsive) */
 .product-grid {
   display: grid;
-  /* Single column on very small phones (< 480px) */
-  grid-template-columns: 1fr;
+  /* Two columns on mobile for better vertical space usage */
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
 }
 
 @media (min-width: 480px) {
   .product-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
