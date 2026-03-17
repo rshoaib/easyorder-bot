@@ -4,6 +4,7 @@ import { getPost, getAllPosts } from '@/lib/blog';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Calendar, User, ShoppingBag } from 'lucide-react';
 import ShareButtons from '@/components/blog/ShareButtons';
+import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
 import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
@@ -143,10 +144,7 @@ export default async function BlogPost({ params }: Props) {
 
                 {/* Content */}
                 <div className="max-w-3xl mx-auto px-6">
-                    <div 
-                        className="prose prose-lg prose-indigo prose-img:rounded-2xl max-w-none"
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                    />
+                    <MarkdownRenderer content={post.content} />
                 </div>
             </article>
 
