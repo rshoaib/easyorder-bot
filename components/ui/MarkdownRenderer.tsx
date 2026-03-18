@@ -13,7 +13,9 @@ export default function MarkdownRenderer({ content, className = '' }: MarkdownRe
     // we can check if it starts with HTML tags. If it's mostly HTML, we might need to use dangerouslySetInnerHTML
     // as a fallback. However, for a pure Markdown approach, ReactMarkdown is best.
     
-    const isHtml = content.trim().startsWith('<') && content.includes('</h1>');
+    const isHtml = content.trim().startsWith('<') && (
+        content.includes('</p>') || content.includes('</h1>') || content.includes('</h2>') || content.includes('</div>') || content.includes('</table>')
+    );
     
     if (isHtml) {
          return (
