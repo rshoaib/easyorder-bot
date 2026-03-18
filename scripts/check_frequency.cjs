@@ -15,7 +15,7 @@ async function main() {
 
     // Calculate dates based on 2026-03-17T15:36:03+03:00 (Today is Tuesday)
     // Actually, let's use JS Date since the time is close enough to local
-    const nowLocalStr = "2026-03-17T15:36:03+03:00";
+    const nowLocalStr = "2026-03-18T20:15:46+03:00";
     const now = new Date(nowLocalStr);
     
     // Start of today in local timezone

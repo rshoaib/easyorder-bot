@@ -1,15 +1,15 @@
 ╔══════════════════════════════════════════════════════╗
 ║  📊 Content Dashboard — orderviachat.com           ║
 ╠══════════════════════════════════════════════════════╣
-║  📦 Total Articles      │ 36                         ║
-║  📅 Last Published      │ WhatsApp AI Chatbot for O  ║
+║  📦 Total Articles      │ 37                         ║
+║  📅 Last Published      │ Why a WhatsApp Menu is th  ║
 ╠─────────────────────────┼──────────────────────────╣
 ║  ✍️ Published Today      │ 0 of 1 ⬜                 ║
-║  📆 Published This Week │ 0 of 3 ⬜⬜⬜              ║
+║  📆 Published This Week │ 1 of 3 ⬛⬜⬜              ║
 ╠─────────────────────────┼──────────────────────────╣
 ║  🟢 Today Slots Left    │ 1                        ║
-║  🟢 Week Slots Left     │ 3                        ║
+║  🟢 Week Slots Left     │ 2                        ║
 ╠══════════════════════════════════════════════════════╣
 ║  This week's articles:                              ║
-
+║  • 2026-03-17 - Why a WhatsApp Menu is the Best Strategy for Restaurant Customer Retention in 2026║
 ╚══════════════════════════════════════════════════════╝
