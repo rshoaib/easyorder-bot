@@ -14,7 +14,7 @@ export default function TermsOfService() {
         <p>OrderViaChat provides a digital menu and ordering platform for businesses (merchants) to receive orders directly via WhatsApp. We are a software provider and do not prepare, sell, or deliver food or physical goods.</p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-4">3. Subscriptions and Payments</h2>
-        <p>Access to merchant features is provided on a subscription basis (e.g., $10/month) after an initial 14-day free trial. Our payments are processed securely via Paddle, our Merchant of Record.</p>
+        <p>Access to basic merchant features is provided free of charge. Premium features are available via an optional Pro subscription ($10/month), payable via bank transfer. You may cancel at any time.</p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-4">4. Merchant Responsibilities</h2>
         <p>Merchants are solely responsible for the accuracy of their menus, pricing, fulfillment of orders, and compliance with local laws and health regulations regarding the products they sell through our platform.</p>

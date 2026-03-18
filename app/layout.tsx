@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     google: 'WcuXQJqslc4P5QSu6dxMcHrXZUK0R-qudDlIKZFYrL8',
   },
   title: "OrderViaChat — WhatsApp Ordering for Small Businesses",
-  description: "Create a beautiful digital menu and accept orders on WhatsApp. 14-day free trial, then $10/month. No commissions, setup in 2 minutes.",
+  description: "Create a beautiful digital menu and accept orders on WhatsApp. Free to start, no commissions, setup in 2 minutes.",
   keywords: ["WhatsApp Ordering", "Digital Menu", "Online Store Builder", "No Commission Food Delivery", "Instagram Menu", "WhatsApp Store Builder"],
   alternates: {
     canonical: 'https://orderviachat.com',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'OrderViaChat',
     title: 'OrderViaChat — WhatsApp Ordering for Small Businesses',
-    description: 'Create a digital menu, share a link, get orders on WhatsApp. 14-day free trial, then $10/month. No commissions.',
+    description: 'Create a digital menu, share a link, get orders on WhatsApp. Free to start. No commissions.',
     images: [
       {
         url: '/images/showcase-store.png',
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'OrderViaChat — WhatsApp Ordering',
-    description: 'Create a digital menu, share a link, get orders on WhatsApp. 14-day free trial!',
+    description: 'Create a digital menu, share a link, get orders on WhatsApp. Start free today!',
     images: ['/images/showcase-store.png'],
   },
 };
@@ -72,7 +72,7 @@ export default function RootLayout({
               "@type": "WebSite",
               name: "OrderViaChat",
               url: "https://orderviachat.com",
-              description: "Create a beautiful digital menu and accept orders on WhatsApp. 14-day free trial, then $10/month. No commissions.",
+              description: "Create a beautiful digital menu and accept orders on WhatsApp. Free to start, no commissions.",
               potentialAction: {
                 "@type": "SearchAction",
                 target: "https://orderviachat.com/?q={search_term_string}",
@@ -90,7 +90,7 @@ export default function RootLayout({
               name: "OrderViaChat",
               url: "https://orderviachat.com",
               logo: "https://orderviachat.com/images/showcase-store.png",
-              description: "WhatsApp ordering platform for small businesses — digital menus, no commissions, setup in 2 minutes. 14-day free trial.",
+              description: "WhatsApp ordering platform for small businesses — digital menus, no commissions, setup in 2 minutes. Start free today.",
             }),
           }}
         />

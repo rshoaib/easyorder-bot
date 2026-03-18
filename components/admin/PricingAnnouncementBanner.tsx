@@ -34,7 +34,7 @@ export default function PricingAnnouncementBanner() {
           📢 Pricing Update — Starting April 1, 2026
         </p>
         <p className="text-amber-800 text-sm leading-relaxed">
-          OrderViaChat is moving to <strong>$10/month</strong> (new stores get a 14-day free trial).
+          OrderViaChat is now <strong>free to start</strong>! Upgrade to Pro for <strong>$10/month</strong> when you need unlimited features.
           As an early adopter, you&apos;ll get <strong>3 months free</strong> before billing starts.
           Questions?{' '}
           <a

@@ -8,7 +8,7 @@ export default function RefundPolicy() {
       
       <div className="prose lg:prose-xl">
         <h2 className="text-2xl font-semibold mt-6 mb-4">1. Subscription Refunds</h2>
-        <p>At OrderViaChat, we offer a 14-day free trial for all new merchants so you can fully evaluate our software before paying.</p>
+        <p>At OrderViaChat, we offer a generous free plan so you can fully evaluate our software before upgrading to Pro.</p>
         <p>Because of this extensive trial period, <strong>monthly subscription payments are generally non-refundable</strong> once processed. You may cancel your subscription at any time to prevent future charges.</p>
         <p>If you experience technical issues that prevent you from using the platform as intended within the first 7 days of a paid billing cycle, please contact our support team to request a review for a potential proportional refund.</p>
 
