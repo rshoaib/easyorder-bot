@@ -222,17 +222,19 @@ function PricingContent() {
                   ))}
                 </div>
 
-                {/* Gumroad CTA */}
+                {/* WhatsApp Subscribe CTA */}
                 <a
-                  href="https://segmentbi.gumroad.com/l/iuzjan"
-                  className="gumroad-button w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-500 hover:from-indigo-500 hover:via-indigo-400 hover:to-emerald-400 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                  href="https://wa.me/923224609117?text=Hi!%20I%20want%20to%20subscribe%20to%20OrderViaChat%20Pro%20%28%2410%2Fmo%29.%20Please%20set%20up%20my%20store!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  Subscribe — $10/mo
-                  <ArrowRight className="w-4 h-4" />
+                  <MessageCircle className="w-5 h-5" />
+                  Subscribe via WhatsApp
                 </a>
 
                 <p className="mt-3 text-center text-xs text-slate-500">
-                  Powered by Gumroad • Cancel anytime
+                  Message us to get started • Cancel anytime
                 </p>
               </div>
             </div>
