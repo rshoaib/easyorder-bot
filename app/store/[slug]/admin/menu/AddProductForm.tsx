@@ -243,29 +243,58 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                     <input name="name" required placeholder="e.g. Cheese Burger" className="form-input" />
                 </div>
 
-                {/* Quick Mode: only Name + Price + Category */}
+                {/* Quick Mode: Name + Price + Category + compact photo */}
                 {quickMode ? (
-                    <div className="grid grid-cols-2 gap-2">
-                        <div>
-                            <label className="form-label">Price ({getCurrencySymbol(currency)})</label>
-                            <input name="price" type="number" step="0.01" required placeholder="10.50" className="form-input" />
+                    <div className="flex flex-col gap-3">
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <label className="form-label">Price ({getCurrencySymbol(currency)})</label>
+                                <input name="price" type="number" step="0.01" required placeholder="10.50" className="form-input" />
+                            </div>
+                            <div>
+                                <label className="form-label">Category</label>
+                                <input 
+                                    name="category" 
+                                    required 
+                                    placeholder="e.g. Burgers" 
+                                    className="form-input"
+                                    list={datalistId}
+                                    autoComplete="off"
+                                />
+                                <datalist id={datalistId}>
+                                    {categoryPresets.map(cat => (
+                                        <option key={cat} value={cat} />
+                                    ))}
+                                </datalist>
+                            </div>
                         </div>
-                        <div>
-                            <label className="form-label">Category</label>
-                            <input 
-                                name="category" 
-                                required 
-                                placeholder="e.g. Burgers" 
-                                className="form-input"
-                                list={datalistId}
-                                autoComplete="off"
-                            />
-                            <datalist id={datalistId}>
-                                {categoryPresets.map(cat => (
-                                    <option key={cat} value={cat} />
-                                ))}
-                            </datalist>
-                        </div>
+                        {/* Compact Photo Upload for Quick Mode */}
+                        {preview ? (
+                            <div className="relative w-full h-28 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                                <Image src={preview} alt="Preview" fill className="object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={() => { setPreview(null); selectedFileRef.current = null; }}
+                                    className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white text-xs font-bold px-2.5 py-1 rounded-lg transition-colors backdrop-blur-sm"
+                                >
+                                    ✕ Remove
+                                </button>
+                            </div>
+                        ) : (
+                            <label className="flex items-center gap-3 p-3 rounded-xl border-2 border-dashed border-gray-200 cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-all group">
+                                <span className="text-xl group-hover:scale-110 transition-transform">📷</span>
+                                <div>
+                                    <span className="text-sm font-semibold text-gray-600 group-hover:text-indigo-600">Add Photo</span>
+                                    <span className="text-xs text-gray-400 ml-1">(optional)</span>
+                                </div>
+                                <input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    className="hidden" 
+                                    onChange={handleFileChange} 
+                                />
+                            </label>
+                        )}
                         {/* Hidden defaults for quick mode */}
                         <input type="hidden" name="description" value="" />
                     </div>
