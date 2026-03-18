@@ -728,12 +728,28 @@ export class SupabasePromoCodeRepository implements PromoCodeRepository {
     }
 
     async incrementUsage(id: string): Promise<void> {
-        // Use atomic RPC designed to prevent race conditions during high-traffic checkouts
-        const { error } = await supabase.rpc('increment_promo_usage', { row_id: id });
+        // Fetch current usage, then increment
+        const { data, error: fetchError } = await supabase
+            .from('promo_codes')
+            .select('usage_count')
+            .eq('id', id)
+            .single();
 
-        if (error) {
-            console.error("Failed to increment promo usage atomically:", error);
-            throw new Error("Could not increment promo usage");
+        if (fetchError) {
+            console.error("Failed to fetch promo for increment:", fetchError);
+            // Non-blocking: don't fail the order just because usage tracking failed
+            return;
+        }
+
+        const currentUsage = data?.usage_count || 0;
+        const { error: updateError } = await supabase
+            .from('promo_codes')
+            .update({ usage_count: currentUsage + 1 })
+            .eq('id', id);
+
+        if (updateError) {
+            console.error("Failed to increment promo usage:", updateError);
+            // Non-blocking: order should still succeed
         }
     }
 }
