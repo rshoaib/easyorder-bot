@@ -396,20 +396,18 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                             />
                         </div>
 
-                        {/* Sizes (Retail/Service/Digital only) */}
-                        {storeType !== 'restaurant' && (
-                            <div>
-                                <label className="form-label">Sizes (Optional)</label>
-                                <input 
-                                    name="sizes" 
-                                    value={sizes}
-                                    onChange={(e) => setSizes(e.target.value)}
-                                    placeholder="e.g. S, M, L, XL, XXL" 
-                                    className="form-input" 
-                                />
-                                <p className="text-xs text-gray-400 mt-1">Comma-separated. Customers will pick a size before adding to cart.</p>
-                            </div>
-                        )}
+                        {/* Sizes (Optional — any store type) */}
+                        <div>
+                            <label className="form-label">Sizes (Optional)</label>
+                            <input 
+                                name="sizes" 
+                                value={sizes}
+                                onChange={(e) => setSizes(e.target.value)}
+                                placeholder="e.g. S, M, L, XL, XXL" 
+                                className="form-input" 
+                            />
+                            <p className="text-xs text-gray-400 mt-1">Comma-separated. Customers will pick a size before adding to cart.</p>
+                        </div>
                     </>
                 )}
                 
