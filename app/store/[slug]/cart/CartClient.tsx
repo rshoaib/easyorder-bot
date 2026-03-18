@@ -312,7 +312,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, x: -20 }}
                         transition={{ duration: 0.2 }}
-                        key={item.id} 
+                        key={item.cartKey || item.id} 
                         className="flex gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm"
                     >
                          <div className="h-20 w-20 rounded-lg overflow-hidden bg-gray-50 relative flex-shrink-0">
@@ -322,7 +322,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                             <div className="flex justify-between items-start mb-1">
                                 <h3 className="font-bold">{item.name}</h3>
                                 <button 
-                                    onClick={() => removeItem(item.id)}
+                                    onClick={() => removeItem(item.cartKey || item.id)}
                                     className="text-gray-400 hover:text-red-500"
                                 >
                                     <Trash2 size={16} />
@@ -330,16 +330,17 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                             </div>
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="text-sm text-gray-500">{formatPrice(item.price, currency)}</div>
+                                {(item as any).selectedSize && <span className="text-[10px] uppercase font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">Size: {(item as any).selectedSize}</span>}
                                 {(item as any).type === 'digital' && <span className="text-[10px] uppercase font-bold bg-indigo-100 text-indigo-700 px-2 rounded-sm">Digital</span>}
                             </div>
                             <div className="flex items-center gap-3">
                                 <button 
-                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                    onClick={() => updateQuantity(item.cartKey || item.id, item.quantity - 1)}
                                     className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 font-bold hover:bg-gray-200"
                                 >-</button>
                                 <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
                                 <button 
-                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                    onClick={() => updateQuantity(item.cartKey || item.id, item.quantity + 1)}
                                     className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 font-bold hover:bg-gray-200"
                                 >+</button>
                             </div>

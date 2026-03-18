@@ -130,7 +130,10 @@ export async function POST(req: NextRequest) {
 
         // Construct WhatsApp Message
         const currencySymbol = getCurrencySymbol(tenant.currency);
-        const itemsList = validatedItems.map((item: any, i: number) => `  ${i + 1}. ${item.name} × ${item.quantity}  —  ${currencySymbol}${(item.price * item.quantity).toFixed(2)}`).join('\n');
+        const itemsList = validatedItems.map((item: any, i: number) => {
+            const sizeLabel = item.selectedSize ? ` (${item.selectedSize})` : '';
+            return `  ${i + 1}. ${item.name}${sizeLabel} × ${item.quantity}  —  ${currencySymbol}${(item.price * item.quantity).toFixed(2)}`;
+        }).join('\n');
         
         const message = 
             `🛒 *NEW ORDER*\n` +

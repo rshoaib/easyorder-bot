@@ -10,6 +10,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
     EGP: 'E£',
     MRU: 'UM',
     MUR: '₨',
+    ZAR: 'R',
 };
 
 /**

@@ -206,12 +206,20 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
 function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tenant, dict: any }) {
     const { addItem } = useCart();
     const [isAdded, setIsAdded] = useState(false);
+    const [showSizePicker, setShowSizePicker] = useState(false);
 
-    const handleAdd = (e: React.MouseEvent) => {
+    const handleAdd = (e: React.MouseEvent, size?: string) => {
         e.stopPropagation();
         if (!product.isAvailable) return;
         
-        addItem({ ...product, price: Number(product.price) });
+        // If product has sizes and no size selected yet, show picker
+        if (product.sizes && product.sizes.length > 0 && !size) {
+            setShowSizePicker(true);
+            return;
+        }
+
+        addItem({ ...product, price: Number(product.price) }, size);
+        setShowSizePicker(false);
         
         // Trigger animation
         setIsAdded(true);
@@ -220,7 +228,7 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
 
     return (
         <div 
-          className={`product-card group ${product.isAvailable ? 'cursor-pointer' : 'opacity-60 cursor-default'}`}
+          className={`product-card group relative ${product.isAvailable ? 'cursor-pointer' : 'opacity-60 cursor-default'}`}
           onClick={handleAdd}
         >
             <div className="product-image-container">
@@ -261,10 +269,44 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
                      {product.type === 'service' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">SERVICE</span>}
                      {product.type === 'digital' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">DIGITAL</span>}
                  </div>
+                 {product.sizes && product.sizes.length > 0 && (
+                   <div className="flex flex-wrap gap-1 mb-1">
+                     {product.sizes.map((s) => (
+                       <span key={s} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">{s}</span>
+                     ))}
+                   </div>
+                 )}
                  <div className="mt-1 text-lg font-bold">
                     {formatPrice(Number(product.price), tenant.currency)}
                  </div>
             </div>
+
+            {/* Size Picker Popup */}
+            {showSizePicker && product.sizes && (
+              <div 
+                className="absolute inset-0 z-10 bg-white/95 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-3 animate-in fade-in zoom-in-95 duration-200"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="text-xs font-bold text-gray-700 mb-2">Select Size</p>
+                <div className="flex flex-wrap gap-1.5 justify-center mb-3">
+                  {product.sizes.map((s) => (
+                    <button
+                      key={s}
+                      onClick={(e) => handleAdd(e, s)}
+                      className="px-3 py-1.5 text-xs font-bold rounded-lg border-2 border-gray-200 hover:border-indigo-500 hover:bg-indigo-50 hover:text-indigo-700 transition-all active:scale-95"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowSizePicker(false); }}
+                  className="text-[10px] text-gray-400 hover:text-gray-600"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
     )
 }

@@ -129,7 +129,8 @@ export class SupabaseProductRepository implements ProductRepository {
             tenantId: d.tenant_id,
             isAvailable: d.is_available, // Map from DB column
             type: d.type || 'physical',
-            digitalFileUrl: d.digital_file_url
+            digitalFileUrl: d.digital_file_url,
+            sizes: d.sizes || undefined
         })) as Product[];
     }
 
@@ -146,7 +147,8 @@ export class SupabaseProductRepository implements ProductRepository {
                 tenant_id: product.tenantId,
                 is_available: true,
                 type: product.type,
-                digital_file_url: product.digitalFileUrl
+                digital_file_url: product.digitalFileUrl,
+                sizes: product.sizes || null
             });
 
         if (error) {
@@ -176,13 +178,14 @@ export class SupabaseProductRepository implements ProductRepository {
         }
     }
 
-    async updateProduct(id: string, data: Partial<Pick<Product, 'name' | 'price' | 'category' | 'description' | 'image'>>): Promise<void> {
+    async updateProduct(id: string, data: Partial<Pick<Product, 'name' | 'price' | 'category' | 'description' | 'image' | 'sizes'>>): Promise<void> {
         const updateData: any = {};
         if (data.name !== undefined) updateData.name = data.name;
         if (data.price !== undefined) updateData.price = data.price;
         if (data.category !== undefined) updateData.category = data.category;
         if (data.description !== undefined) updateData.description = data.description;
         if (data.image !== undefined) updateData.image = data.image;
+        if (data.sizes !== undefined) updateData.sizes = data.sizes;
 
         const { error } = await this.client
             .from('products')

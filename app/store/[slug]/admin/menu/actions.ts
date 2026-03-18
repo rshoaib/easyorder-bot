@@ -24,6 +24,10 @@ export async function addProduct(slug: string, formData: FormData) {
 
     const id = Date.now().toString();
 
+    // Parse sizes from comma-separated string
+    const sizesRaw = formData.get('sizes') as string;
+    const sizes = sizesRaw ? sizesRaw.split(',').map(s => s.trim()).filter(Boolean) : undefined;
+
     const product: Product = {
         id,
         name: sanitizeProductName(formData.get('name') as string),
@@ -34,7 +38,8 @@ export async function addProduct(slug: string, formData: FormData) {
         tenantId: tenant.id,
         isAvailable: true,
         type: (formData.get('type') as 'physical' | 'digital' | 'service') || 'physical',
-        digitalFileUrl: formData.get('digitalFileUrl') as string || undefined
+        digitalFileUrl: formData.get('digitalFileUrl') as string || undefined,
+        sizes: sizes && sizes.length > 0 ? sizes : undefined
     };
 
     await repo.addProduct(product);
@@ -82,7 +87,7 @@ export async function importProducts(slug: string, products: Omit<Product, 'id' 
     revalidatePath(`/store/${slug}`);
 }
 
-export async function updateProduct(slug: string, productId: string, data: { name?: string; price?: number; category?: string; description?: string; image?: string }) {
+export async function updateProduct(slug: string, productId: string, data: { name?: string; price?: number; category?: string; description?: string; image?: string; sizes?: string[] }) {
     // Security Check
     await verifyTenantOwnership(slug);
 
@@ -93,6 +98,7 @@ export async function updateProduct(slug: string, productId: string, data: { nam
     if (data.category !== undefined) sanitized.category = sanitizeCategory(data.category);
     if (data.description !== undefined) sanitized.description = sanitizeDescription(data.description);
     if (data.image !== undefined) sanitized.image = data.image;
+    if (data.sizes !== undefined) sanitized.sizes = data.sizes;
 
     const supabase = await createClient();
     const repo = getProductRepository(supabase);

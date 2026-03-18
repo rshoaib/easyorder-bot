@@ -31,6 +31,7 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
     const [category, setCategory] = useState(product.category);
     const [editPreview, setEditPreview] = useState<string | null>(null);
     const editFileRef = useRef<File | null>(null);
+    const [sizesText, setSizesText] = useState((product.sizes || []).join(', '));
 
     const handleToggle = async () => {
         if (isToggling) return;
@@ -66,11 +67,15 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
                 }
             }
 
+            // Parse sizes
+            const parsedSizes = sizesText.split(',').map((s: string) => s.trim()).filter(Boolean);
+
             await updateProduct(slug, product.id, {
                 name,
                 price: parseFloat(price),
                 category,
                 ...(imageUrl !== undefined ? { image: imageUrl } : {}),
+                sizes: parsedSizes.length > 0 ? parsedSizes : [],
             });
             setIsEditing(false);
             setEditPreview(null);
@@ -109,6 +114,7 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
         setName(product.name);
         setPrice(product.price.toString());
         setCategory(product.category);
+        setSizesText((product.sizes || []).join(', '));
         setEditPreview(null);
         editFileRef.current = null;
         setIsEditing(false);
@@ -181,6 +187,13 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
                                 placeholder="Category"
                             />
                         </div>
+                        {/* Sizes input */}
+                        <input
+                            value={sizesText}
+                            onChange={(e) => setSizesText(e.target.value)}
+                            className="w-full px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none"
+                            placeholder="Sizes: S, M, L, XL"
+                        />
                     </div>
                 </div>
 
@@ -229,6 +242,13 @@ export default function EditableProductItem({ product, slug, tenantId, currency,
                     <div className="flex-1 min-w-0">
                         <h3 className="font-bold text-sm truncate">{product.name}</h3>
                         <div className="text-sm text-gray-500">{product.category} • {formatPrice(product.price, currency)}</div>
+                        {product.sizes && product.sizes.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                                {product.sizes.map((s: string) => (
+                                    <span key={s} className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">{s}</span>
+                                ))}
+                            </div>
+                        )}
                     </div>
                     <button
                         onClick={() => setIsEditing(true)}

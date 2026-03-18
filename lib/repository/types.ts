@@ -70,6 +70,7 @@ export interface Product {
     isAvailable: boolean;
     type: 'physical' | 'digital' | 'service';
     digitalFileUrl?: string; // New: URL for digital downloads
+    sizes?: string[]; // Optional: e.g. ["S", "M", "L", "XL"]
 }
 
 export interface ProductRepository {
@@ -77,7 +78,7 @@ export interface ProductRepository {
     addProduct(product: Product): Promise<void>;
     deleteProduct(id: string): Promise<void>;
     toggleAvailability(id: string, isAvailable: boolean): Promise<void>;
-    updateProduct(id: string, data: Partial<Pick<Product, 'name' | 'price' | 'category' | 'description'>>): Promise<void>;
+    updateProduct(id: string, data: Partial<Pick<Product, 'name' | 'price' | 'category' | 'description' | 'sizes'>>): Promise<void>;
 }
 
 // Analytics Interface

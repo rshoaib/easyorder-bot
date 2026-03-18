@@ -40,6 +40,7 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
     const [productCount, setProductCount] = useState(initialProductCount);
     const [showProModal, setShowProModal] = useState(false);
     const [quickMode, setQuickMode] = useState(true); // Fix 3: Quick Add mode default ON
+    const [sizes, setSizes] = useState('');
     
     // Store the selected image file in a ref so it survives form submission
     const selectedFileRef = useRef<File | null>(null);
@@ -87,6 +88,7 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
             submitData.set('description', description || (formData.get('description') as string));
             submitData.set('image', imageUrl);
             submitData.set('type', productType);
+            if (sizes.trim()) submitData.set('sizes', sizes.trim());
 
             console.log('[AddProductForm] Submitting with image URL:', imageUrl);
             const savedName = (submitData.get('name') as string) || 'Item';
@@ -97,6 +99,7 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
             setDescription('');
             setDigitalFileName(null);
             setProductType('physical');
+            setSizes('');
             selectedFileRef.current = null;
             setSavedProductName(savedName);
             setProductCount(prev => prev + 1);
@@ -392,6 +395,21 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                                 rows={2} 
                             />
                         </div>
+
+                        {/* Sizes (Retail/Service/Digital only) */}
+                        {storeType !== 'restaurant' && (
+                            <div>
+                                <label className="form-label">Sizes (Optional)</label>
+                                <input 
+                                    name="sizes" 
+                                    value={sizes}
+                                    onChange={(e) => setSizes(e.target.value)}
+                                    placeholder="e.g. S, M, L, XL, XXL" 
+                                    className="form-input" 
+                                />
+                                <p className="text-xs text-gray-400 mt-1">Comma-separated. Customers will pick a size before adding to cart.</p>
+                            </div>
+                        )}
                     </>
                 )}
                 
