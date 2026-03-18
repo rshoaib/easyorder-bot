@@ -78,6 +78,7 @@ export default async function AdminMenuPage({ params }: Props) {
                         storeType={tenant.storeType}
                         currency={tenant.currency}
                         initialProductCount={products.length}
+                        plan={tenant.plan}
                     />
                 </div>
             </div>

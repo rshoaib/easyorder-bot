@@ -20,6 +20,8 @@ const CATEGORY_PRESETS: Record<string, string[]> = {
 
 const RECOMMENDED_COUNT = 8;
 
+const FREE_PRODUCT_LIMIT = 8;
+
 interface Props {
     slug: string;
     tenantId: string;
@@ -27,9 +29,10 @@ interface Props {
     storeType?: string;
     currency?: string;
     initialProductCount?: number;
+    plan?: 'free' | 'pro';
 }
 
-export default function AddProductForm({ slug, tenantId, storeName, storeType, currency, initialProductCount = 0 }: Props) {
+export default function AddProductForm({ slug, tenantId, storeName, storeType, currency, initialProductCount = 0, plan }: Props) {
     const [isUploading, setIsUploading] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
     const [description, setDescription] = useState('');
@@ -203,6 +206,35 @@ export default function AddProductForm({ slug, tenantId, storeName, storeType, c
                         </button>
                     </Link>
                 </div>
+            </div>
+        );
+    }
+
+    // Free tier product limit gate
+    const isFreeLimited = plan !== 'pro' && productCount >= FREE_PRODUCT_LIMIT;
+
+    if (isFreeLimited) {
+        return (
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-4 text-center">
+                <div className="p-3 bg-amber-50 rounded-xl mb-4">
+                    <span className="text-3xl">🔒</span>
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 mb-1">Product Limit Reached</h3>
+                <p className="text-sm text-gray-500 mb-1">
+                    Free plan allows up to <span className="font-bold text-gray-700">{FREE_PRODUCT_LIMIT} products</span>.
+                </p>
+                <p className="text-sm text-gray-500 mb-4">
+                    You have <span className="font-bold text-amber-600">{productCount}</span> products.
+                </p>
+                <a
+                    href="https://wa.me/923224609117?text=Hi!%20I%20want%20to%20upgrade%20to%20OrderViaChat%20Pro%20for%20unlimited%20products!"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-emerald-500 hover:from-indigo-500 hover:to-emerald-400 shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                    ⭐ Upgrade to Pro — $10/mo
+                </a>
+                <p className="text-[11px] text-gray-400 mt-2">Unlimited products, custom domain, priority support</p>
             </div>
         );
     }
