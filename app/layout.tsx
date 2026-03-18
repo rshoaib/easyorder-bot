@@ -64,6 +64,7 @@ export default function RootLayout({
         </CartProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
         <Toaster position="top-center" richColors />
+        <script src="https://gumroad.com/js/gumroad.js" async />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

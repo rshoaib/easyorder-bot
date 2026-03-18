@@ -15,6 +15,8 @@ import {
   Copy,
   CheckCircle2,
   ArrowRight,
+  Sparkles,
+  Crown,
 } from 'lucide-react';
 
 const features = [
@@ -83,10 +85,10 @@ function PricingContent() {
             <div className="flex items-center justify-center gap-2 mb-1">
               <Gift className="w-5 h-5 text-white" />
               <span className="text-white font-bold text-sm sm:text-base tracking-wide uppercase">
-                100% Free — No Credit Card Required
+                Start Free — Upgrade Anytime
               </span>
             </div>
-            <p className="text-white/90 text-xs">All features included. Start accepting orders on WhatsApp today.</p>
+            <p className="text-white/90 text-xs">All core features included free. Go Pro for premium support & custom domains.</p>
           </div>
         </div>
 
@@ -113,7 +115,7 @@ function PricingContent() {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-white/80 mb-4 flex items-center gap-2">
               <Star className="w-5 h-5 text-amber-400" />
-              Everything included — for free
+              Everything you need to grow
             </h2>
             <div className="space-y-3">
               {features.map((feature, idx) => (
@@ -134,47 +136,85 @@ function PricingContent() {
             </div>
           </div>
 
-          {/* Pricing Card Column */}
-          <div className="lg:sticky lg:top-8">
+          {/* Pricing Cards Column */}
+          <div className="space-y-6 lg:sticky lg:top-8">
+
+            {/* FREE Plan */}
+            <div className="relative bg-slate-900/70 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-white">Free Plan</h3>
+                <span className="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/20">
+                  Free Forever
+                </span>
+              </div>
+              <div className="flex items-baseline gap-1 mb-4">
+                <span className="text-4xl font-extrabold text-white">$0</span>
+                <span className="text-slate-400">/mo</span>
+              </div>
+              <div className="space-y-2 mb-6">
+                {[
+                  'Up to 50 orders/month',
+                  'Product catalog with images',
+                  'WhatsApp ordering',
+                  'Basic order tracking',
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span className="text-sm text-slate-300">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <a
+                href="/register"
+                className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-white bg-white/10 hover:bg-white/20 border border-white/10 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Get Started Free
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+
+            {/* PRO Plan */}
             <div className="relative">
               {/* Glow effect */}
               <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-emerald-500 to-cyan-500 rounded-2xl blur-lg opacity-20 animate-pulse" />
               
-              <div className="relative bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
+              <div className="relative bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
                 {/* Badge */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-emerald-500/30 uppercase tracking-wider">
-                    Currently Free
+                  <span className="bg-gradient-to-r from-indigo-500 to-emerald-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-indigo-500/30 uppercase tracking-wider flex items-center gap-1">
+                    <Crown className="w-3 h-3" /> Recommended
                   </span>
                 </div>
 
-                <div className="text-center mt-2">
-                  <h3 className="text-xl font-bold text-white">Full Access</h3>
-                  
-                  {/* Price */}
-                  <div className="mt-4 flex items-baseline justify-center gap-1">
-                    <span className="text-5xl sm:text-6xl font-extrabold text-white">$0</span>
-                    <span className="ml-1 text-lg text-slate-400">/mo</span>
-                  </div>
-
-                  <div className="mt-2 inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1">
-                    <Gift className="w-3 h-3 text-emerald-400" />
-                    <span className="text-emerald-400 text-xs font-semibold">All features included free</span>
-                  </div>
+                <div className="flex items-center justify-between mb-4 mt-2">
+                  <h3 className="text-lg font-bold text-white">Pro Plan</h3>
+                  <span className="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-3 py-1 rounded-full border border-indigo-500/20">
+                    Most Popular
+                  </span>
                 </div>
 
-                {/* Quick feature checklist */}
-                <div className="mt-6 space-y-2.5">
+                <div className="flex items-baseline gap-1 mb-1">
+                  <span className="text-4xl font-extrabold text-white">$10</span>
+                  <span className="text-slate-400">/mo</span>
+                </div>
+                <p className="text-emerald-400 text-xs font-semibold mb-4 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" /> Everything in Free, plus:
+                </p>
+
+                <div className="space-y-2 mb-6">
                   {[
                     'Unlimited orders & customers',
                     'Real-time order tracking board',
                     'Custom domain (yourbrand.com)',
-                    'WhatsApp-first ordering',
+                    'Multi-currency support',
+                    'Product sizes & variants',
+                    'Promotional tools & coupons',
+                    'Store blog for SEO',
                     'Priority WhatsApp support',
-                    'Free store setup by our team',
+                    'Free complete store setup',
                   ].map((item) => (
-                    <div key={item} className="flex items-center gap-2.5">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                    <div key={item} className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
                         <Check className="w-3 h-3 text-emerald-400" />
                       </div>
                       <span className="text-sm text-slate-300">{item}</span>
@@ -182,66 +222,66 @@ function PricingContent() {
                   ))}
                 </div>
 
-                {/* CTA Button */}
+                {/* Gumroad CTA */}
                 <a
-                  href="/register"
-                  className="mt-8 w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-500 hover:from-indigo-500 hover:via-indigo-400 hover:to-emerald-400 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                  href="https://segmentbi.gumroad.com/l/iuzjan"
+                  className="gumroad-button w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-500 hover:from-indigo-500 hover:via-indigo-400 hover:to-emerald-400 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  Get Started Free
+                  Subscribe — $10/mo
                   <ArrowRight className="w-4 h-4" />
                 </a>
 
                 <p className="mt-3 text-center text-xs text-slate-500">
-                  No credit card needed • Setup in under 10 minutes
+                  Powered by Gumroad • Cancel anytime
                 </p>
+              </div>
+            </div>
 
-                {/* Bank Transfer Support Section */}
-                <div className="mt-6 pt-5 border-t border-white/10">
-                  <p className="text-center text-xs text-slate-400 mb-3">
-                    💛 Want to support our platform? Send a contribution via bank transfer:
-                  </p>
-                  <div className="bg-white/5 rounded-xl p-4 space-y-2 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-500">Account Title</span>
-                      <span className="text-slate-300 font-medium">RIZWAN SHOAIB</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-500">Bank</span>
-                      <span className="text-slate-300 font-medium text-right">Askari Bank Limited, Johar Town, Lahore</span>
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-slate-500 shrink-0">Account #</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-slate-300 font-mono text-[11px]">01000100579994</span>
-                        <button 
-                          onClick={() => handleCopy('01000100579994', 'account')}
-                          className="text-slate-500 hover:text-emerald-400 transition-colors"
-                          title="Copy"
-                        >
-                          {copied === 'account' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-slate-500 shrink-0">IBAN</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-slate-300 font-mono text-[11px]">PK48ASCM0001000100579994</span>
-                        <button 
-                          onClick={() => handleCopy('PK48ASCM0001000100579994', 'iban')}
-                          className="text-slate-500 hover:text-emerald-400 transition-colors"
-                          title="Copy"
-                        >
-                          {copied === 'iban' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
-                      </div>
-                    </div>
+            {/* Bank Transfer Alternative */}
+            <div className="bg-white/5 border border-white/5 rounded-xl p-4">
+              <p className="text-xs text-slate-400 mb-3 text-center">
+                💳 Prefer bank transfer? Send payment directly:
+              </p>
+              <div className="space-y-1.5 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Account Title</span>
+                  <span className="text-slate-300 font-medium">RIZWAN SHOAIB</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Bank</span>
+                  <span className="text-slate-300 font-medium text-right">Askari Bank, Johar Town, Lahore</span>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-slate-500 shrink-0">Account #</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-slate-300 font-mono text-[11px]">01000100579994</span>
+                    <button
+                      onClick={() => handleCopy('01000100579994', 'account')}
+                      className="text-slate-500 hover:text-emerald-400 transition-colors"
+                      title="Copy"
+                    >
+                      {copied === 'account' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-slate-500 shrink-0">IBAN</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-slate-300 font-mono text-[11px]">PK48ASCM0001000100579994</span>
+                    <button
+                      onClick={() => handleCopy('PK48ASCM0001000100579994', 'iban')}
+                      className="text-slate-500 hover:text-emerald-400 transition-colors"
+                      title="Copy"
+                    >
+                      {copied === 'iban' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Social proof */}
-            <div className="mt-4 text-center text-xs text-slate-500">
+            <div className="text-center text-xs text-slate-500">
               <p>
                 Trusted by <span className="text-emerald-400 font-semibold">200+</span> businesses worldwide
               </p>
@@ -257,16 +297,16 @@ function PricingContent() {
           <div className="space-y-3">
             {[
               {
-                q: 'Is it really free?',
-                a: 'Yes! All features are currently free. We want to help businesses grow with WhatsApp ordering without any cost.',
+                q: 'Is there really a free plan?',
+                a: 'Yes! The free plan lets you accept up to 50 orders per month with all the basics. Upgrade to Pro anytime for unlimited orders and premium features.',
               },
               {
                 q: 'Do I need technical skills to set up?',
                 a: 'Not at all! We set up your entire store for you — menu, design, WhatsApp integration — all for free.',
               },
               {
-                q: 'Can I use my own domain?',
-                a: 'Yes! You can connect your own domain (e.g., menu.yourstore.com) for free.',
+                q: 'Can I cancel the Pro plan anytime?',
+                a: 'Yes! No contracts, no commitments. Cancel with one click whenever you want.',
               },
               {
                 q: 'How do my customers order?',
