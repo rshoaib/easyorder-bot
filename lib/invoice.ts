@@ -3,12 +3,14 @@ import autoTable from "jspdf-autotable";
 import fs from "fs";
 import path from "path";
 import { formatOrderDateTime } from "./date-utils";
+import { getCurrencySymbol } from "./currency";
 
-// Define the Order interface locally to avoid circular deps, or import if shared properly
+// Define the Order interface locally to avoid circular deps
 interface OrderItem {
     name: string;
     quantity: number;
     price: number;
+    size?: string;
 }
 
 interface Order {
@@ -26,29 +28,41 @@ interface Order {
     timezone?: string;
 }
 
-export const generateInvoicePDF = async (order: Order) => {
-    const doc = new jsPDF();
+interface StoreInfo {
+    name: string;
+    logoUrl?: string;
+    currency?: string;
+}
 
-    // --- Header ---
+export const generateInvoicePDF = async (order: Order, store?: StoreInfo) => {
+    const doc = new jsPDF();
+    const storeName = store?.name || 'OrderViaChat';
+    const currencySymbol = getCurrencySymbol(store?.currency || 'USD');
+
+    // --- Header with Store Name ---
     doc.setFontSize(22);
     doc.setTextColor(40);
-    doc.text("EasyOrder Invoice", 20, 20);
+    doc.text(`${storeName}`, 20, 20);
+
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text("Invoice", 20, 28);
 
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text(`Invoice ID: ${order.id}`, 20, 30);
-    doc.text(`Date: ${formatOrderDateTime(order.date, order.timezone)}`, 20, 35);
+    doc.text(`Invoice ID: ${order.id}`, 20, 36);
+    doc.text(`Date: ${formatOrderDateTime(order.date, order.timezone)}`, 20, 41);
 
     // --- Customer Details ---
     doc.setFontSize(14);
     doc.setTextColor(40);
-    doc.text("Bill To:", 20, 50);
+    doc.text("Bill To:", 20, 56);
 
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text(`Name: ${order.customer.name}`, 20, 56);
-    doc.text(`Phone: ${order.customer.phone}`, 20, 61);
-    doc.text(`Address: ${order.customer.address}`, 20, 66);
+    doc.text(`Name: ${order.customer.name}`, 20, 62);
+    doc.text(`Phone: ${order.customer.phone}`, 20, 67);
+    doc.text(`Address: ${order.customer.address}`, 20, 72);
 
     // --- Order Items Table ---
     const tableColumn = ["Item", "Quantity", "Price", "Total"];
@@ -57,11 +71,12 @@ export const generateInvoicePDF = async (order: Order) => {
     order.items.forEach((item: any) => {
         const qty = Number(item.quantity || item.qty || 1);
         const price = Number(item.price || 0);
+        const itemName = item.size ? `${item.name} (${item.size})` : item.name;
         const itemData = [
-            item.name,
+            itemName,
             qty.toString(),
-            `$${price.toFixed(2)}`,
-            `$${(price * qty).toFixed(2)}`,
+            `${currencySymbol}${price.toFixed(2)}`,
+            `${currencySymbol}${(price * qty).toFixed(2)}`,
         ];
         tableRows.push(itemData);
     });
@@ -70,7 +85,7 @@ export const generateInvoicePDF = async (order: Order) => {
     autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
-        startY: 75,
+        startY: 80,
         theme: 'striped',
         headStyles: { fillColor: [0, 0, 0] }
     });
@@ -81,15 +96,18 @@ export const generateInvoicePDF = async (order: Order) => {
 
     doc.setFontSize(16);
     doc.setTextColor(0);
-    doc.text(`Grand Total: $${order.total.toFixed(2)}`, 20, finalY);
+    doc.text(`Grand Total: ${currencySymbol}${order.total.toFixed(2)}`, 20, finalY);
 
     // --- Footer ---
     doc.setFontSize(10);
     doc.setTextColor(150);
     doc.text("Thank you for your business!", 20, finalY + 20);
 
+    doc.setFontSize(8);
+    doc.setTextColor(180);
+    doc.text("Powered by OrderViaChat.com", 20, finalY + 28);
+
     // --- Save to Public Folder ---
-    // Ensure "public/invoices" exists
     const invoiceDir = path.join(process.cwd(), "public", "invoices");
     if (!fs.existsSync(invoiceDir)) {
         fs.mkdirSync(invoiceDir, { recursive: true });
@@ -98,39 +116,41 @@ export const generateInvoicePDF = async (order: Order) => {
     const fileName = `invoice_${order.id}.pdf`;
     const filePath = path.join(invoiceDir, fileName);
 
-    // Save the PDF
     const pdfOutput = doc.output("arraybuffer");
     fs.writeFileSync(filePath, Buffer.from(pdfOutput));
 
-    // Return public URL (Assuming ngrok or localhost)
-    // We'll trust the caller to prepend the domain or we can hardcode the current one if known.
-    // For better flexibility, we return the relative path.
     return `/invoices/${fileName}`;
 };
 
-export const generateInvoiceBuffer = async (order: Order): Promise<Buffer> => {
+export const generateInvoiceBuffer = async (order: Order, store?: StoreInfo): Promise<Buffer> => {
     const doc = new jsPDF();
+    const storeName = store?.name || 'OrderViaChat';
+    const currencySymbol = getCurrencySymbol(store?.currency || 'USD');
 
-    // --- Header ---
+    // --- Header with Store Name ---
     doc.setFontSize(22);
     doc.setTextColor(40);
-    doc.text("EasyOrder Invoice", 20, 20);
+    doc.text(`${storeName}`, 20, 20);
+
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text("Invoice", 20, 28);
 
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text(`Invoice ID: ${order.id}`, 20, 30);
-    doc.text(`Date: ${formatOrderDateTime(order.date, order.timezone)}`, 20, 35);
+    doc.text(`Invoice ID: ${order.id}`, 20, 36);
+    doc.text(`Date: ${formatOrderDateTime(order.date, order.timezone)}`, 20, 41);
 
     // --- Customer Details ---
     doc.setFontSize(14);
     doc.setTextColor(40);
-    doc.text("Bill To:", 20, 50);
+    doc.text("Bill To:", 20, 56);
 
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text(`Name: ${order.customer.name}`, 20, 56);
-    doc.text(`Phone: ${order.customer.phone}`, 20, 61);
-    doc.text(`Address: ${order.customer.address}`, 20, 66);
+    doc.text(`Name: ${order.customer.name}`, 20, 62);
+    doc.text(`Phone: ${order.customer.phone}`, 20, 67);
+    doc.text(`Address: ${order.customer.address}`, 20, 72);
 
     // --- Order Items Table ---
     const tableColumn = ["Item", "Quantity", "Price", "Total"];
@@ -139,25 +159,26 @@ export const generateInvoiceBuffer = async (order: Order): Promise<Buffer> => {
     order.items.forEach((item: any) => {
         const qty = Number(item.quantity || item.qty || 1);
         const price = Number(item.price || 0);
+        const itemName = item.size ? `${item.name} (${item.size})` : item.name;
         const itemData = [
-            item.name,
+            itemName,
             qty.toString(),
-            `$${price.toFixed(2)}`,
-            `$${(price * qty).toFixed(2)}`,
+            `${currencySymbol}${price.toFixed(2)}`,
+            `${currencySymbol}${(price * qty).toFixed(2)}`,
         ];
         tableRows.push(itemData);
     });
 
     // Add Delivery Fee if present
     if ((order.deliveryFee || 0) > 0) {
-        tableRows.push(['Delivery Fee', '', '', `$${(order.deliveryFee || 0).toFixed(2)}`]);
+        tableRows.push(['Delivery Fee', '', '', `${currencySymbol}${(order.deliveryFee || 0).toFixed(2)}`]);
     }
 
     // @ts-ignore
     autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
-        startY: 75,
+        startY: 80,
         theme: 'striped',
         headStyles: { fillColor: [0, 0, 0] }
     });
@@ -168,12 +189,16 @@ export const generateInvoiceBuffer = async (order: Order): Promise<Buffer> => {
 
     doc.setFontSize(16);
     doc.setTextColor(0);
-    doc.text(`Grand Total: $${order.total.toFixed(2)}`, 20, finalY);
+    doc.text(`Grand Total: ${currencySymbol}${order.total.toFixed(2)}`, 20, finalY);
 
     // --- Footer ---
     doc.setFontSize(10);
     doc.setTextColor(150);
     doc.text("Thank you for your business!", 20, finalY + 20);
+
+    doc.setFontSize(8);
+    doc.setTextColor(180);
+    doc.text("Powered by OrderViaChat.com", 20, finalY + 28);
 
     return Buffer.from(doc.output("arraybuffer"));
 };

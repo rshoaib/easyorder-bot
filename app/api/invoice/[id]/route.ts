@@ -25,8 +25,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         const tenantRepo = getTenantRepository(supabase);
         const tenant = await tenantRepo.getTenantById(order.tenantId);
 
-        // Generate PDF in memory (pass timezone for correct date formatting)
-        const pdfBuffer = await generateInvoiceBuffer({ ...order, timezone: tenant?.timezone });
+        // Generate PDF in memory (pass timezone and store info for branding)
+        const storeInfo = tenant ? { name: tenant.name, logoUrl: tenant.logoUrl, currency: tenant.currency } : undefined;
+        const pdfBuffer = await generateInvoiceBuffer({ ...order, timezone: tenant?.timezone }, storeInfo);
 
         // Return as PDF file
         return new NextResponse(pdfBuffer as any, {
