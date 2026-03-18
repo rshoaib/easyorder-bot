@@ -169,7 +169,7 @@ async function buildInvoicePDF(order: Order, store?: StoreInfo): Promise<jsPDF> 
     order.items.forEach((item: any) => {
         const qty = Number(item.quantity || item.qty || 1);
         const price = Number(item.price || 0);
-        const itemName = item.size ? `${item.name} (${item.size})` : item.name;
+        const itemName = (item.selectedSize || item.size) ? `${item.name} (${item.selectedSize || item.size})` : item.name;
         tableRows.push([
             itemName,
             qty.toString(),
