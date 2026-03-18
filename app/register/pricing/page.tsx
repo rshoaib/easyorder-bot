@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, Suspense, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
 import {
   Loader2,
   Check,
@@ -9,15 +8,14 @@ import {
   Smartphone,
   Globe,
   Headphones,
-  Clock,
   Zap,
   Star,
-  Shield,
-  ArrowRight,
-  Sparkles,
   MessageCircle,
+  Gift,
+  Copy,
+  CheckCircle2,
+  ArrowRight,
 } from 'lucide-react';
-import { initializePaddle, Paddle } from '@paddle/paddle-js';
 
 const features = [
   {
@@ -52,110 +50,18 @@ const features = [
   },
 ];
 
-function CountdownTimer() {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    // Offer ends on the last day of current month
-    const now = new Date();
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-
-    const updateTimer = () => {
-      const diff = endOfMonth.getTime() - new Date().getTime();
-      if (diff <= 0) return;
-      setTimeLeft({
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / (1000 * 60)) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
-      });
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="flex items-center justify-center gap-2 text-xs font-mono">
-      {[
-        { val: timeLeft.days, label: 'D' },
-        { val: timeLeft.hours, label: 'H' },
-        { val: timeLeft.minutes, label: 'M' },
-        { val: timeLeft.seconds, label: 'S' },
-      ].map(({ val, label }) => (
-        <div key={label} className="flex items-center gap-0.5">
-          <span className="bg-white/20 backdrop-blur-sm rounded px-1.5 py-0.5 font-bold text-white tabular-nums">
-            {String(val).padStart(2, '0')}
-          </span>
-          <span className="text-white/70 text-[10px]">{label}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function PricingContent() {
-  const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-
-  const tenantId = searchParams.get('tenantId');
-  const canceled = searchParams.get('canceled');
-
-  const [paddle, setPaddle] = useState<Paddle>();
+  const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
     setIsVisible(true);
-    // Initialize Paddle using the client-side token
-    initializePaddle({ 
-      environment: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox',
-      token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN || '' 
-    }).then(
-      (paddleInstance: Paddle | undefined) => {
-        if (paddleInstance) setPaddle(paddleInstance);
-      }
-    );
   }, []);
 
-  const handleSubscribe = async () => {
-    if (!tenantId) {
-      alert('No Store ID found. Please register first.');
-      return;
-    }
-    const priceId = process.env.NEXT_PUBLIC_PADDLE_PRICE_ID;
-    if (!priceId) {
-      alert('Paddle Price ID is not configured.');
-      return;
-    }
-
-    if (!paddle) {
-      alert('Paddle checkout is still loading. Please try again in a moment.');
-      return;
-    }
-
-    setLoading(true);
-    
-    // Open Paddle Checkout Overlay
-    paddle.Checkout.open({
-      items: [
-        {
-          priceId: priceId,
-          quantity: 1
-        }
-      ],
-      customData: {
-        tenantId: tenantId
-      },
-      settings: {
-        displayMode: 'overlay',
-        theme: 'light',
-        successUrl: `${window.location.origin}/admin/dashboard?success=true`
-      }
-    });
-    
-    // Reset loading state after a slight delay so user sees the action registered
-    setTimeout(() => setLoading(false), 1000);
+  const handleCopy = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(label);
+    setTimeout(() => setCopied(null), 2000);
   };
 
   return (
@@ -169,20 +75,18 @@ function PricingContent() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 py-12 sm:py-16">
 
-        {/* Discount Banner */}
+        {/* Free Banner */}
         <div
           className={`mx-auto max-w-lg mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
         >
-          <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-3 sm:p-4 text-center shadow-lg shadow-amber-500/20">
+          <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl p-3 sm:p-4 text-center shadow-lg shadow-emerald-500/20">
             <div className="flex items-center justify-center gap-2 mb-1">
-              <Sparkles className="w-4 h-4 text-white animate-pulse" />
+              <Gift className="w-5 h-5 text-white" />
               <span className="text-white font-bold text-sm sm:text-base tracking-wide uppercase">
-                Launch Offer — 50% OFF
+                100% Free — No Credit Card Required
               </span>
-              <Sparkles className="w-4 h-4 text-white animate-pulse" />
             </div>
-            <p className="text-white/90 text-xs mb-2">Limited time offer. Price goes back to $20/mo soon.</p>
-            <CountdownTimer />
+            <p className="text-white/90 text-xs">All features included. Start accepting orders on WhatsApp today.</p>
           </div>
         </div>
 
@@ -201,12 +105,6 @@ function PricingContent() {
           </p>
         </div>
 
-        {canceled && (
-          <div className="mb-6 max-w-lg mx-auto bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl text-sm text-amber-300 text-center">
-            Checkout canceled — no worries, you can try again below.
-          </div>
-        )}
-
         {/* Main Content Grid */}
         <div
           className={`grid lg:grid-cols-2 gap-8 items-start transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
@@ -215,7 +113,7 @@ function PricingContent() {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-white/80 mb-4 flex items-center gap-2">
               <Star className="w-5 h-5 text-amber-400" />
-              Everything included
+              Everything included — for free
             </h2>
             <div className="space-y-3">
               {features.map((feature, idx) => (
@@ -246,31 +144,23 @@ function PricingContent() {
                 {/* Badge */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg shadow-emerald-500/30 uppercase tracking-wider">
-                    Most Popular
+                    Currently Free
                   </span>
                 </div>
 
                 <div className="text-center mt-2">
-                  <h3 className="text-xl font-bold text-white">Pro Plan</h3>
+                  <h3 className="text-xl font-bold text-white">Full Access</h3>
                   
-                  {/* Price with discount */}
-                  <div className="mt-4 flex items-center justify-center gap-3">
-                    <span className="text-2xl font-medium text-slate-500 line-through">$20</span>
-                    <div className="flex items-baseline">
-                      <span className="text-5xl sm:text-6xl font-extrabold text-white">$10</span>
-                      <span className="ml-1 text-lg text-slate-400">/mo</span>
-                    </div>
+                  {/* Price */}
+                  <div className="mt-4 flex items-baseline justify-center gap-1">
+                    <span className="text-5xl sm:text-6xl font-extrabold text-white">$0</span>
+                    <span className="ml-1 text-lg text-slate-400">/mo</span>
                   </div>
 
                   <div className="mt-2 inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1">
-                    <Sparkles className="w-3 h-3 text-emerald-400" />
-                    <span className="text-emerald-400 text-xs font-semibold">50% OFF — Save $120/year</span>
+                    <Gift className="w-3 h-3 text-emerald-400" />
+                    <span className="text-emerald-400 text-xs font-semibold">All features included free</span>
                   </div>
-
-                  <p className="mt-3 text-indigo-400 text-sm font-semibold flex items-center justify-center gap-1.5">
-                    <Clock className="w-4 h-4" />
-                    14-day free trial included
-                  </p>
                 </div>
 
                 {/* Quick feature checklist */}
@@ -293,38 +183,59 @@ function PricingContent() {
                 </div>
 
                 {/* CTA Button */}
-                <button
-                  onClick={handleSubscribe}
-                  disabled={loading}
-                  className="mt-8 w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-500 hover:from-indigo-500 hover:via-indigo-400 hover:to-emerald-400 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                <a
+                  href="/register"
+                  className="mt-8 w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-emerald-500 hover:from-indigo-500 hover:via-indigo-400 hover:to-emerald-400 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  {loading ? (
-                    <Loader2 className="animate-spin h-5 w-5" />
-                  ) : (
-                    <>
-                      Start Free Trial
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
+                  Get Started Free
+                  <ArrowRight className="w-4 h-4" />
+                </a>
 
                 <p className="mt-3 text-center text-xs text-slate-500">
-                  No credit card required to start • Cancel anytime
+                  No credit card needed • Setup in under 10 minutes
                 </p>
 
-                {/* Trust badges */}
-                <div className="mt-6 pt-5 border-t border-white/5 flex items-center justify-center gap-4 text-[10px] text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <Shield className="w-3 h-3" /> SSL Secured
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Zap className="w-3 h-3" /> Instant Access
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Star className="w-3 h-3" /> 4.9★ Rating
-                  </span>
+                {/* Bank Transfer Support Section */}
+                <div className="mt-6 pt-5 border-t border-white/10">
+                  <p className="text-center text-xs text-slate-400 mb-3">
+                    💛 Want to support our platform? Send a contribution via bank transfer:
+                  </p>
+                  <div className="bg-white/5 rounded-xl p-4 space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">Account Title</span>
+                      <span className="text-slate-300 font-medium">RIZWAN SHOAIB</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">Bank</span>
+                      <span className="text-slate-300 font-medium text-right">Askari Bank Limited, Johar Town, Lahore</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-slate-500 shrink-0">Account #</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-slate-300 font-mono text-[11px]">01000100579994</span>
+                        <button 
+                          onClick={() => handleCopy('01000100579994', 'account')}
+                          className="text-slate-500 hover:text-emerald-400 transition-colors"
+                          title="Copy"
+                        >
+                          {copied === 'account' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-slate-500 shrink-0">IBAN</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-slate-300 font-mono text-[11px]">PK48ASCM0001000100579994</span>
+                        <button 
+                          onClick={() => handleCopy('PK48ASCM0001000100579994', 'iban')}
+                          className="text-slate-500 hover:text-emerald-400 transition-colors"
+                          title="Copy"
+                        >
+                          {copied === 'iban' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -332,13 +243,13 @@ function PricingContent() {
             {/* Social proof */}
             <div className="mt-4 text-center text-xs text-slate-500">
               <p>
-                Trusted by <span className="text-emerald-400 font-semibold">200+</span> restaurants worldwide
+                Trusted by <span className="text-emerald-400 font-semibold">200+</span> businesses worldwide
               </p>
             </div>
           </div>
         </div>
 
-        {/* FAQ / Objection handling */}
+        {/* FAQ */}
         <div
           className={`mt-16 max-w-2xl mx-auto transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
@@ -346,12 +257,16 @@ function PricingContent() {
           <div className="space-y-3">
             {[
               {
+                q: 'Is it really free?',
+                a: 'Yes! All features are currently free. We want to help businesses grow with WhatsApp ordering without any cost.',
+              },
+              {
                 q: 'Do I need technical skills to set up?',
                 a: 'Not at all! We set up your entire store for you — menu, design, WhatsApp integration — all for free.',
               },
               {
-                q: 'Can I cancel anytime?',
-                a: 'Yes! No contracts, no commitments. Cancel with one click whenever you want.',
+                q: 'Can I use my own domain?',
+                a: 'Yes! You can connect your own domain (e.g., menu.yourstore.com) for free.',
               },
               {
                 q: 'How do my customers order?',

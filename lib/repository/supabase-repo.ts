@@ -492,11 +492,8 @@ export class SupabaseTenantRepository implements TenantRepository {
         };
     }
 
-    async updateTenantBilling(id: string, billingData: { paddle_customer_id?: string; paddle_subscription_id?: string; paddle_price_id?: string; subscription_status?: string }): Promise<void> {
+    async updateTenantBilling(id: string, billingData: { subscription_status?: string }): Promise<void> {
         const updateData: any = {};
-        if (billingData.paddle_customer_id) updateData.paddle_customer_id = billingData.paddle_customer_id;
-        if (billingData.paddle_subscription_id) updateData.paddle_subscription_id = billingData.paddle_subscription_id;
-        if (billingData.paddle_price_id) updateData.paddle_price_id = billingData.paddle_price_id;
         if (billingData.subscription_status) updateData.subscription_status = billingData.subscription_status;
 
         const { error } = await this.client
