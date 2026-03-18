@@ -31,6 +31,7 @@ interface StoreInfo {
     logoUrl?: string;
     currency?: string;
     themeColor?: string;
+    ownerPhone?: string;
 }
 
 // Fetch logo and convert to base64 data URL for embedding in PDF
@@ -117,6 +118,14 @@ async function buildInvoicePDF(order: Order, store?: StoreInfo): Promise<jsPDF> 
     doc.setFontSize(28);
     doc.setTextColor(accent[0], accent[1], accent[2]);
     doc.text("INVOICE", pageW - 20, 24, { align: 'right' });
+
+    // Store phone under separator
+    if (store?.ownerPhone) {
+        doc.setFontSize(8);
+        doc.setTextColor(130, 130, 130);
+        doc.text(`Contact: ${store.ownerPhone}`, 20, headerY + 4);
+        headerY += 7;
+    }
 
     // Subtle separator
     doc.setDrawColor(220, 220, 220);
