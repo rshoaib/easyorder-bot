@@ -304,14 +304,13 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
 
             {/* Cart Items */}
             <div className="space-y-4 mb-8">
-                <AnimatePresence mode="popLayout">
+                <AnimatePresence>
                 {items.map((item) => (
                     <motion.div 
-                        layout
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, x: -20 }}
-                        transition={{ duration: 0.2 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
                         key={item.cartKey || item.id} 
                         className="flex gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm"
                     >

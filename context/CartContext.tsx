@@ -60,29 +60,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = useCallback((product: Product, size?: string) => {
     setItems((prev) => {
-      const cartKey = size ? `${product.id}-${size}` : product.id;
-      const existing = prev.find((item) => item.cartKey === cartKey);
+      const newCartKey = size ? `${product.id}-${size}` : product.id;
+      const existing = prev.find((item) => (item.cartKey || item.id) === newCartKey);
       if (existing) {
         return prev.map((item) =>
-          item.cartKey === cartKey ? { ...item, quantity: item.quantity + 1 } : item
+          (item.cartKey || item.id) === newCartKey ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prev, { ...product, quantity: 1, selectedSize: size, cartKey }];
+      return [...prev, { ...product, quantity: 1, selectedSize: size, cartKey: newCartKey }];
     });
   }, []);
 
-  const removeItem = useCallback((cartKey: string) => {
-    setItems((prev) => prev.filter((item) => item.cartKey !== cartKey));
+  const removeItem = useCallback((keyOrId: string) => {
+    setItems((prev) => prev.filter((item) => (item.cartKey || item.id) !== keyOrId));
   }, []);
 
-  const updateQuantity = useCallback((cartKey: string, quantity: number) => {
+  const updateQuantity = useCallback((keyOrId: string, quantity: number) => {
     if (quantity < 1) {
-      setItems((prev) => prev.filter((item) => item.cartKey !== cartKey));
+      setItems((prev) => prev.filter((item) => (item.cartKey || item.id) !== keyOrId));
       return;
     }
     setItems((prev) =>
       prev.map((item) =>
-        item.cartKey === cartKey ? { ...item, quantity } : item
+        (item.cartKey || item.id) === keyOrId ? { ...item, quantity } : item
       )
     );
   }, []);
