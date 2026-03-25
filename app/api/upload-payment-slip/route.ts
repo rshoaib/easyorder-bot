@@ -58,11 +58,11 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Upload failed: ' + uploadError.message }, { status: 500 });
         }
 
-        const { data } = supabase.storage
-            .from('payment-slips')
-            .getPublicUrl(filePath);
+        // Return short URL instead of full Supabase storage URL
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://orderviachat.com';
+        const shortUrl = `${siteUrl}/slip/${filePath}`;
 
-        return NextResponse.json({ success: true, url: data.publicUrl });
+        return NextResponse.json({ success: true, url: shortUrl });
     } catch (error: any) {
         console.error('[upload-payment-slip] Error:', error?.message);
         return NextResponse.json({ error: error?.message || 'Upload failed' }, { status: 500 });
