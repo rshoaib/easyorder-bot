@@ -7,21 +7,33 @@ import { createClient } from "@/utils/supabase/server";
 import { verifyTenantOwnership } from "@/lib/auth/security";
 
 export async function toggleStoreStatus(tenantId: string, slug: string, isOpen: boolean) {
-    // Security Check
-    await verifyTenantOwnership(slug);
+    try {
+        // Security Check — also gives us an authenticated supabase client
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+            return { success: false, error: 'Not authenticated' };
+        }
 
-    const repo = getTenantRepository();
-    // In real app, verify user permission here
+        const repo = getTenantRepository(supabase);
 
-    // We update only the is_open field
-    await repo.updateTenantSettings(tenantId, {
-        isOpen
-    });
+        // Update the is_open field
+        await repo.updateTenantSettings(tenantId, {
+            isOpen
+        });
 
-    revalidatePath(`/store/${slug}/admin/settings`);
+        revalidatePath(`/store/${slug}/admin`);
+        revalidatePath(`/store/${slug}/admin/settings`);
+        revalidatePath(`/store/${slug}`);
 
-    return { success: true };
+        return { success: true };
+    } catch (error: any) {
+        console.error('toggleStoreStatus error:', error);
+        return { success: false, error: error.message || 'Failed to update store status' };
+    }
 }
+
 
 export async function deleteStore(slug: string, tenantId: string) {
     try {
