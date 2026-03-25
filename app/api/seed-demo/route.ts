@@ -1,6 +1,8 @@
 import { getTenantRepository, getProductRepository } from "@/lib/repository";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     const tenantRepo = getTenantRepository();
     const productRepo = getProductRepository();

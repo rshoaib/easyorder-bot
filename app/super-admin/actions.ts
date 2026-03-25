@@ -96,3 +96,50 @@ export async function deactivateTenant(formData: FormData) {
     revalidatePath('/super-admin');
 }
 
+export async function setProPlan(formData: FormData) {
+    await verifySuperAdmin();
+
+    const repo = getTenantRepository(getServiceClient());
+    const id = formData.get('id') as string;
+    const amountPkr = parseFloat(formData.get('amountPkr') as string) || 0;
+    const paymentDate = formData.get('paymentDate') as string;
+    const durationMonths = parseInt(formData.get('durationMonths') as string) || 12;
+    const notes = formData.get('notes') as string || '';
+
+    if (!id || !paymentDate) throw new Error("Missing required fields");
+
+    // Calculate start/end dates
+    const startDate = paymentDate; // subscription starts on payment date
+    const endDateObj = new Date(paymentDate);
+    endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+    const endDate = endDateObj.toISOString().split('T')[0];
+
+    // Set plan + dates on tenant
+    await repo.setTenantPlan(id, 'pro', startDate, endDate);
+
+    // Record subscription payment
+    await repo.addSubscription({
+        tenantId: id,
+        plan: 'pro',
+        amountPkr,
+        paymentDate,
+        startDate,
+        endDate,
+        durationMonths,
+        notes
+    });
+
+    revalidatePath('/super-admin');
+}
+
+export async function downgradePlan(formData: FormData) {
+    await verifySuperAdmin();
+
+    const repo = getTenantRepository(getServiceClient());
+    const id = formData.get('id') as string;
+
+    if (!id) return;
+
+    await repo.setTenantPlan(id, 'free');
+    revalidatePath('/super-admin');
+}

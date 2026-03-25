@@ -4,7 +4,7 @@ import {
     Tenant, TenantRepository,
     AnalyticsRepository, AnalyticsSummary,
     PromoCode, PromoCodeRepository,
-    Integration, SocialPost
+    Integration, SocialPost, Subscription
 } from './types';
 import { supabase } from '../supabase';
 
@@ -242,6 +242,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
+            subscriptionStartDate: data.subscription_start_date || undefined,
+            subscriptionEndDate: data.subscription_end_date || undefined,
             deliveryFee: parseFloat(data.delivery_fee) || 0,
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
             timezone: data.timezone || undefined
@@ -279,6 +281,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeLink: row.stripe_link,
             codEnabled: row.cod_enabled ?? true,
             plan: row.plan || 'free',
+            subscriptionStartDate: row.subscription_start_date || undefined,
+            subscriptionEndDate: row.subscription_end_date || undefined,
             timezone: row.timezone || undefined
         }));
     }
@@ -446,6 +450,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
+            subscriptionStartDate: data.subscription_start_date || undefined,
+            subscriptionEndDate: data.subscription_end_date || undefined,
             deliveryFee: parseFloat(data.delivery_fee) || 0,
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
             timezone: data.timezone || undefined
@@ -486,6 +492,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             stripeLink: data.stripe_link,
             codEnabled: data.cod_enabled ?? true,
             plan: data.plan || 'free',
+            subscriptionStartDate: data.subscription_start_date || undefined,
+            subscriptionEndDate: data.subscription_end_date || undefined,
             deliveryFee: parseFloat(data.delivery_fee) || 0,
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
             timezone: data.timezone || undefined
@@ -596,6 +604,60 @@ export class SupabaseTenantRepository implements TenantRepository {
             externalPostId: d.external_post_id,
             createdAt: d.created_at
         }));
+    }
+
+    // -------------------------------------------------------
+    // Subscription Management
+    // -------------------------------------------------------
+
+    async setTenantPlan(id: string, plan: 'free' | 'pro', startDate?: string, endDate?: string): Promise<void> {
+        const updateData: any = { plan };
+        if (plan === 'pro') {
+            if (startDate) updateData.subscription_start_date = startDate;
+            if (endDate) updateData.subscription_end_date = endDate;
+        } else {
+            updateData.subscription_start_date = null;
+            updateData.subscription_end_date = null;
+        }
+        const { error } = await this.client.from('tenants').update(updateData).eq('id', id);
+        if (error) throw new Error(error.message);
+    }
+
+    async getSubscriptions(tenantId: string): Promise<Subscription[]> {
+        const { data, error } = await this.client
+            .from('subscriptions')
+            .select('*')
+            .eq('tenant_id', tenantId)
+            .order('created_at', { ascending: false });
+
+        if (error || !data) return [];
+
+        return data.map((d: any) => ({
+            id: d.id,
+            tenantId: d.tenant_id,
+            plan: d.plan,
+            amountPkr: d.amount_pkr ? parseFloat(d.amount_pkr) : undefined,
+            paymentDate: d.payment_date,
+            startDate: d.start_date,
+            endDate: d.end_date,
+            durationMonths: d.duration_months,
+            notes: d.notes,
+            createdAt: d.created_at
+        }));
+    }
+
+    async addSubscription(sub: Omit<Subscription, 'id' | 'createdAt'>): Promise<void> {
+        const { error } = await this.client.from('subscriptions').insert({
+            tenant_id: sub.tenantId,
+            plan: sub.plan,
+            amount_pkr: sub.amountPkr,
+            payment_date: sub.paymentDate,
+            start_date: sub.startDate,
+            end_date: sub.endDate,
+            duration_months: sub.durationMonths,
+            notes: sub.notes
+        });
+        if (error) throw new Error(error.message);
     }
 }
 

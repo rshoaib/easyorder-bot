@@ -25,6 +25,8 @@ export interface Tenant {
     stripeLink?: string; // Stripe Payment Link
     codEnabled?: boolean; // Cash on Delivery toggle
     plan?: 'free' | 'pro'; // Subscription plan
+    subscriptionStartDate?: string; // ISO date
+    subscriptionEndDate?: string;   // ISO date
     deliveryFee?: number; // Per-store delivery fee
     minOrderAmount?: number; // Minimum order amount
     timezone?: string; // IANA timezone e.g. 'Africa/Johannesburg'
@@ -126,6 +128,11 @@ export interface TenantRepository {
     updateTenantBilling(id: string, billingData: { subscription_status?: string }): Promise<void>;
     deleteTenant(id: string): Promise<void>;
 
+    // Subscription management
+    setTenantPlan(id: string, plan: 'free' | 'pro', startDate?: string, endDate?: string): Promise<void>;
+    getSubscriptions(tenantId: string): Promise<Subscription[]>;
+    addSubscription(sub: Omit<Subscription, 'id' | 'createdAt'>): Promise<void>;
+
     // Integrations
     getIntegration(tenantId: string, provider: string): Promise<Integration | null>;
     saveIntegration(integration: Omit<Integration, 'id' | 'createdAt' | 'updatedAt'>): Promise<void>;
@@ -153,6 +160,20 @@ export interface SocialPost {
     provider: 'facebook' | 'instagram';
     externalPostId: string;
     createdAt: string;
+}
+
+
+export interface Subscription {
+    id: string;
+    tenantId: string;
+    plan: string;
+    amountPkr?: number;
+    paymentDate: string;
+    startDate: string;
+    endDate: string;
+    durationMonths?: number;
+    notes?: string;
+    createdAt?: string;
 }
 
 

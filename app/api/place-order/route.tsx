@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTenantRepository, getOrderRepository, getProductRepository, getPromoCodeRepository } from '@/lib/repository';
-import { Order, Product } from '@/lib/repository/types';
+import { Order } from '@/lib/repository/types';
 import { getCurrencySymbol } from '@/lib/currency';
 import { sanitizeCustomerInput } from '@/lib/sanitize';
+
+export const dynamic = 'force-dynamic';
 
 // Simple in-memory rate limiter (resets on deploy/restart)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -54,7 +56,7 @@ export async function POST(req: NextRequest) {
         }
 
         for (const item of items) {
-            const product = products.find((p) => p.id === item.id);
+            const product = products.find((p: any) => p.id === item.id);
             if (!product) {
                 return NextResponse.json({ error: `Product "${item.name}" is no longer available. Please refresh and try again.` }, { status: 400 });
             }
@@ -134,8 +136,8 @@ export async function POST(req: NextRequest) {
             const sizeLabel = item.selectedSize ? ` (${item.selectedSize})` : '';
             return `  ${i + 1}. ${item.name}${sizeLabel} × ${item.quantity}  —  ${currencySymbol}${(item.price * item.quantity).toFixed(2)}`;
         }).join('\n');
-        
-        const message = 
+
+        const message =
             `🛒 *NEW ORDER*\n` +
             `━━━━━━━━━━━━━━━━\n` +
             `📋 *Order #${orderId}*\n` +
@@ -152,10 +154,10 @@ export async function POST(req: NextRequest) {
             `┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n` +
             `${itemsList}\n\n` +
             `   Subtotal: ${currencySymbol}${calculatedTotal.toFixed(2)}\n` +
-            (deliveryFeeSetting > 0 ? 
-                `   🚗 Delivery: ${currencySymbol}${deliveryFeeSetting.toFixed(2)}\n` 
+            (deliveryFeeSetting > 0 ?
+                `   🚗 Delivery: ${currencySymbol}${deliveryFeeSetting.toFixed(2)}\n`
                 : '') +
-            (discount > 0 ? 
+            (discount > 0 ?
                 `   🏷️ Discount${validatedPromoCode ? ` (${validatedPromoCode})` : ''}: -${currencySymbol}${discount.toFixed(2)}\n`
                 : '') +
             `━━━━━━━━━━━━━━━━\n` +
@@ -222,4 +224,3 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: error?.message || 'Internal server error' }, { status: 500 });
     }
 }
-
