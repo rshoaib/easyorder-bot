@@ -97,6 +97,12 @@ export default async function AdminPage({ params }: Props) {
         </div>
       </div>
 
+      {/* Store Open/Close Toggle — most used action, always visible */}
+      <div className="mb-4">
+          <StoreStatusToggle tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} />
+      </div>
+
+
       {/* Mobile: Compact Stats Strip */}
       <div className="lg:hidden mb-4">
         <div className="grid grid-cols-2 gap-2">
@@ -283,7 +289,6 @@ export default async function AdminPage({ params }: Props) {
 
       {/* Quick Actions */}
       <div className="flex flex-wrap items-center gap-3 mb-8">
-          <StoreStatusToggle tenantId={tenant.id} slug={slug} isOpen={tenant.isOpen ?? true} />
           <Link href={`/store/${slug}/board`} target="_blank">
               <button className="flex items-center gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm">
                   Order Board
