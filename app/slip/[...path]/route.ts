@@ -5,9 +5,9 @@ export const dynamic = 'force-dynamic';
 // Short redirect: /slip/tenantId/filename.ext → full Supabase storage URL
 export async function GET(
     req: NextRequest,
-    { params }: { params: { path: string[] } }
+    context: { params: Promise<{ path: string[] }> }
 ) {
-    const { path } = await params;
+    const { path } = await context.params;
     
     if (!path || path.length < 2) {
         return NextResponse.json({ error: 'Invalid slip URL' }, { status: 404 });
