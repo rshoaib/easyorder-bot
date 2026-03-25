@@ -96,3 +96,26 @@ export async function uploadDigitalFile(file: File, tenantId: string): Promise<s
     return data.publicUrl;
 }
 
+export async function uploadPaymentSlip(file: File, tenantId: string): Promise<string | null> {
+    validateFile(file, MAX_IMAGE_SIZE, ALLOWED_IMAGE_TYPES);
+
+    const fileExt = file.name.split('.').pop();
+    const randomHash = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+    const filePath = `${tenantId}/${randomHash}.${fileExt}`;
+
+    const { error } = await supabase.storage
+        .from('payment-slips')
+        .upload(filePath, file, { upsert: true });
+
+    if (error) {
+        console.error('[uploadPaymentSlip] Upload error:', error.message);
+        throw new Error('Payment slip upload failed: ' + error.message);
+    }
+
+    const { data } = supabase.storage
+        .from('payment-slips')
+        .getPublicUrl(filePath);
+
+    return data.publicUrl;
+}
+

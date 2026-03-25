@@ -30,6 +30,8 @@ export interface Tenant {
     deliveryFee?: number; // Per-store delivery fee
     minOrderAmount?: number; // Minimum order amount
     timezone?: string; // IANA timezone e.g. 'Africa/Johannesburg'
+    jazzcashNumber?: string; // JazzCash account number
+    easypaisaNumber?: string; // EasyPaisa account number
 }
 
 export interface Order {
@@ -50,6 +52,7 @@ export interface Order {
     promoCode?: string;
     total: number;
     paymentMethod?: string;
+    paymentSlipUrl?: string; // Payment screenshot URL
     status: OrderStatus;
     notes?: string; // Customer special instructions
 }

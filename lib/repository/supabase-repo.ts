@@ -32,7 +32,8 @@ export class SupabaseOrderRepository implements OrderRepository {
                 total: order.total,
                 status: order.status,
                 notes: order.notes || null,
-                payment_method: order.paymentMethod || null
+                payment_method: order.paymentMethod || null,
+                payment_slip_url: order.paymentSlipUrl || null
             });
 
         if (error) {
@@ -64,7 +65,8 @@ export class SupabaseOrderRepository implements OrderRepository {
             total: row.total,
             status: row.status as OrderStatus,
             notes: row.notes || undefined,
-            paymentMethod: row.payment_method || undefined
+            paymentMethod: row.payment_method || undefined,
+            paymentSlipUrl: row.payment_slip_url || undefined
         }));
     }
 
@@ -90,7 +92,8 @@ export class SupabaseOrderRepository implements OrderRepository {
             total: data.total,
             status: data.status as OrderStatus,
             notes: data.notes || undefined,
-            paymentMethod: data.payment_method || undefined
+            paymentMethod: data.payment_method || undefined,
+            paymentSlipUrl: data.payment_slip_url || undefined
         };
     }
 
@@ -246,7 +249,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             subscriptionEndDate: data.subscription_end_date || undefined,
             deliveryFee: parseFloat(data.delivery_fee) || 0,
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
-            timezone: data.timezone || undefined
+            timezone: data.timezone || undefined,
+            jazzcashNumber: data.jazzcash_number || undefined,
+            easypaisaNumber: data.easypaisa_number || undefined
         };
     }
 
@@ -283,7 +288,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             plan: row.plan || 'free',
             subscriptionStartDate: row.subscription_start_date || undefined,
             subscriptionEndDate: row.subscription_end_date || undefined,
-            timezone: row.timezone || undefined
+            timezone: row.timezone || undefined,
+            jazzcashNumber: row.jazzcash_number || undefined,
+            easypaisaNumber: row.easypaisa_number || undefined
         }));
     }
 
@@ -404,6 +411,8 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (settings.deliveryFee !== undefined) { updateData.delivery_fee = settings.deliveryFee; }
         if (settings.minOrderAmount !== undefined) { updateData.min_order_amount = settings.minOrderAmount; }
         if (settings.timezone !== undefined) { updateData.timezone = settings.timezone || null; }
+        if (settings.jazzcashNumber !== undefined) { updateData.jazzcash_number = settings.jazzcashNumber || null; }
+        if (settings.easypaisaNumber !== undefined) { updateData.easypaisa_number = settings.easypaisaNumber || null; }
         if (settings.language !== undefined) { updateData.language = settings.language; }
         if (settings.customDomain !== undefined) { updateData.custom_domain = settings.customDomain; }
         if (settings.plan !== undefined) { updateData.plan = settings.plan; }
@@ -454,7 +463,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             subscriptionEndDate: data.subscription_end_date || undefined,
             deliveryFee: parseFloat(data.delivery_fee) || 0,
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
-            timezone: data.timezone || undefined
+            timezone: data.timezone || undefined,
+            jazzcashNumber: data.jazzcash_number || undefined,
+            easypaisaNumber: data.easypaisa_number || undefined
         };
     }
 
@@ -496,7 +507,9 @@ export class SupabaseTenantRepository implements TenantRepository {
             subscriptionEndDate: data.subscription_end_date || undefined,
             deliveryFee: parseFloat(data.delivery_fee) || 0,
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
-            timezone: data.timezone || undefined
+            timezone: data.timezone || undefined,
+            jazzcashNumber: data.jazzcash_number || undefined,
+            easypaisaNumber: data.easypaisa_number || undefined
         };
     }
 

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { items, total, customer, slug, promoCode, paymentMethod, notes } = body;
+        const { items, total, customer, slug, promoCode, paymentMethod, notes, paymentSlipUrl } = body;
 
         if (!slug) {
             return NextResponse.json({ error: 'Missing store slug' }, { status: 400 });
@@ -124,7 +124,8 @@ export async function POST(req: NextRequest) {
             total: finalTotal,
             paymentMethod,
             status: 'pending',
-            notes: notes ? String(notes).slice(0, 500) : undefined
+            notes: notes ? String(notes).slice(0, 500) : undefined,
+            paymentSlipUrl: paymentSlipUrl || undefined
         };
 
         const orderRepo = getOrderRepository();
@@ -165,6 +166,7 @@ export async function POST(req: NextRequest) {
             `💳 Payment: ${paymentMethod}\n` +
             `━━━━━━━━━━━━━━━━\n` +
             (notes ? `\n📝 *Notes:* ${notes}\n` : '') +
+            (paymentSlipUrl ? `\n📎 *Payment Slip:* ${paymentSlipUrl}\n` : '') +
             `\n🔗 *Track:* ${process.env.NEXT_PUBLIC_SITE_URL || 'https://easyorder-bot.vercel.app'}/store/${slug}/order/${orderId}\n` +
             `\n_Powered by OrderViaChat.com_`;
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCart } from "@/context/CartContext";
-import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin, Tag, Store, CreditCard, Wallet } from "lucide-react";
+import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin, Tag, Store, CreditCard, Wallet, Paperclip, X } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -73,9 +73,11 @@ interface Props {
     codEnabled?: boolean;
     deliveryFee?: number;
     minOrderAmount?: number;
+    jazzcashNumber?: string;
+    easypaisaNumber?: string;
 }
 
-export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp, minOrderAmount }: Props) {
+export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp, minOrderAmount, jazzcashNumber, easypaisaNumber }: Props) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', email: '', locationLink: '' });
@@ -92,6 +94,12 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
     if (stripeLink) {
         availableMethods.push({ id: 'stripe', label: 'Pay with Card (Stripe)', icon: <CreditCard size={18} className="text-purple-600" /> });
     }
+    if (jazzcashNumber) {
+        availableMethods.push({ id: 'jazzcash', label: 'JazzCash', icon: <span className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center text-white text-[10px] font-bold">JC</span> });
+    }
+    if (easypaisaNumber) {
+        availableMethods.push({ id: 'easypaisa', label: 'EasyPaisa', icon: <span className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center text-white text-[10px] font-bold">EP</span> });
+    }
     // Fallback: If nothing is configured, show COD + Bank Transfer
     if (availableMethods.length === 0) {
         availableMethods.push({ id: 'cod', label: 'Cash on Delivery', icon: <span className="text-lg">💵</span> });
@@ -102,6 +110,9 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
 
     const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [appliedPromo, setAppliedPromo] = useState<Pick<PromoCode, 'code' | 'discountType' | 'value'> | null>(null);
+    const [paymentSlip, setPaymentSlip] = useState<File | null>(null);
+    const [slipPreview, setSlipPreview] = useState<string | null>(null);
+    const [slipUploading, setSlipUploading] = useState(false);
 
     // Use per-store delivery fee from tenant settings (falls back to env var for backward compat)
     const deliveryFee = deliveryFeeProp ?? parseFloat(process.env.NEXT_PUBLIC_DELIVERY_FEE || "0");
@@ -182,6 +193,25 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
         setIsSubmitting(true);
 
         try {
+            // Upload payment slip if attached (for JazzCash/EasyPaisa)
+            let paymentSlipUrl: string | undefined;
+            if (paymentSlip && (paymentMethod === 'jazzcash' || paymentMethod === 'easypaisa')) {
+                setSlipUploading(true);
+                try {
+                    const formData = new FormData();
+                    formData.append('file', paymentSlip);
+                    formData.append('tenantId', tenantId);
+                    const uploadRes = await axios.post('/api/upload-payment-slip', formData);
+                    paymentSlipUrl = uploadRes.data.url;
+                } catch (uploadErr: any) {
+                    toast.error('Failed to upload payment slip. Please try again.');
+                    setIsSubmitting(false);
+                    setSlipUploading(false);
+                    return;
+                }
+                setSlipUploading(false);
+            }
+
             const response = await axios.post('/api/place-order', {
                 items,
                 total: finalTotal, // API calculates simpler, but we pass for reference
@@ -189,7 +219,8 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 slug, // Pass slug so API knows which tenant!
                 promoCode: appliedPromo?.code,
                 paymentMethod,
-                notes: notes.trim() || undefined
+                notes: notes.trim() || undefined,
+                paymentSlipUrl
             });
 
             if (response.data.success) {
@@ -212,13 +243,11 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 if (paymentMethod === 'paypal' && paypalLink) {
                     toast.success("Order placed!", { description: "Redirecting to PayPal..." });
                     runFireworks();
-                    // Normalize the PayPal link and append amount
                     let ppLink = paypalLink.trim();
                     if (!ppLink.startsWith('http')) ppLink = `https://${ppLink}`;
-                    // Append amount and currency
                     const ppUrl = `${ppLink}/${finalTotal.toFixed(2)}${currency || 'USD'}`;
-                    window.open(ppUrl, '_blank');
-                    setTimeout(() => { window.location.href = `/store/${slug}`; }, 2000);
+                    // Use location.href — window.open is blocked on iOS after async calls
+                    setTimeout(() => { window.location.href = ppUrl; }, 1000);
                     return;
                 }
 
@@ -226,19 +255,22 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 if (paymentMethod === 'stripe' && stripeLink) {
                     toast.success("Order placed!", { description: "Redirecting to payment..." });
                     runFireworks();
-                    window.open(stripeLink, '_blank');
-                    setTimeout(() => { window.location.href = `/store/${slug}`; }, 2000);
+                    // Use location.href — window.open is blocked on iOS after async calls
+                    setTimeout(() => { window.location.href = stripeLink; }, 1000);
                     return;
                 }
                 
                 if (response.data.whatsappNumber) {
-                     toast.success("Order placed!", { description: "Redirecting to WhatsApp..." });
+                     toast.success("Order placed!", { description: "Opening WhatsApp..." });
                      runFireworks();
                      const url = `https://wa.me/${response.data.whatsappNumber}?text=${response.data.message}`;
-                     window.open(url, '_blank');
+                     // CRITICAL: Use location.href instead of window.open
+                     // iOS Safari blocks window.open after async calls (axios.post)
+                     // because it loses the user gesture context. location.href
+                     // works reliably across all platforms for deep links.
                      setTimeout(() => {
-                        window.location.href = `/store/${slug}`;
-                     }, 2000);
+                        window.location.href = url;
+                     }, 1000);
                 } else {
                      toast.success("Order placed successfully!");
                      runFireworks();
@@ -485,6 +517,83 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     </div>
                 </div>
 
+                {/* JazzCash / EasyPaisa Account Info + Payment Slip */}
+                {(paymentMethod === 'jazzcash' || paymentMethod === 'easypaisa') && (
+                    <div className="space-y-4">
+                        {/* Show Account Number */}
+                        <div className={`p-4 rounded-xl border-2 ${
+                            paymentMethod === 'jazzcash' 
+                              ? 'bg-red-50 border-red-200' 
+                              : 'bg-green-50 border-green-200'
+                        }`}>
+                            <p className="text-sm font-medium text-gray-700 mb-1">
+                                Send payment to this {paymentMethod === 'jazzcash' ? 'JazzCash' : 'EasyPaisa'} number:
+                            </p>
+                            <p className={`text-2xl font-bold font-mono tracking-wider ${
+                                paymentMethod === 'jazzcash' ? 'text-red-700' : 'text-green-700'
+                            }`}>
+                                {paymentMethod === 'jazzcash' ? jazzcashNumber : easypaisaNumber}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-2">
+                                After sending payment, attach your payment screenshot below (optional).
+                            </p>
+                        </div>
+
+                        {/* Payment Slip Upload */}
+                        <div>
+                            <label className="form-label flex items-center gap-2">
+                                <Paperclip size={14} /> Payment Slip (Optional)
+                            </label>
+                            {!paymentSlip ? (
+                                <label className="mt-1 flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                    <div className="flex flex-col items-center justify-center pt-3 pb-3">
+                                        <Paperclip size={24} className="text-gray-400 mb-1" />
+                                        <p className="text-sm text-gray-500">Tap to attach payment screenshot</p>
+                                        <p className="text-xs text-gray-400">JPG, PNG or WebP (max 5MB)</p>
+                                    </div>
+                                    <input 
+                                        type="file" 
+                                        className="hidden" 
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                if (file.size > 5 * 1024 * 1024) {
+                                                    toast.error('Image too large. Maximum 5MB.');
+                                                    return;
+                                                }
+                                                setPaymentSlip(file);
+                                                setSlipPreview(URL.createObjectURL(file));
+                                            }
+                                        }}
+                                    />
+                                </label>
+                            ) : (
+                                <div className="mt-1 relative inline-block">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img 
+                                        src={slipPreview || ''} 
+                                        alt="Payment slip" 
+                                        className="w-32 h-32 object-cover rounded-xl border border-gray-200 shadow-sm" 
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setPaymentSlip(null);
+                                            if (slipPreview) URL.revokeObjectURL(slipPreview);
+                                            setSlipPreview(null);
+                                        }}
+                                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                    <p className="text-xs text-green-600 mt-1 font-medium">✓ Slip attached</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
                 {/* Special Instructions / Notes */}
                 <div>
                     <label className="form-label">Special Instructions (Optional)</label>
@@ -500,10 +609,12 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
 
                 <button 
                     type="submit" 
-                    disabled={isSubmitting || !isOpen || belowMinimum}
+                    disabled={isSubmitting || slipUploading || !isOpen || belowMinimum}
                     className="btn-primary w-full mt-4 flex items-center justify-center gap-2 py-4 text-base shadow-lg shadow-blue-500/20 disabled:bg-gray-300 disabled:shadow-none"
                 >
-                    {isSubmitting ? (
+                    {slipUploading ? (
+                        'Uploading Slip...'
+                    ) : isSubmitting ? (
                         'Sending Order...'
                     ) : !isOpen ? (
                         'Store Closed'

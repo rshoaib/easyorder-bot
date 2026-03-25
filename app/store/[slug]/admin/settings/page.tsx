@@ -45,6 +45,8 @@ async function updateSettings(formData: FormData) {
         const paypalLink = formData.get('paypalLink') as string;
         const stripeLink = formData.get('stripeLink') as string;
         const codEnabled = formData.get('codEnabled') === 'true';
+        const jazzcashNumber = formData.get('jazzcashNumber') as string;
+        const easypaisaNumber = formData.get('easypaisaNumber') as string;
         const deliveryFeeRaw = formData.get('deliveryFee') as string;
         const deliveryFee = deliveryFeeRaw ? parseFloat(deliveryFeeRaw) : 0;
         const minOrderRaw = formData.get('minOrderAmount') as string;
@@ -85,6 +87,8 @@ async function updateSettings(formData: FormData) {
             paypalLink, 
             stripeLink, 
             codEnabled, 
+            jazzcashNumber,
+            easypaisaNumber,
             deliveryFee, 
             minOrderAmount, 
             timezone
@@ -463,6 +467,40 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                             />
                             <p className="text-xs text-gray-500 mt-2">
                                 Create a payment link in your Stripe Dashboard and paste it here.
+                            </p>
+                        </div>
+
+                        <div className="border-t border-gray-100"></div>
+
+                        {/* JazzCash */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center text-white text-[10px] font-bold">JC</span> JazzCash Account Number
+                            </label>
+                            <input 
+                                name="jazzcashNumber" 
+                                defaultValue={tenant.jazzcashNumber} 
+                                placeholder="03XX-XXXXXXX"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none transition-all placeholder:text-gray-400 font-medium font-mono" 
+                            />
+                            <p className="text-xs text-gray-500 mt-2">
+                                Your JazzCash mobile number. Customers will send payment to this number and can attach a payment slip.
+                            </p>
+                        </div>
+
+                        {/* EasyPaisa */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center text-white text-[10px] font-bold">EP</span> EasyPaisa Account Number
+                            </label>
+                            <input 
+                                name="easypaisaNumber" 
+                                defaultValue={tenant.easypaisaNumber} 
+                                placeholder="03XX-XXXXXXX"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-4 focus:ring-green-500/10 outline-none transition-all placeholder:text-gray-400 font-medium font-mono" 
+                            />
+                            <p className="text-xs text-gray-500 mt-2">
+                                Your EasyPaisa mobile number. Customers will send payment to this number and can attach a payment slip.
                             </p>
                         </div>
                     </div>
