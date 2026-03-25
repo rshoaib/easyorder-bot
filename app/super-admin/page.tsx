@@ -1,6 +1,7 @@
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { getTenantRepository } from "@/lib/repository";
 import Link from "next/link";
+import CopyButton from "@/components/ui/CopyButton";
 import { createStore, activateTenant, deactivateTenant, setProPlan, downgradePlan } from "./actions";
 import { Tenant, Subscription } from "@/lib/repository/types";
 import { createClient } from "@/utils/supabase/server";
@@ -165,6 +166,25 @@ export default async function SuperAdminPage() {
                                                 {planBadge(tenant)}
                                                 <span className={`w-2 h-2 rounded-full mt-0.5 ${tenant.status === 'active' ? 'bg-green-500' : 'bg-gray-300'}`} />
                                             </div>
+                                        </div>
+
+                                        {/* Contact row */}
+                                        <div className="flex flex-wrap gap-1.5 mb-3">
+                                            <CopyButton text={tenant.name} label="store name" icon="🏪" />
+                                            {tenant.email && <CopyButton text={tenant.email} label="email" icon="📧" />}
+                                            {tenant.ownerPhone && <CopyButton text={tenant.ownerPhone} label="phone" icon="📱" />}
+                                            {tenant.ownerPhone && (
+                                                <a
+                                                    href={`https://wa.me/${tenant.ownerPhone.replace(/[^0-9]/g, '')}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition-all active:scale-95"
+                                                    title="Open WhatsApp"
+                                                >
+                                                    <span>💬</span>
+                                                    <span>WhatsApp</span>
+                                                </a>
+                                            )}
                                         </div>
 
                                         {/* Action buttons */}
