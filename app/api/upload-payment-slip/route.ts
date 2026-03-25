@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { uploadPaymentSlip } from '@/lib/storage';
+import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,13 +40,29 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'File too large. Maximum 5MB.' }, { status: 400 });
         }
 
-        const publicUrl = await uploadPaymentSlip(file, tenantId);
+        // Use service role key to bypass RLS on storage (server-side only)
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+        const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+        const supabase = createClient(supabaseUrl, serviceKey);
 
-        if (!publicUrl) {
-            return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+        const fileExt = file.name.split('.').pop();
+        const randomHash = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+        const filePath = `${tenantId}/${randomHash}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('payment-slips')
+            .upload(filePath, file, { upsert: true });
+
+        if (uploadError) {
+            console.error('[upload-payment-slip] Storage error:', uploadError.message);
+            return NextResponse.json({ error: 'Upload failed: ' + uploadError.message }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, url: publicUrl });
+        const { data } = supabase.storage
+            .from('payment-slips')
+            .getPublicUrl(filePath);
+
+        return NextResponse.json({ success: true, url: data.publicUrl });
     } catch (error: any) {
         console.error('[upload-payment-slip] Error:', error?.message);
         return NextResponse.json({ error: error?.message || 'Upload failed' }, { status: 500 });
