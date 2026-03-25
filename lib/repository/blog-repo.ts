@@ -1,4 +1,4 @@
-import { supabase } from '../supabase';
+import { createClient } from '@supabase/supabase-js';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 export interface BlogPost {
@@ -46,11 +46,23 @@ function mapRowToPost(row: BlogPostRow): BlogPost {
     };
 }
 
+// Use service role key on the server side to bypass RLS on blog_posts
+// (blog posts are public content, so this is safe)
+function getAdminClient(): SupabaseClient {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) {
+        // Return placeholder during build — queries will fail gracefully below
+        return createClient('https://placeholder.supabase.co', 'placeholder');
+    }
+    return createClient(url, key);
+}
+
 export class SupabaseBlogRepository {
     private client: SupabaseClient;
 
     constructor(client: SupabaseClient | null = null) {
-        this.client = client || supabase;
+        this.client = client || getAdminClient();
     }
 
     async getAllPosts(): Promise<BlogPost[]> {
@@ -77,7 +89,7 @@ export class SupabaseBlogRepository {
             .single();
 
         if (error || !data) {
-            if (error?.code !== 'PGRST116') { // Not a "no rows" error
+            if (error?.code !== 'PGRST116') {
                 console.error('Error fetching blog post:', error);
             }
             return undefined;
