@@ -253,12 +253,13 @@ export default async function SuperAdminPage() {
                                                     <select
                                                         name="durationMonths"
                                                         required
+                                                        defaultValue="12"
                                                         className="w-full text-sm px-3 py-2 rounded-lg border border-indigo-200 bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 outline-none transition"
                                                     >
                                                         <option value="1">1 Month</option>
                                                         <option value="3">3 Months</option>
                                                         <option value="6">6 Months</option>
-                                                        <option value="12" selected>12 Months (1 Year)</option>
+                                                        <option value="12">12 Months (1 Year)</option>
                                                         <option value="24">24 Months (2 Years)</option>
                                                         <option value="36">36 Months (3 Years)</option>
                                                     </select>
