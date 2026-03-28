@@ -855,6 +855,51 @@ export default async function HomePage({
                   </li>
                 </ul>
               </div>
+              <div>
+                <h4 className="text-white font-semibold mb-3">Free Tools</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a
+                      href="https://legalpolicygen.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white transition-colors"
+                    >
+                      Legal Policy Generator
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://onlineimageshrinker.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white transition-colors"
+                    >
+                      Image Compressor
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://tinypdftools.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white transition-colors"
+                    >
+                      PDF Tools
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://dailysmartcalc.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white transition-colors"
+                    >
+                      Smart Calculators
+                    </a>
+                  </li>
+                </ul>
+              </div>
 
             </div>
           </div>
