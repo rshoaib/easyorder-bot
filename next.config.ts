@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Explicitly enforce no trailing slashes for SEO
+  trailingSlash: false,
+  poweredByHeader: false,
   /* config options here */
   images: {
     remotePatterns: [

@@ -1,6 +1,0 @@
-﻿.next/dev/types/validator.ts(323,39): error TS2307: Cannot find module '../../../app/api/checkout/route.js' or its corresponding type declarations.
-.next/dev/types/validator.ts(368,39): error TS2307: Cannot find module '../../../app/api/webhooks/lemonsqueezy/route.js' or its corresponding type declarations.
-.next/types/validator.ts(323,39): error TS2307: Cannot find module '../../app/api/checkout/route.js' or its corresponding type declarations.
-.next/types/validator.ts(368,39): error TS2307: Cannot find module '../../app/api/webhooks/lemonsqueezy/route.js' or its corresponding type declarations.
-app/api/webhooks/paddle/route.ts(33,33): error TS2339: Property 'eventType' does not exist on type 'Promise<EventEntity>'.
-app/api/webhooks/paddle/route.ts(45,38): error TS2339: Property 'data' does not exist on type 'Promise<EventEntity>'.
