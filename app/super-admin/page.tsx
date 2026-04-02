@@ -2,7 +2,8 @@ import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { getTenantRepository } from "@/lib/repository";
 import Link from "next/link";
 import CopyButton from "@/components/ui/CopyButton";
-import { createStore, activateTenant, deactivateTenant, setProPlan, downgradePlan } from "./actions";
+import { createStore, activateTenant, deactivateTenant, setProPlan, downgradePlan, clearOrderHistory } from "./actions";
+import ClearOrdersButton from "@/components/admin/ClearOrdersButton";
 import { Tenant, Subscription } from "@/lib/repository/types";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -62,6 +63,29 @@ export default async function SuperAdminPage() {
         .from('subscriptions')
         .select('*, tenants(name)')
         .order('created_at', { ascending: false });
+
+    // Load order counts per tenant in one query
+    const { data: rawOrderCounts } = await adminClient
+        .rpc('get_order_counts_by_tenant')
+        .select('*');
+
+    // Fallback: if RPC doesn't exist, query manually
+    let orderCountMap: Record<string, number> = {};
+    if (rawOrderCounts && Array.isArray(rawOrderCounts)) {
+        for (const row of rawOrderCounts) {
+            orderCountMap[row.tenant_id] = row.order_count;
+        }
+    } else {
+        // Manual fallback: count orders per tenant
+        const { data: orderData } = await adminClient
+            .from('orders')
+            .select('tenant_id');
+        if (orderData) {
+            for (const row of orderData) {
+                orderCountMap[row.tenant_id] = (orderCountMap[row.tenant_id] || 0) + 1;
+            }
+        }
+    }
 
     const allSubs = (rawSubs || []).map((s: any) => ({
         id: s.id,
@@ -149,6 +173,7 @@ export default async function SuperAdminPage() {
                         <div className="divide-y divide-gray-50">
                             {tenants.map(tenant => {
                                 const isPro = tenant.plan === 'pro';
+                                const orderCount = orderCountMap[tenant.id] || 0;
                                 return (
                                     <div key={tenant.id} className="px-5 py-5">
                                         {/* Header row */}
@@ -211,6 +236,13 @@ export default async function SuperAdminPage() {
                                                     <input type="hidden" name="id" value={tenant.id} />
                                                     <button className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition">↓ Downgrade to Free</button>
                                                 </form>
+                                            )}
+                                            {orderCount > 0 && (
+                                                <ClearOrdersButton
+                                                    tenantId={tenant.id}
+                                                    orderCount={orderCount}
+                                                    clearAction={clearOrderHistory}
+                                                />
                                             )}
                                         </div>
 

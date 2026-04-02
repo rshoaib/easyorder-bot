@@ -143,3 +143,22 @@ export async function downgradePlan(formData: FormData) {
     await repo.setTenantPlan(id, 'free');
     revalidatePath('/super-admin');
 }
+
+export async function clearOrderHistory(formData: FormData) {
+    await verifySuperAdmin();
+
+    const id = formData.get('id') as string;
+    if (!id) return;
+
+    const serviceClient = getServiceClient();
+
+    // Delete all orders for this tenant (permanent)
+    const { error } = await serviceClient
+        .from('orders')
+        .delete()
+        .eq('tenant_id', id);
+
+    if (error) throw new Error(`Failed to clear orders: ${error.message}`);
+
+    revalidatePath('/super-admin');
+}
