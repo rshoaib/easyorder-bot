@@ -3,6 +3,8 @@ import { Order } from "@/lib/repository/types";
 import Link from "next/link";
 import { RefreshCw, ShoppingBag } from 'lucide-react';
 import OrderList from '@/components/admin/OrderList';
+import ClearStoreOrdersButton from '@/components/admin/ClearStoreOrdersButton';
+import { clearStoreOrders } from './actions';
 import { createClient } from "@/utils/supabase/server";
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 
@@ -53,6 +55,13 @@ export default async function AdminOrdersPage({ params }: Props) {
          </div>
 
          <div className="flex items-center gap-3">
+             {orders.length > 0 && (
+                <ClearStoreOrdersButton
+                    slug={slug}
+                    orderCount={orders.length}
+                    clearAction={clearStoreOrders}
+                />
+             )}
              <Link href={`/store/${slug}/admin/orders`}>
                 <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:text-indigo-600 hover:border-indigo-200 transition-colors" title="Refresh list">
                     <RefreshCw size={16} />
@@ -67,3 +76,4 @@ export default async function AdminOrdersPage({ params }: Props) {
     </main>
   );
 }
+
