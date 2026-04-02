@@ -4,7 +4,6 @@ import Link from "next/link";
 import { RefreshCw, ShoppingBag } from 'lucide-react';
 import OrderList from '@/components/admin/OrderList';
 import ClearStoreOrdersButton from '@/components/admin/ClearStoreOrdersButton';
-import { clearStoreOrders } from './actions';
 import { createClient } from "@/utils/supabase/server";
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 
@@ -59,7 +58,6 @@ export default async function AdminOrdersPage({ params }: Props) {
                 <ClearStoreOrdersButton
                     slug={slug}
                     orderCount={orders.length}
-                    clearAction={clearStoreOrders}
                 />
              )}
              <Link href={`/store/${slug}/admin/orders`}>
