@@ -8,10 +8,15 @@ export const dynamic = 'force-dynamic';
 
 export async function DELETE(req: NextRequest) {
     try {
-        const { slug } = await req.json();
+        const body = await req.json();
+        const { slug, orderIds } = body;
 
         if (!slug) {
             return NextResponse.json({ error: 'Missing store slug' }, { status: 400 });
+        }
+
+        if (!orderIds || !Array.isArray(orderIds) || orderIds.length === 0) {
+            return NextResponse.json({ error: 'Missing orderIds array' }, { status: 400 });
         }
 
         // Auth check: support both cookie-based and Supabase Auth
@@ -48,17 +53,17 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ error: 'Store not found' }, { status: 404 });
         }
 
-        // Delete all orders for this tenant
         const { error } = await serviceClient
             .from('orders')
             .delete()
-            .eq('tenant_id', tenant.id);
+            .eq('tenant_id', tenant.id)
+            .in('id', orderIds);
 
         if (error) {
             return NextResponse.json({ error: `Failed: ${error.message}` }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, message: 'All orders cleared' });
+        return NextResponse.json({ success: true, message: `${orderIds.length} order(s) deleted` });
     } catch (err: any) {
         return NextResponse.json({ error: err?.message || 'Internal error' }, { status: 500 });
     }

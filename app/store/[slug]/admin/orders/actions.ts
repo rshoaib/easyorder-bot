@@ -6,9 +6,9 @@ import { createClient as createAdminClient } from '@supabase/supabase-js';
 import { getTenantRepository } from '@/lib/repository';
 import { cookies } from 'next/headers';
 
-export async function clearStoreOrders(formData: FormData) {
-    const slug = formData.get('slug') as string;
+export async function deleteSelectedOrders(slug: string, orderIds: string[]) {
     if (!slug) throw new Error('Missing store slug');
+    if (!orderIds || orderIds.length === 0) throw new Error('No orders selected');
 
     // Auth check: support both cookie-based and Supabase Auth
     const cookieStore = await cookies();
@@ -17,7 +17,6 @@ export async function clearStoreOrders(formData: FormData) {
 
     let isAuthorized = hasCookieAuth || hasSuperAuth;
 
-    // Also check Supabase Auth (store owners who log in via email/password)
     if (!isAuthorized) {
         try {
             const supabase = await createClient();
@@ -42,13 +41,13 @@ export async function clearStoreOrders(formData: FormData) {
 
     if (!tenant) throw new Error('Store not found');
 
-    // Delete all orders for this tenant
-    const { error, count } = await serviceClient
+    const { error } = await serviceClient
         .from('orders')
         .delete()
-        .eq('tenant_id', tenant.id);
+        .eq('tenant_id', tenant.id)
+        .in('id', orderIds);
 
-    if (error) throw new Error(`Failed to clear orders: ${error.message}`);
+    if (error) throw new Error(`Failed to delete orders: ${error.message}`);
 
     revalidatePath(`/store/${slug}/admin/orders`);
     revalidatePath(`/store/${slug}/admin`);

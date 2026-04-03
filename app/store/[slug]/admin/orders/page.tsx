@@ -3,7 +3,6 @@ import { Order } from "@/lib/repository/types";
 import Link from "next/link";
 import { RefreshCw, ShoppingBag } from 'lucide-react';
 import OrderList from '@/components/admin/OrderList';
-import ClearStoreOrdersButton from '@/components/admin/ClearStoreOrdersButton';
 import { createClient } from "@/utils/supabase/server";
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 
@@ -53,20 +52,12 @@ export default async function AdminOrdersPage({ params }: Props) {
             <p className="text-gray-500 text-sm">Manage all your incoming orders</p>
          </div>
 
-         <div className="flex items-center gap-3">
-             {orders.length > 0 && (
-                <ClearStoreOrdersButton
-                    slug={slug}
-                    orderCount={orders.length}
-                />
-             )}
-             <Link href={`/store/${slug}/admin/orders`}>
-                <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:text-indigo-600 hover:border-indigo-200 transition-colors" title="Refresh list">
-                    <RefreshCw size={16} />
-                    <span className="hidden md:inline">Refresh</span>
-                </button>
-             </Link>
-         </div>
+         <Link href={`/store/${slug}/admin/orders`}>
+            <button className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:text-indigo-600 hover:border-indigo-200 transition-colors" title="Refresh list">
+                <RefreshCw size={16} />
+                <span className="hidden md:inline">Refresh</span>
+            </button>
+         </Link>
       </div>
 
       {/* Orders Table with Search & Filter */}
