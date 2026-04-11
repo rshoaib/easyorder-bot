@@ -213,6 +213,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                                 <option value="MRU">MRU (UM)</option>
                                 <option value="MUR">MUR (₨)</option>
                                 <option value="ZAR">ZAR (R) — South African Rand</option>
+                                <option value="NGN">NGN (₦) — Nigerian Naira</option>
                             </select>
                             <p className="text-xs text-gray-500 mt-2">
                                 This symbol will be shown next to all your prices.

@@ -11,6 +11,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
     MRU: 'UM',
     MUR: '₨',
     ZAR: 'R',
+    NGN: '₦',
 };
 
 /**
