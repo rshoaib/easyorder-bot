@@ -32,6 +32,7 @@ export interface Tenant {
     timezone?: string; // IANA timezone e.g. 'Africa/Johannesburg'
     jazzcashNumber?: string; // JazzCash account number
     easypaisaNumber?: string; // EasyPaisa account number
+    fulfillmentMethods?: string[]; // e.g. ['delivery', 'pickup', 'meetup', 'post']
 }
 
 export interface Order {
@@ -52,6 +53,7 @@ export interface Order {
     promoCode?: string;
     total: number;
     paymentMethod?: string;
+    fulfillmentMethod?: string; // delivery, pickup, meetup, post
     paymentSlipUrl?: string; // Payment screenshot URL
     status: OrderStatus;
     notes?: string; // Customer special instructions

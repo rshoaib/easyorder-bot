@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { items, total, customer, slug, promoCode, paymentMethod, notes, paymentSlipUrl } = body;
+        const { items, total, customer, slug, promoCode, paymentMethod, fulfillmentMethod, notes, paymentSlipUrl } = body;
 
         if (!slug) {
             return NextResponse.json({ error: 'Missing store slug' }, { status: 400 });
@@ -123,6 +123,7 @@ export async function POST(req: NextRequest) {
             promoCode: validatedPromoCode,
             total: finalTotal,
             paymentMethod,
+            fulfillmentMethod: fulfillmentMethod || 'delivery',
             status: 'pending',
             notes: notes ? String(notes).slice(0, 500) : undefined,
             paymentSlipUrl: paymentSlipUrl || undefined
@@ -132,6 +133,13 @@ export async function POST(req: NextRequest) {
         await orderRepo.saveOrder(order);
 
         // Construct WhatsApp Message
+        const fulfillmentLabels: Record<string, string> = {
+            delivery: '🚗 Delivery',
+            pickup: '🏪 Pick Up',
+            meetup: '🤝 Meet Up',
+            post: '📦 Delivery by Post',
+        };
+        const fulfillmentLabel = fulfillmentLabels[fulfillmentMethod || 'delivery'] || '🚗 Delivery';
         const currencySymbol = getCurrencySymbol(tenant.currency);
         const itemsList = validatedItems.map((item: any, i: number) => {
             const sizeLabel = item.selectedSize ? ` (${item.selectedSize})` : '';
@@ -150,6 +158,7 @@ export async function POST(req: NextRequest) {
             (customer.email ? `📧 ${customer.email}\n` : '') +
             `📍 ${customer.address}\n` +
             (customer.locationLink ? `🗺️ ${customer.locationLink}\n` : '') +
+            `${fulfillmentLabel}\n` +
             `\n` +
             `🍽️ *Order Items*\n` +
             `┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n` +

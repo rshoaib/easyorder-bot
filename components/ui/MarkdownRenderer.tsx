@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 interface MarkdownRendererProps {
     content: string;
@@ -28,7 +29,24 @@ export default function MarkdownRenderer({ content, className = '' }: MarkdownRe
 
     return (
         <div className={`prose prose-lg prose-indigo prose-img:rounded-2xl max-w-none ${className}`}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{
+                    pre({ children, ...props }) {
+                        const child = children as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
+                        if (child?.props?.className?.includes('language-svg')) {
+                            return (
+                                <div
+                                    className="not-prose my-8"
+                                    dangerouslySetInnerHTML={{ __html: String(child.props.children).trim() }}
+                                />
+                            );
+                        }
+                        return <pre {...props}>{children}</pre>;
+                    },
+                }}
+            >
                 {content}
             </ReactMarkdown>
         </div>

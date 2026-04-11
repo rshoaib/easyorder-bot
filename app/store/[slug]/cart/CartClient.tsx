@@ -1,7 +1,7 @@
 'use client';
 
 import { useCart } from "@/context/CartContext";
-import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin, Tag, Store, CreditCard, Wallet, Paperclip, X } from "lucide-react";
+import { Trash2, ShoppingBag, ArrowLeft, Send, MapPin, Tag, Store, CreditCard, Wallet, Paperclip, X, Truck, Users, Package } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -75,9 +75,10 @@ interface Props {
     minOrderAmount?: number;
     jazzcashNumber?: string;
     easypaisaNumber?: string;
+    fulfillmentMethods?: string[];
 }
 
-export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp, minOrderAmount, jazzcashNumber, easypaisaNumber }: Props) {
+export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp, minOrderAmount, jazzcashNumber, easypaisaNumber, fulfillmentMethods: fulfillmentMethodsProp }: Props) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', email: '', locationLink: '' });
@@ -106,6 +107,22 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
     }
 
     const [paymentMethod, setPaymentMethod] = useState(availableMethods[0]?.id || 'cod');
+
+    // Build fulfillment methods
+    const allFulfillmentOptions: { id: string; label: string; icon: React.ReactNode }[] = [
+        { id: 'delivery', label: 'Delivery', icon: <Truck size={16} className="text-blue-600" /> },
+        { id: 'pickup', label: 'Pick Up', icon: <ShoppingBag size={16} className="text-green-600" /> },
+        { id: 'meetup', label: 'Meet Up', icon: <Users size={16} className="text-orange-600" /> },
+        { id: 'post', label: 'Delivery by Post', icon: <Package size={16} className="text-purple-600" /> },
+    ];
+    const enabledFulfillment = fulfillmentMethodsProp && fulfillmentMethodsProp.length > 0
+        ? allFulfillmentOptions.filter(o => fulfillmentMethodsProp.includes(o.id))
+        : [allFulfillmentOptions[0]];
+    const [fulfillmentMethod, setFulfillmentMethod] = useState(enabledFulfillment[0]?.id || 'delivery');
+
+    const needsAddress = fulfillmentMethod === 'delivery' || fulfillmentMethod === 'post';
+    const needsMeetingPoint = fulfillmentMethod === 'meetup';
+
     const router = useRouter();
 
     const [locationStatus, setLocationStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -219,6 +236,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 slug, // Pass slug so API knows which tenant!
                 promoCode: appliedPromo?.code,
                 paymentMethod,
+                fulfillmentMethod,
                 notes: notes.trim() || undefined,
                 paymentSlipUrl
             });
@@ -450,12 +468,53 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     />
                 </div>
 
-                {/* Hide Address for Digital Only */}
-                {!isDigitalOnly ? (
+                {/* Fulfillment Method Selector */}
+                {!isDigitalOnly && enabledFulfillment.length > 1 && (
                     <div>
-                        <label className="form-label">Delivery Address</label>
+                        <label className="form-label mb-2 block">Shipping Method</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {enabledFulfillment.map((method) => (
+                                <label key={method.id} className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all text-sm ${
+                                    fulfillmentMethod === method.id
+                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-900'
+                                    : 'border-gray-200 hover:bg-gray-50'
+                                }`}>
+                                    <input
+                                        type="radio"
+                                        name="fulfillmentMethod"
+                                        value={method.id}
+                                        checked={fulfillmentMethod === method.id}
+                                        onChange={(e) => setFulfillmentMethod(e.target.value)}
+                                        className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
+                                    />
+                                    <span className="flex items-center gap-1.5 font-medium">
+                                        {method.icon} {method.label}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Address / Email / Meeting Point based on fulfillment */}
+                {isDigitalOnly ? (
+                    <div>
+                         <label className="form-label">Email Address (For Delivery)</label>
+                         <input
+                            required={isOpen}
+                            type="email"
+                            className="form-input"
+                            placeholder="you@example.com"
+                            value={customer.email}
+                            onChange={e => setCustomer({...customer, email: e.target.value})}
+                         />
+                         <p className="text-xs text-gray-500 mt-1">We will send your files to this email.</p>
+                    </div>
+                ) : needsAddress ? (
+                    <div>
+                        <label className="form-label">{fulfillmentMethod === 'post' ? 'Shipping Address' : 'Delivery Address'}</label>
                         <div className="flex gap-2">
-                            <textarea 
+                            <textarea
                                 required={isOpen}
                                 className="form-input flex-1"
                                 rows={2}
@@ -463,7 +522,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                                 value={customer.address}
                                 onChange={e => setCustomer({...customer, address: e.target.value})}
                             />
-                             <button 
+                             <button
                                 type="button"
                                 onClick={handleLocationClick}
                                 disabled={locationStatus === 'loading'}
@@ -477,20 +536,19 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                             </button>
                         </div>
                     </div>
-                ) : (
+                ) : needsMeetingPoint ? (
                     <div>
-                         <label className="form-label">Email Address (For Delivery)</label>
-                         <input 
+                        <label className="form-label">Meeting Point</label>
+                        <textarea
                             required={isOpen}
-                            type="email"
                             className="form-input"
-                            placeholder="you@example.com"
-                            value={customer.email}
-                            onChange={e => setCustomer({...customer, email: e.target.value})}
-                         />
-                         <p className="text-xs text-gray-500 mt-1">We will send your files to this email.</p>
+                            rows={2}
+                            placeholder="e.g. Mall entrance, parking lot B..."
+                            value={customer.address}
+                            onChange={e => setCustomer({...customer, address: e.target.value})}
+                        />
                     </div>
-                )}
+                ) : null}
 
                 <div>
                     <label className="form-label mb-2 block">Payment Method</label>

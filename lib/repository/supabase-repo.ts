@@ -251,7 +251,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
             timezone: data.timezone || undefined,
             jazzcashNumber: data.jazzcash_number || undefined,
-            easypaisaNumber: data.easypaisa_number || undefined
+            easypaisaNumber: data.easypaisa_number || undefined,
+            fulfillmentMethods: data.fulfillment_methods || ['delivery']
         };
     }
 
@@ -413,6 +414,7 @@ export class SupabaseTenantRepository implements TenantRepository {
         if (settings.timezone !== undefined) { updateData.timezone = settings.timezone || null; }
         if (settings.jazzcashNumber !== undefined) { updateData.jazzcash_number = settings.jazzcashNumber || null; }
         if (settings.easypaisaNumber !== undefined) { updateData.easypaisa_number = settings.easypaisaNumber || null; }
+        if (settings.fulfillmentMethods !== undefined) { updateData.fulfillment_methods = settings.fulfillmentMethods; }
         if (settings.language !== undefined) { updateData.language = settings.language; }
         if (settings.customDomain !== undefined) { updateData.custom_domain = settings.customDomain; }
         if (settings.plan !== undefined) { updateData.plan = settings.plan; }
@@ -465,7 +467,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
             timezone: data.timezone || undefined,
             jazzcashNumber: data.jazzcash_number || undefined,
-            easypaisaNumber: data.easypaisa_number || undefined
+            easypaisaNumber: data.easypaisa_number || undefined,
+            fulfillmentMethods: data.fulfillment_methods || ['delivery']
         };
     }
 
@@ -509,7 +512,8 @@ export class SupabaseTenantRepository implements TenantRepository {
             minOrderAmount: parseFloat(data.min_order_amount) || 0,
             timezone: data.timezone || undefined,
             jazzcashNumber: data.jazzcash_number || undefined,
-            easypaisaNumber: data.easypaisa_number || undefined
+            easypaisaNumber: data.easypaisa_number || undefined,
+            fulfillmentMethods: data.fulfillment_methods || ['delivery']
         };
     }
 

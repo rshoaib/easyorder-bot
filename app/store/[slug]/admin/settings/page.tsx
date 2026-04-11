@@ -1,5 +1,5 @@
 import { getTenantRepository } from "@/lib/repository";
-import { ArrowLeft, Save, Instagram, Facebook, Banknote, CheckCircle, CreditCard, Wallet } from "lucide-react";
+import { ArrowLeft, Save, Instagram, Facebook, Banknote, CheckCircle, CreditCard, Wallet, Truck, ShoppingBag, Users, Package } from "lucide-react";
 import Link from "next/link";
 import ServiceStatus from "@/components/admin/ServiceStatus";
 import { redirect } from "next/navigation";
@@ -52,6 +52,10 @@ async function updateSettings(formData: FormData) {
         const minOrderRaw = formData.get('minOrderAmount') as string;
         const minOrderAmount = minOrderRaw ? parseFloat(minOrderRaw) : 0;
         const timezone = formData.get('timezone') as string;
+
+        // Fulfillment methods
+        const fulfillmentMethods = formData.getAll('fulfillmentMethods') as string[];
+        const validFulfillment = fulfillmentMethods.length > 0 ? fulfillmentMethods : ['delivery'];
         
         // Checkbox is "true" if checked, null if unchecked
         const isOpen = formData.get('isOpen') === 'true';
@@ -89,9 +93,10 @@ async function updateSettings(formData: FormData) {
             codEnabled, 
             jazzcashNumber,
             easypaisaNumber,
-            deliveryFee, 
-            minOrderAmount, 
-            timezone
+            deliveryFee,
+            minOrderAmount,
+            timezone,
+            fulfillmentMethods: validFulfillment
         });
         success = true;
     } catch (err: any) {
@@ -402,6 +407,43 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                                 Find this in your Facebook Events Manager. We&apos;ll automatically convert it into a tracking script.
                             </p>
                         </div>
+                    </div>
+                </div>
+
+                {/* ═══════════════════════════════════════════════════════ */}
+                {/* SECTION: Fulfillment / Shipping Methods               */}
+                {/* ═══════════════════════════════════════════════════════ */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="p-5 border-b border-gray-100 bg-gray-50">
+                        <h2 className="font-bold text-gray-900 flex items-center gap-2">
+                            <Truck size={18} className="text-indigo-600" /> Shipping / Fulfillment Methods
+                        </h2>
+                        <p className="text-sm text-gray-500 mt-1">Choose how customers can receive their orders.</p>
+                    </div>
+                    <div className="p-5 space-y-4">
+                        {[
+                            { id: 'delivery', label: 'Delivery', desc: 'Deliver to customer address', icon: <Truck size={16} className="text-blue-600" /> },
+                            { id: 'pickup', label: 'Pick Up', desc: 'Customer picks up from your location', icon: <ShoppingBag size={16} className="text-green-600" /> },
+                            { id: 'meetup', label: 'Meet Up', desc: 'Agree on a meeting point with customer', icon: <Users size={16} className="text-orange-600" /> },
+                            { id: 'post', label: 'Delivery by Post', desc: 'Ship via postal / courier service', icon: <Package size={16} className="text-purple-600" /> },
+                        ].map((method) => (
+                            <label key={method.id} className="flex items-center justify-between cursor-pointer">
+                                <div className="flex items-center gap-3">
+                                    {method.icon}
+                                    <div>
+                                        <h3 className="font-semibold text-gray-700 text-sm">{method.label}</h3>
+                                        <p className="text-xs text-gray-500">{method.desc}</p>
+                                    </div>
+                                </div>
+                                <input
+                                    type="checkbox"
+                                    name="fulfillmentMethods"
+                                    value={method.id}
+                                    defaultChecked={(tenant.fulfillmentMethods || ['delivery']).includes(method.id)}
+                                    className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                                />
+                            </label>
+                        ))}
                     </div>
                 </div>
 
