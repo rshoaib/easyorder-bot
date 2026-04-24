@@ -20,17 +20,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const post = await getPost(slug);
     if (!post) return {};
 
+    // DB-managed title/excerpt are already SERP-tuned (≤65 chars / ≤160 chars).
+    // Do NOT append brand/CTA suffixes here — they push us past truncation limits.
+    const canonicalUrl = `https://orderviachat.com/blog/${post.slug}`;
     return {
-        title: `${post.title} | Free Guide [2026]`,
-        description: post.excerpt.endsWith('.') 
-            ? `${post.excerpt} Click to learn the secrets to scaling your WhatsApp restaurant orders.`
-            : `${post.excerpt}. Click to learn the secrets to scaling your WhatsApp restaurant orders.`,
+        title: post.title,
+        description: post.excerpt,
+        alternates: { canonical: canonicalUrl },
         openGraph: {
-            title: `${post.title} | Free Guide [2026]`,
-            description: post.excerpt.endsWith('.') 
-                ? `${post.excerpt} Click to learn the secrets to scaling your WhatsApp restaurant orders.`
-                : `${post.excerpt}. Click to learn the secrets to scaling your WhatsApp restaurant orders.`,
+            title: post.title,
+            description: post.excerpt,
             type: 'article',
+            url: canonicalUrl,
+            siteName: 'OrderViaChat',
+            images: post.coverImage ? [post.coverImage] : [],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: post.title,
+            description: post.excerpt,
             images: post.coverImage ? [post.coverImage] : [],
         }
     };
@@ -137,7 +145,15 @@ export default async function BlogPost({ params }: Props) {
                 {post.coverImage && (
                     <div className="max-w-5xl mx-auto px-6 mb-16">
                         <div className="relative rounded-3xl overflow-hidden shadow-2xl h-[300px] md:h-[400px]">
-                            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover object-center" />
+                            <img
+                                src={post.coverImage}
+                                alt={post.title}
+                                width={1280}
+                                height={720}
+                                fetchPriority="high"
+                                decoding="async"
+                                className="w-full h-full object-cover object-center"
+                            />
                         </div>
                     </div>
                 )}

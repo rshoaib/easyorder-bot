@@ -1,4 +1,21 @@
 import React from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy — OrderViaChat',
+  description:
+    'How OrderViaChat collects, uses, and protects your data when you create a WhatsApp ordering store or place an order. Last updated 2026.',
+  alternates: { canonical: 'https://orderviachat.com/privacy-policy' },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: 'Privacy Policy — OrderViaChat',
+    description:
+      'How OrderViaChat collects, uses, and protects your data when you create a WhatsApp ordering store or place an order.',
+    type: 'website',
+    url: 'https://orderviachat.com/privacy-policy',
+    siteName: 'OrderViaChat',
+  },
+};
 
 export default function PrivacyPolicy() {
   return (

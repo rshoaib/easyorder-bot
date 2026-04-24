@@ -60,9 +60,13 @@ export default async function BlogIndex() {
                                 <article className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
                                     <div className="relative h-48 overflow-hidden bg-slate-100">
                                         {post.coverImage && (
-                                            <img 
-                                                src={post.coverImage} 
-                                                alt={post.title} 
+                                            <img
+                                                src={post.coverImage}
+                                                alt={post.title}
+                                                width={640}
+                                                height={360}
+                                                loading="lazy"
+                                                decoding="async"
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
                                         )}
