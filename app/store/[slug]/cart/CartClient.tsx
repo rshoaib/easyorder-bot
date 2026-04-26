@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { runFireworks } from "@/components/ui/Confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatPrice, getCurrencySymbol } from '@/lib/currency';
+import { getDictionary, type Locale } from '@/lib/i18n/dictionaries';
 
 // Helper to calc discount
 function calculateDiscount(subtotal: number, promo: Pick<PromoCode, 'discountType' | 'value'>) {
@@ -21,7 +22,7 @@ function calculateDiscount(subtotal: number, promo: Pick<PromoCode, 'discountTyp
     return promo.value;
 }
 
-function PromoCodeSection({ tenantId, onApply }: { tenantId: string, onApply: (p: any) => void }) {
+function PromoCodeSection({ tenantId, onApply, t }: { tenantId: string, onApply: (p: any) => void, t: import('@/lib/i18n/dictionaries').Dictionary }) {
     const [code, setCode] = useState('');
     const [loading, setLoading] = useState(false);
     const [msg, setMsg] = useState('');
@@ -46,7 +47,7 @@ function PromoCodeSection({ tenantId, onApply }: { tenantId: string, onApply: (p
              <div className="flex gap-2">
                  <input 
                     className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm uppercase"
-                    placeholder="Promo Code"
+                    placeholder={t.promoCode}
                     value={code}
                     onChange={e => setCode(e.target.value)}
                  />
@@ -55,7 +56,7 @@ function PromoCodeSection({ tenantId, onApply }: { tenantId: string, onApply: (p
                     onClick={handleApply}
                     className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
                  >
-                    {loading ? '...' : 'Apply'}
+                    {loading ? '...' : t.apply}
                  </button>
              </div>
              {msg && <p className={`text-xs mt-2 ${msg === 'Applied!' ? 'text-green-600' : 'text-red-500'}`}>{msg}</p>}
@@ -76,10 +77,20 @@ interface Props {
     jazzcashNumber?: string;
     easypaisaNumber?: string;
     fulfillmentMethods?: string[];
+    language?: Locale;
 }
 
-export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp, minOrderAmount, jazzcashNumber, easypaisaNumber, fulfillmentMethods: fulfillmentMethodsProp }: Props) {
+export default function CartClient({ tenantId, slug, isOpen, currency, paypalLink, stripeLink, codEnabled, deliveryFee: deliveryFeeProp, minOrderAmount, jazzcashNumber, easypaisaNumber, fulfillmentMethods: fulfillmentMethodsProp, language }: Props) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart();
+    // Resolve locale: customer override (localStorage) wins over merchant default.
+    const [locale, setLocale] = useState<Locale>(language || 'en');
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem(`ovc_locale_${slug}`) as Locale | null;
+            if (stored) setLocale(stored);
+        } catch { /* noop */ }
+    }, [slug]);
+    const t = getDictionary(locale);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customer, setCustomer] = useState({ name: '', phone: '+', address: '', email: '', locationLink: '' });
     const [notes, setNotes] = useState('');
@@ -139,7 +150,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
     const handleLocationClick = () => {
         setLocationStatus('loading');
         if (!navigator.geolocation) {
-            toast.error("Geolocation is not supported by your browser");
+            toast.error(t.geoNotSupported);
             setLocationStatus('error');
             return;
         }
@@ -189,7 +200,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 setLocationStatus('success');
             },
             () => {
-                toast.error("Unable to retrieve your location");
+                toast.error(t.geoFailed);
                 setLocationStatus('error');
                 setCustomer(prev => ({
                      ...prev,
@@ -238,7 +249,8 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 paymentMethod,
                 fulfillmentMethod,
                 notes: notes.trim() || undefined,
-                paymentSlipUrl
+                paymentSlipUrl,
+                locale, // customer's chosen language for the WhatsApp message
             });
 
             if (response.data.success) {
@@ -259,7 +271,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
 
                 // Handle PayPal redirect
                 if (paymentMethod === 'paypal' && paypalLink) {
-                    toast.success("Order placed!", { description: "Redirecting to PayPal..." });
+                    toast.success(t.orderPlaced, { description: t.redirectingToPaypal });
                     runFireworks();
                     let ppLink = paypalLink.trim();
                     if (!ppLink.startsWith('http')) ppLink = `https://${ppLink}`;
@@ -271,7 +283,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
 
                 // Handle Stripe redirect
                 if (paymentMethod === 'stripe' && stripeLink) {
-                    toast.success("Order placed!", { description: "Redirecting to payment..." });
+                    toast.success(t.orderPlaced, { description: t.redirectingToPayment });
                     runFireworks();
                     // Use location.href — window.open is blocked on iOS after async calls
                     setTimeout(() => { window.location.href = stripeLink; }, 1000);
@@ -279,7 +291,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 }
                 
                 if (response.data.whatsappNumber) {
-                     toast.success("Order placed!", { description: "Opening WhatsApp..." });
+                     toast.success(t.orderPlaced, { description: t.openingWhatsapp });
                      runFireworks();
                      const url = `https://wa.me/${response.data.whatsappNumber}?text=${response.data.message}`;
                      // CRITICAL: Use location.href instead of window.open
@@ -290,7 +302,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                         window.location.href = url;
                      }, 1000);
                 } else {
-                     toast.success("Order placed successfully!");
+                     toast.success(t.orderPlacedSuccess);
                      runFireworks();
                      setTimeout(() => {
                         router.push(`/store/${slug}`);
@@ -312,7 +324,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 <div className="w-24 h-24 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl flex items-center justify-center mb-6 shadow-sm border border-indigo-100/50">
                     <ShoppingBag size={36} className="text-indigo-400" />
                 </div>
-                <h1 className="text-2xl font-bold text-slate-900 mb-2">Your cart is empty</h1>
+                <h1 className="text-2xl font-bold text-slate-900 mb-2">{t.emptyCart}</h1>
                 <p className="text-gray-500 mb-8 max-w-xs leading-relaxed">
                     Browse the menu and tap any item to add it here. It only takes a few taps to order!
                 </p>
@@ -335,7 +347,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     <ArrowLeft size={20} />
                 </Link>
                 <div className="flex-1">
-                    <h1 className="text-xl font-bold">Checkout</h1>
+                    <h1 className="text-xl font-bold">{t.checkoutTitle}</h1>
                 </div>
                 {!isOpen && (
                    <div className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
@@ -401,11 +413,11 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
 
             {/* Order Summary */}
             <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm mb-8 space-y-2">
-                {isOpen && <PromoCodeSection tenantId={tenantId} onApply={setAppliedPromo} />}
+                {isOpen && <PromoCodeSection tenantId={tenantId} onApply={setAppliedPromo} t={t} />}
                 
                 <div className="border-t border-gray-100 pt-4 space-y-2">
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">Subtotal</span>
+                        <span className="text-gray-500">{t.subtotal}</span>
                         <span className="font-medium">{formatPrice(total, currency)}</span>
                     </div>
                     {/* Hide delivery fee for digital only */}
@@ -424,7 +436,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 </div>
                 
                 <div className="border-t border-gray-100 my-2 pt-2 flex justify-between text-lg font-bold">
-                    <span>Total</span>
+                    <span>{t.total}</span>
                     <span>{formatPrice(Math.max(0, total + (isDigitalOnly ? 0 : deliveryFee) - (appliedPromo ? calculateDiscount(total, appliedPromo) : 0)), currency)}</span>
                 </div>
             </div>
@@ -446,7 +458,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     <input 
                         required={isOpen}
                         className="form-input"
-                        placeholder="John Doe"
+                        placeholder={t.fullNamePlaceholder}
                         value={customer.name}
                         onChange={e => setCustomer({...customer, name: e.target.value})}
                     />
@@ -458,7 +470,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                         required={isOpen}
                         type="tel"
                         className="form-input"
-                        placeholder="+1234567890"
+                        placeholder={t.phonePlaceholder}
                         value={customer.phone}
                         onChange={e => {
                             let val = e.target.value;
@@ -504,7 +516,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                             required={isOpen}
                             type="email"
                             className="form-input"
-                            placeholder="you@example.com"
+                            placeholder={t.emailPlaceholder}
                             value={customer.email}
                             onChange={e => setCustomer({...customer, email: e.target.value})}
                          />
@@ -518,7 +530,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                                 required={isOpen}
                                 className="form-input flex-1"
                                 rows={2}
-                                placeholder="Street, City, Building..."
+                                placeholder={t.addressPlaceholder}
                                 value={customer.address}
                                 onChange={e => setCustomer({...customer, address: e.target.value})}
                             />
@@ -543,7 +555,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                             required={isOpen}
                             className="form-input"
                             rows={2}
-                            placeholder="e.g. Mall entrance, parking lot B..."
+                            placeholder={t.locationHelpPlaceholder}
                             value={customer.address}
                             onChange={e => setCustomer({...customer, address: e.target.value})}
                         />
@@ -606,7 +618,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                                 <label className="mt-1 flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
                                     <div className="flex flex-col items-center justify-center pt-3 pb-3">
                                         <Paperclip size={24} className="text-gray-400 mb-1" />
-                                        <p className="text-sm text-gray-500">Tap to attach payment screenshot</p>
+                                        <p className="text-sm text-gray-500">{t.attachPaymentSlip}</p>
                                         <p className="text-xs text-gray-400">JPG, PNG or WebP (max 5MB)</p>
                                     </div>
                                     <input 
@@ -658,7 +670,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     <textarea 
                         className="form-input"
                         rows={2}
-                        placeholder="e.g. No onions, extra sauce, ring the doorbell..."
+                        placeholder={t.notesPlaceholder}
                         value={notes}
                         onChange={e => setNotes(e.target.value)}
                         maxLength={500}

@@ -1,6 +1,7 @@
 import { getTenantRepository, getOrderRepository } from "@/lib/repository";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { formatPrice, getCurrencySymbol } from "@/lib/currency";
+import { getDictionary, type Locale } from "@/lib/i18n/dictionaries";
 import Link from "next/link";
 import { ArrowLeft, Package, Clock, ChefHat, CheckCircle, Truck, MapPin, Phone, FileText, StickyNote } from "lucide-react";
 import { formatOrderDateFull, formatOrderTime } from "@/lib/date-utils";
@@ -33,6 +34,7 @@ export default async function OrderTrackingPage({ params }: Props) {
 
     const tenantRepo = getTenantRepository(serviceClient);
     const tenant = await tenantRepo.getTenantBySlug(slug);
+    const t = getDictionary(((tenant?.language as Locale) || 'en'));
 
     if (!tenant) {
         return (
@@ -87,7 +89,7 @@ export default async function OrderTrackingPage({ params }: Props) {
             <div className="container max-w-lg mx-auto px-4 py-8 space-y-6">
                 {/* Order ID + Date */}
                 <div className="text-center">
-                    <p className="text-sm text-gray-500">Order</p>
+                    <p className="text-sm text-gray-500">{t.orderLabel}</p>
                     <h2 className="text-xl font-bold font-mono text-gray-900">#{orderId.replace('ORD-', '')}</h2>
                     <p className="text-sm text-gray-400 mt-1">
                         {formatOrderDateFull(order.date, tenant.timezone)}
@@ -191,7 +193,7 @@ export default async function OrderTrackingPage({ params }: Props) {
                             </div>
                         )}
                         <div className="flex justify-between text-lg font-bold text-gray-900">
-                            <span>Total</span>
+                            <span>{t.total}</span>
                             <span>{formatPrice(order.total, tenant.currency)}</span>
                         </div>
                     </div>

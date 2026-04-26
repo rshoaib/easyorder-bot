@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getTenantRepository, getOrderRepository, getProductRepository, getPromoCodeRepository } from '@/lib/repository';
 import { Order } from '@/lib/repository/types';
 import { getCurrencySymbol } from '@/lib/currency';
+import { getDictionary, type Locale } from '@/lib/i18n/dictionaries';
 import { sanitizeCustomerInput } from '@/lib/sanitize';
 
 export const dynamic = 'force-dynamic';
@@ -132,14 +133,19 @@ export async function POST(req: NextRequest) {
         const orderRepo = getOrderRepository();
         await orderRepo.saveOrder(order);
 
-        // Construct WhatsApp Message
+        // Construct WhatsApp Message — translated to the customer's locale
+        // (passed in the request body) or the merchant's default if none.
+        const requestedLocale = (body?.locale as string | undefined) || tenant.language || 'en';
+        const locale: Locale = (['en','es','fr','ar','pt','id'].includes(requestedLocale) ? requestedLocale : 'en') as Locale;
+        const t = getDictionary(locale);
+
         const fulfillmentLabels: Record<string, string> = {
-            delivery: '🚗 Delivery',
-            pickup: '🏪 Pick Up',
-            meetup: '🤝 Meet Up',
-            post: '📦 Delivery by Post',
+            delivery: `🚗 ${t.fulfillmentDelivery}`,
+            pickup:   `🏪 ${t.fulfillmentPickup}`,
+            meetup:   `🤝 ${t.fulfillmentDinein}`,
+            post:     `📦 ${t.fulfillmentPost}`,
         };
-        const fulfillmentLabel = fulfillmentLabels[fulfillmentMethod || 'delivery'] || '🚗 Delivery';
+        const fulfillmentLabel = fulfillmentLabels[fulfillmentMethod || 'delivery'] || fulfillmentLabels.delivery;
         const currencySymbol = getCurrencySymbol(tenant.currency);
         const itemsList = validatedItems.map((item: any, i: number) => {
             const sizeLabel = item.selectedSize ? ` (${item.selectedSize})` : '';
@@ -147,11 +153,11 @@ export async function POST(req: NextRequest) {
         }).join('\n');
 
         const message =
-            `🛒 *NEW ORDER*\n` +
+            `🛒 *${t.newOrder}*\n` +
             `━━━━━━━━━━━━━━━━\n` +
-            `📋 *Order #${orderId}*\n` +
+            `📋 *${t.orderLabel} #${orderId}*\n` +
             `🏪 ${tenant.name}\n\n` +
-            `👤 *Customer Details*\n` +
+            `👤 *${t.customerDetails}*\n` +
             `┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n` +
             `   ${customer.name}\n` +
             `📞 ${customer.phone}\n` +
@@ -160,24 +166,24 @@ export async function POST(req: NextRequest) {
             (customer.locationLink ? `🗺️ ${customer.locationLink}\n` : '') +
             `${fulfillmentLabel}\n` +
             `\n` +
-            `🍽️ *Order Items*\n` +
+            `🍽️ *${t.orderItems}*\n` +
             `┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈\n` +
             `${itemsList}\n\n` +
-            `   Subtotal: ${currencySymbol}${calculatedTotal.toFixed(2)}\n` +
+            `   ${t.subtotal}: ${currencySymbol}${calculatedTotal.toFixed(2)}\n` +
             (deliveryFeeSetting > 0 ?
-                `   🚗 Delivery: ${currencySymbol}${deliveryFeeSetting.toFixed(2)}\n`
+                `   🚗 ${t.delivery}: ${currencySymbol}${deliveryFeeSetting.toFixed(2)}\n`
                 : '') +
             (discount > 0 ?
-                `   🏷️ Discount${validatedPromoCode ? ` (${validatedPromoCode})` : ''}: -${currencySymbol}${discount.toFixed(2)}\n`
+                `   🏷️ ${t.discount}${validatedPromoCode ? ` (${validatedPromoCode})` : ''}: -${currencySymbol}${discount.toFixed(2)}\n`
                 : '') +
             `━━━━━━━━━━━━━━━━\n` +
-            `💰 *TOTAL: ${currencySymbol}${finalTotal.toFixed(2)}*\n` +
-            `💳 Payment: ${paymentMethod}\n` +
+            `💰 *${t.total.toUpperCase()}: ${currencySymbol}${finalTotal.toFixed(2)}*\n` +
+            `💳 ${t.paymentLabel}: ${paymentMethod}\n` +
             `━━━━━━━━━━━━━━━━\n` +
-            (notes ? `\n📝 *Notes:* ${notes}\n` : '') +
-            (paymentSlipUrl ? `\n📎 *Payment Slip:* ${paymentSlipUrl}\n` : '') +
-            `\n🔗 *Track:* ${process.env.NEXT_PUBLIC_SITE_URL || 'https://easyorder-bot.vercel.app'}/store/${slug}/order/${orderId}\n` +
-            `\n_Powered by OrderViaChat.com_`;
+            (notes ? `\n📝 *${t.notesLabel}:* ${notes}\n` : '') +
+            (paymentSlipUrl ? `\n📎 *${t.paymentSlipLabel}:* ${paymentSlipUrl}\n` : '') +
+            `\n🔗 *${t.trackLabel}:* ${process.env.NEXT_PUBLIC_SITE_URL || 'https://easyorder-bot.vercel.app'}/store/${slug}/order/${orderId}\n` +
+            `\n_${t.poweredBy} OrderViaChat.com_`;
 
         // --- Send Email Receipt (non-blocking) ---
         if (customer.email && process.env.RESEND_API_KEY) {

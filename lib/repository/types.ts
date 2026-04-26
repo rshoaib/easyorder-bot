@@ -12,7 +12,7 @@ export interface Tenant {
     status: 'active' | 'pending_payment' | 'disabled';
     stripeCustomerId?: string;
     password?: string;
-    language: 'en' | 'es' | 'fr';
+    language: 'en' | 'es' | 'fr' | 'ar' | 'pt' | 'id';
     customDomain?: string;
     instagramUrl?: string;
     facebookUrl?: string;

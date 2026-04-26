@@ -6,6 +6,7 @@ import { Plus, ShoppingBag, Search, Check, Clock } from "lucide-react";
 import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { getDictionary, detectLocale, isRTL, type Locale } from "@/lib/i18n/dictionaries";
+import LanguagePicker from "@/components/LanguagePicker";
 import { Tenant } from "@/lib/repository/types";
 import { Product } from "@/lib/repository/types";
 import { formatPrice } from "@/lib/currency";
@@ -16,29 +17,40 @@ interface StoreFrontProps {
 }
 
 export default function StoreFront({ initialProducts, tenant }: StoreFrontProps) {
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState<string>("__all__");
   const [searchQuery, setSearchQuery] = useState("");
   const { itemCount, total } = useCart();
   
-  // Auto-detect locale from browser, fallback to tenant setting, then 'en'
+  // Locale resolution priority:
+  //   1. localStorage (customer's previous choice from the picker)
+  //   2. tenant.language (merchant's default for this store)
+  //   3. browser-detected language
+  //   4. English fallback
   const [locale, setLocale] = useState<Locale>((tenant.language as Locale) || 'en');
   useEffect(() => {
-    const detected = detectLocale();
-    // Only override if tenant hasn't explicitly set a language
-    if (!tenant.language) {
-      setLocale(detected);
+    let initial: Locale | null = null;
+    try {
+      const stored = localStorage.getItem(`ovc_locale_${tenant.slug}`) as Locale | null;
+      if (stored) initial = stored;
+    } catch { /* noop */ }
+    if (!initial) {
+      initial = (tenant.language as Locale) || detectLocale();
     }
-  }, [tenant.language]);
+    setLocale(initial);
+  }, [tenant.slug, tenant.language]);
   
   const dict = getDictionary(locale);
   const rtl = isRTL(locale);
 
   const products = initialProducts;
-  const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
+  const categories: { id: string; label: string }[] = [
+    { id: "__all__", label: dict.all },
+    ...Array.from(new Set(products.map((p) => p.category))).map((c) => ({ id: c, label: c })),
+  ];
   
   const filteredProducts = useMemo(() => {
       return products.filter((p) => {
-          const matchesCategory = category === "All" || p.category === category;
+          const matchesCategory = category === "__all__" || p.category === category;
           const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
           return matchesCategory && matchesSearch;
       });
@@ -56,6 +68,9 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
         }}
       >
         <div className="store-hero-content">
+          <div className="flex items-start justify-end mb-2">
+            <LanguagePicker value={locale} onChange={setLocale} slug={tenant.slug} />
+          </div>
           <div className="flex items-center gap-4">
             {tenant.logoUrl && (
               <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 shadow-lg shrink-0" style={{ borderColor: `${tenant.themeColor || '#6366f1'}30` }}>
@@ -128,12 +143,12 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
         <div className="category-scroll">
           {categories.map((cat) => (
             <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className={`category-pill ${category === cat ? "active" : ""}`}
-              style={category === cat ? { backgroundColor: tenant.themeColor || '#000', borderColor: tenant.themeColor || '#000', color: '#fff' } : {}}
+              key={cat.id}
+              onClick={() => setCategory(cat.id)}
+              className={`category-pill ${category === cat.id ? "active" : ""}`}
+              style={category === cat.id ? { backgroundColor: tenant.themeColor || '#000', borderColor: tenant.themeColor || '#000', color: '#fff' } : {}}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>
