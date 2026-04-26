@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from 'sonner';
 import { CartProvider } from "@/context/CartContext";
 import { GoogleAnalytics } from '@next/third-parties/google';
+import RecoveryRedirect from "@/components/RecoveryRedirect";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,6 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} suppressHydrationWarning={true}>
+        <RecoveryRedirect />
         <CartProvider>
           {children}
         </CartProvider>
