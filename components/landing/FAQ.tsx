@@ -7,7 +7,7 @@ const FAQ_ITEMS = [
   {
     question: "Is it really free?",
     answer:
-      "Yes — 100% free, no hidden charges. You get unlimited products, unlimited orders, and WhatsApp integration at no cost. We plan to offer optional premium features later, but the core product will always be free.",
+      "Yes — 100% free, forever. Unlimited products, unlimited orders, WhatsApp integration, custom branding — all included at no cost. The only thing we charge for is optional one-on-one customization help (a setup, custom feature, or design tweak), and that's only if you ask.",
   },
   {
     question: "Do I need any technical skills?",

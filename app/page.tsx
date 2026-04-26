@@ -48,11 +48,16 @@ export default async function HomePage({
 }) {
   const params = await searchParams;
 
-  // If OAuth redirected here with a ?code= param (instead of /auth/callback),
-  // forward to the callback route to exchange the code for a session
+  // If OAuth or password-recovery redirected here with a ?code= param
+  // (instead of /auth/callback), forward to the callback route to exchange
+  // the code for a session. For recovery flows, send the user to
+  // /reset-password so they can choose a new password; otherwise default
+  // to /register for new sign-ups.
   if (params.code) {
     const code = Array.isArray(params.code) ? params.code[0] : params.code;
-    redirect(`/auth/callback?code=${code}&next=/register`);
+    const type = Array.isArray(params.type) ? params.type[0] : params.type;
+    const next = type === 'recovery' ? '/reset-password' : '/register';
+    redirect(`/auth/callback?code=${code}&next=${encodeURIComponent(next)}`);
   }
 
   // If logged-in user already has a store, redirect to their admin dashboard
@@ -162,8 +167,8 @@ export default async function HomePage({
 
               <p className="text-lg text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fade-in delay-200">
                 Your customers are already on WhatsApp. Give them a beautiful
-                store to order from — no app downloads, no commissions. Free
-                to start, upgrade when you grow.
+                store to order from — no app downloads, no commissions. 100%
+                free, no plans, no upgrades.
               </p>
 
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 animate-fade-in delay-300">
@@ -727,8 +732,8 @@ export default async function HomePage({
 
           <ScrollFadeIn delay={200}>
             <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-xl mx-auto leading-relaxed">
-              Create your free store today — no credit card, no contracts,
-              upgrade anytime.
+              Create your free store today — no credit card, no contracts, no
+              paid plans to worry about.
             </p>
           </ScrollFadeIn>
 

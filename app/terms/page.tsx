@@ -13,8 +13,10 @@ export default function TermsOfService() {
         <h2 className="text-2xl font-semibold mt-6 mb-4">2. Description of Service</h2>
         <p>OrderViaChat provides a digital menu and ordering platform for businesses (merchants) to receive orders directly via WhatsApp. We are a software provider and do not prepare, sell, or deliver food or physical goods.</p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-4">3. Subscriptions and Payments</h2>
-        <p>Access to basic merchant features is provided free of charge. Premium features are available via an optional Pro subscription ($10/month), payable via bank transfer. You may cancel at any time.</p>
+        <h2 className="text-2xl font-semibold mt-6 mb-4">3. Pricing and Payments</h2>
+        <p>Access to OrderViaChat&apos;s merchant features is provided free of charge. There are no subscription fees, no per-order commissions, and no paid tiers required to use the platform.</p>
+        <p>OrderViaChat optionally offers paid one-on-one customization services (for example, custom store setup, bespoke features, or design work) on request. Any such engagement, including its scope, deliverables, fees, and payment terms, will be agreed separately in writing (typically over WhatsApp or email) before any work begins. These customization services are provided on a project basis and are not part of the free platform offering.</p>
+        <p>Merchants who entered into a Pro subscription under previous versions of these Terms continue to enjoy any features for the period they paid for; no further charges will be applied to those subscriptions.</p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-4">4. Merchant Responsibilities</h2>
         <p>Merchants are solely responsible for the accuracy of their menus, pricing, fulfillment of orders, and compliance with local laws and health regulations regarding the products they sell through our platform.</p>
