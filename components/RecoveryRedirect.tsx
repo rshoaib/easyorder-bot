@@ -7,21 +7,25 @@ import { createClient } from '@/utils/supabase/client';
 /**
  * RecoveryRedirect
  *
- * Mounted globally in the root layout. Watches for Supabase auth events
- * and redirects the user to /reset-password whenever a password-recovery
- * session lands.
+ * Mounted globally in the root layout. Catches the recovery flow that
+ * lands a user on the site with `#access_token=...&type=recovery&...`
+ * tokens in the URL hash, installs the session, and routes them to
+ * /reset-password where they can choose a new password.
  *
- * Why this exists: Supabase's recovery flow with /admin/generate_link uses
- * the "implicit" flow — the access/refresh tokens are appended to the URL
- * as a hash (`#access_token=...&type=recovery&...`). Hash fragments don't
- * reach the Next.js server, so server-side params can't detect a recovery
- * landing. The Supabase JS client *does* parse the hash on the client and
- * fires a PASSWORD_RECOVERY event, which we listen for here.
+ * Why this is non-trivial: Supabase's admin generate_link uses the
+ * "implicit" flow — tokens come back as URL hash fragments, not as a
+ * `?code=` query param. Hashes don't reach the Next.js server, AND
+ * @supabase/ssr's createBrowserClient defaults to the "pkce" flow,
+ * which means it does NOT auto-parse implicit hashes. So we have to:
  *
- * We must wait for that event (or for getSession() to have parsed the hash)
- * before navigating away — otherwise router.replace strips the hash before
- * the client has stored the session, and the user lands on /reset-password
- * with no session and an "expired" message.
+ *   1. Read the hash ourselves.
+ *   2. Call supabase.auth.setSession({ access_token, refresh_token })
+ *      to persist the session to cookies/localStorage.
+ *   3. Clear the hash and navigate to /reset-password.
+ *
+ * Also still listens for PASSWORD_RECOVERY in case any other code path
+ * (e.g. the implicit flow being explicitly enabled in future) populates
+ * the session before us.
  */
 export default function RecoveryRedirect() {
     const router = useRouter();
@@ -29,9 +33,7 @@ export default function RecoveryRedirect() {
 
     useEffect(() => {
         if (pathname === '/reset-password') return;
-
         const supabase = createClient();
-        let unsub: (() => void) | undefined;
         let cancelled = false;
 
         const goToReset = () => {
@@ -39,28 +41,45 @@ export default function RecoveryRedirect() {
             router.replace('/reset-password');
         };
 
-        // 1) Subscribe to PASSWORD_RECOVERY events. Supabase's browser client
-        //    parses the URL hash on init and fires this event when it finds
-        //    `type=recovery`.
+        // Listen for PASSWORD_RECOVERY in case Supabase's own hash detection
+        // beats us to it (it won't with @supabase/ssr defaults, but the
+        // listener is cheap and future-proof).
         const { data: sub } = supabase.auth.onAuthStateChange((event) => {
             if (event === 'PASSWORD_RECOVERY') goToReset();
         });
-        unsub = () => sub.subscription.unsubscribe();
 
-        // 2) Belt-and-suspenders: if the page was loaded directly with a
-        //    recovery hash, ensure the hash is parsed (getSession() forces
-        //    detectSessionInUrl). After getSession resolves, the session
-        //    has been persisted to storage, so we can safely redirect.
-        if (typeof window !== 'undefined' && window.location.hash.includes('type=recovery')) {
-            (async () => {
-                await supabase.auth.getSession().catch(() => undefined);
-                goToReset();
-            })();
+        // Manually consume the implicit-flow recovery hash.
+        if (typeof window !== 'undefined' && window.location.hash) {
+            const params = new URLSearchParams(window.location.hash.slice(1));
+            const type = params.get('type');
+            const accessToken = params.get('access_token');
+            const refreshToken = params.get('refresh_token');
+
+            if (type === 'recovery' && accessToken && refreshToken) {
+                (async () => {
+                    try {
+                        await supabase.auth.setSession({
+                            access_token: accessToken,
+                            refresh_token: refreshToken,
+                        });
+                    } catch {
+                        // If setSession fails, /reset-password will surface
+                        // the "invalid link" state and prompt a fresh
+                        // request — fall through to the redirect anyway.
+                    }
+                    // Clean up the URL so a refresh on /reset-password
+                    // doesn't replay the (now-consumed) hash.
+                    if (typeof window !== 'undefined') {
+                        history.replaceState(null, '', window.location.pathname + window.location.search);
+                    }
+                    goToReset();
+                })();
+            }
         }
 
         return () => {
             cancelled = true;
-            unsub?.();
+            sub.subscription.unsubscribe();
         };
     }, [router, pathname]);
 
