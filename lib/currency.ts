@@ -1,6 +1,7 @@
 // Currency symbols map — used across storefront, admin, and emails
 const CURRENCY_SYMBOLS: Record<string, string> = {
     USD: '$',
+    CAD: 'CA$',
     EUR: '€',
     GBP: '£',
     INR: '₹',

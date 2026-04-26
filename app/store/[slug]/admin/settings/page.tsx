@@ -203,6 +203,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium bg-white"
                             >
                                 <option value="USD">USD ($)</option>
+                                <option value="CAD">CAD (CA$) — Canadian Dollar</option>
                                 <option value="EUR">EUR (€)</option>
                                 <option value="GBP">GBP (£)</option>
                                 <option value="EGP">EGP (E£)</option>
