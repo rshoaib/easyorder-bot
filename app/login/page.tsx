@@ -1,10 +1,12 @@
 'use client'
 
 import { createClient } from "@/utils/supabase/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Mail, CheckCircle, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { getDictionary, detectLocale, type Locale } from "@/lib/i18n/dictionaries";
+import LanguagePicker from "@/components/LanguagePicker";
 
 import { Suspense } from 'react';
 
@@ -20,6 +22,19 @@ function LoginForm() {
     const supabase = createClient();
     const [isSignUp, setIsSignUp] = useState(view === 'signup');
     const [showForgotPassword, setShowForgotPassword] = useState(false);
+    // Locale: read 'ovc_locale_global' from localStorage, fall back to browser detection.
+    const [locale, setLocale] = useState<Locale>('en');
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem('ovc_locale_global') as Locale | null;
+            setLocale(stored || detectLocale());
+        } catch { setLocale(detectLocale()); }
+    }, []);
+    function changeLocale(next: Locale) {
+        setLocale(next);
+        try { localStorage.setItem('ovc_locale_global', next); } catch { /* noop */ }
+    }
+    const t = getDictionary(locale);
 
     const handleGoogleLogin = async () => {
         setLoading(true);
@@ -72,7 +87,7 @@ function LoginForm() {
                     router.refresh();
                 } else {
                     // Fallback to email confirmation message
-                    setMessage("Check your email for the confirmation link!");
+                    setMessage(t.authCheckEmail);
                 }
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
@@ -104,7 +119,7 @@ function LoginForm() {
                 redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
             });
             if (error) throw error;
-            setMessage('Password reset link sent! Check your email.');
+            setMessage(t.authResetLinkSent);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -114,16 +129,19 @@ function LoginForm() {
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-            <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md border border-slate-100">
+            <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md border border-slate-100 relative">
+                <div className="absolute top-4 right-4">
+                    <LanguagePicker value={locale} onChange={changeLocale} />
+                </div>
                 <div className="text-center mb-8">
                     <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-indigo-200">
                         <Mail size={24} />
                     </div>
                     <h1 className="text-2xl font-bold text-slate-900">
-                        {isSignUp ? 'Create Your Store Account' : 'Welcome Back'}
+                        {isSignUp ? t.authCreateYourAccount : t.authWelcomeBack}
                     </h1>
                     <p className="text-slate-500 mt-2">
-                        {isSignUp ? 'Join thousands of successful merchants. Start for free.' : 'Sign in to manage your store.'}
+                        {isSignUp ? t.authCreateSubtitle : t.authSignInSubtitle}
                     </p>
                 </div>
 
@@ -132,8 +150,8 @@ function LoginForm() {
                     <div className="bg-indigo-50 text-indigo-700 p-4 rounded-xl text-sm mb-6 border border-indigo-100 flex items-start gap-3">
                         <span className="text-lg shrink-0">🔒</span>
                         <div>
-                            <p className="font-bold">Please sign in to access your store dashboard</p>
-                            <p className="text-indigo-500 mt-0.5 text-xs">You need to be logged in to manage products, orders, and settings.</p>
+                            <p className="font-bold">{t.authPleaseSignIn}</p>
+                            <p className="text-indigo-500 mt-0.5 text-xs">{t.authNeedLogin}</p>
                         </div>
                     </div>
                 )}
@@ -163,7 +181,7 @@ function LoginForm() {
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                     </svg>
-                    Continue with Google
+                    {t.authContinueWithGoogle}
                 </button>
 
                 <div className="relative mb-6">
@@ -171,7 +189,7 @@ function LoginForm() {
                         <div className="w-full border-t border-slate-200"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white text-slate-500">Or continue with email</span>
+                        <span className="px-2 bg-white text-slate-500">{t.authOrContinueWithEmail}</span>
                     </div>
                 </div>
 
@@ -179,7 +197,7 @@ function LoginForm() {
                     <input type="hidden" name="type" value={isSignUp ? 'signup' : 'signin'} />
                     
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">{t.authEmailAddress}</label>
                         <input 
                             name="email" 
                             type="email" 
@@ -190,7 +208,7 @@ function LoginForm() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">{t.authPassword}</label>
                         <input 
                             name="password" 
                             type="password" 
@@ -206,7 +224,7 @@ function LoginForm() {
                         disabled={loading}
                         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-slate-900/20 flex items-center justify-center gap-2 disabled:opacity-70"
                     >
-                        {loading ? <Loader2 className="animate-spin" /> : (isSignUp ? 'Create Account' : 'Sign In')}
+                        {loading ? <Loader2 className="animate-spin" /> : (isSignUp ? t.authCreateAccount : t.authSignIn)}
                     </button>
                 </form>
 
@@ -216,20 +234,20 @@ function LoginForm() {
                             onClick={() => setShowForgotPassword(true)}
                             className="text-sm text-slate-400 hover:text-indigo-600 transition-colors"
                         >
-                            Forgot your password?
+                            {t.authForgotPassword}
                         </button>
                     </div>
                 )}
 
                 {showForgotPassword && (
                     <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                        <h3 className="text-sm font-bold text-slate-700 mb-2">Reset Password</h3>
+                        <h3 className="text-sm font-bold text-slate-700 mb-2">{t.authResetPassword}</h3>
                         <form onSubmit={handleForgotPassword} className="space-y-3">
                             <input 
                                 name="email" 
                                 type="email" 
                                 required 
-                                placeholder="Enter your email" 
+                                placeholder={t.authEnterYourEmail} 
                                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
                             />
                             <div className="flex gap-2">
@@ -238,14 +256,14 @@ function LoginForm() {
                                     disabled={loading}
                                     className="flex-1 bg-indigo-600 text-white font-bold py-2 rounded-xl text-sm hover:bg-indigo-700 transition-colors disabled:opacity-70"
                                 >
-                                    {loading ? 'Sending...' : 'Send Reset Link'}
+                                    {loading ? t.authSending : t.authSendResetLink}
                                 </button>
                                 <button 
                                     type="button" 
                                     onClick={() => setShowForgotPassword(false)}
                                     className="px-3 py-2 text-sm text-slate-500 hover:text-slate-700"
                                 >
-                                    Cancel
+                                    {t.authCancel}
                                 </button>
                             </div>
                         </form>
@@ -257,13 +275,13 @@ function LoginForm() {
                         onClick={() => { setIsSignUp(!isSignUp); setShowForgotPassword(false); }}
                         className="text-indigo-600 font-bold hover:underline"
                     >
-                        {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+                        {isSignUp ? t.authAlreadyHaveAccount : t.authDontHaveAccount}
                     </button>
                 </div>
                 
                  <div className="mt-8 text-center">
                      <Link href="/">
-                        <button className="text-slate-400 hover:text-slate-600 text-sm">Back to Home</button>
+                        <button className="text-slate-400 hover:text-slate-600 text-sm">{t.authBackToHome}</button>
                     </Link>
                  </div>
             </div>
