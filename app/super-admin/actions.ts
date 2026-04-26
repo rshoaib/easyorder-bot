@@ -162,3 +162,48 @@ export async function clearOrderHistory(formData: FormData) {
 
     revalidatePath('/super-admin');
 }
+
+/**
+ * Bulk-delete stores and all their dependent rows (orders, products,
+ * promo_codes, subscriptions). Used by the Cleanup tab to purge abandoned
+ * stores in one click. Mirrors the transactional cascade we ran manually
+ * against the production DB on 2026-04-26.
+ *
+ * Callers are responsible for confirmation UX. This is destructive and
+ * cannot be undone. Returns the count of tenants actually deleted.
+ */
+export async function bulkDeleteStores(ids: string[]): Promise<{ deleted: number }> {
+    await verifySuperAdmin();
+
+    if (!Array.isArray(ids) || ids.length === 0) return { deleted: 0 };
+
+    const sc = getServiceClient();
+
+    // Hard-coded protected slugs that must never be bulk-deleted.
+    // 'demo' is the Pizza Palace demo store; 'default' is the system fallback tenant.
+    const { data: protectedRows } = await sc
+        .from('tenants')
+        .select('id')
+        .in('slug', ['demo', 'default']);
+    const protectedIds = new Set((protectedRows || []).map((r: { id: string }) => r.id));
+    const safeIds = ids.filter(id => !protectedIds.has(id));
+
+    if (safeIds.length === 0) return { deleted: 0 };
+
+    // Delete child rows first to satisfy FK constraints.
+    // (Order matches the production purge: orders → products → promos → subs → tenant)
+    const tables = ['orders', 'products', 'promo_codes', 'subscriptions'] as const;
+    for (const table of tables) {
+        const { error } = await sc.from(table).delete().in('tenant_id', safeIds);
+        if (error) throw new Error(`Failed to delete from ${table}: ${error.message}`);
+    }
+
+    const { error: tenantErr, count } = await sc
+        .from('tenants')
+        .delete({ count: 'exact' })
+        .in('id', safeIds);
+    if (tenantErr) throw new Error(`Failed to delete tenants: ${tenantErr.message}`);
+
+    revalidatePath('/super-admin');
+    return { deleted: count ?? safeIds.length };
+}
