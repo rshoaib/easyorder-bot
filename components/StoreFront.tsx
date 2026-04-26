@@ -62,14 +62,11 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
     <main className="store-container" dir={rtl ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <div 
-        className="store-hero relative"
+        className="store-hero"
         style={{ 
           background: `linear-gradient(135deg, ${tenant.themeColor || '#6366f1'}15 0%, ${tenant.themeColor || '#6366f1'}08 50%, transparent 100%)`,
         }}
       >
-        <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
-          <LanguagePicker value={locale} onChange={setLocale} slug={tenant.slug} />
-        </div>
         <div className="store-hero-content">
           <div className="flex items-center gap-4">
             {tenant.logoUrl && (
@@ -110,18 +107,21 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
             </div>
           </div>
           
-          {/* Cart button */}
-          <div className="cart-btn-wrapper">
-            <Link href={`/store/${tenant.slug}/cart`}>
-              <button className="cart-btn">
-                <ShoppingBag size={22} />
-                {itemCount > 0 && (
-                  <span className="cart-badge animate-in zoom-in duration-300" style={{ backgroundColor: tenant.themeColor || '#000' }}>
-                    {itemCount}
-                  </span>
-                )}
-              </button>
-            </Link>
+          {/* Right-side: language picker + cart, aligned horizontally */}
+          <div className="flex items-center gap-2 shrink-0">
+            <LanguagePicker value={locale} onChange={setLocale} slug={tenant.slug} />
+            <div className="cart-btn-wrapper">
+              <Link href={`/store/${tenant.slug}/cart`}>
+                <button className="cart-btn">
+                  <ShoppingBag size={22} />
+                  {itemCount > 0 && (
+                    <span className="cart-badge animate-in zoom-in duration-300" style={{ backgroundColor: tenant.themeColor || '#000' }}>
+                      {itemCount}
+                    </span>
+                  )}
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
