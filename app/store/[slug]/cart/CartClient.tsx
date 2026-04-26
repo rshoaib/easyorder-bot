@@ -98,13 +98,13 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
     // Build available payment methods dynamically
     const availableMethods: { id: string; label: string; icon: React.ReactNode }[] = [];
     if (codEnabled !== false) {
-        availableMethods.push({ id: 'cod', label: 'Cash on Delivery', icon: <span className="text-lg">💵</span> });
+        availableMethods.push({ id: 'cod', label: t.cashOnDelivery, icon: <span className="text-lg">💵</span> });
     }
     if (paypalLink) {
-        availableMethods.push({ id: 'paypal', label: 'Pay with PayPal', icon: <Wallet size={18} className="text-blue-600" /> });
+        availableMethods.push({ id: 'paypal', label: t.payWithPaypal, icon: <Wallet size={18} className="text-blue-600" /> });
     }
     if (stripeLink) {
-        availableMethods.push({ id: 'stripe', label: 'Pay with Card (Stripe)', icon: <CreditCard size={18} className="text-purple-600" /> });
+        availableMethods.push({ id: 'stripe', label: t.payWithCard, icon: <CreditCard size={18} className="text-purple-600" /> });
     }
     if (jazzcashNumber) {
         availableMethods.push({ id: 'jazzcash', label: 'JazzCash', icon: <span className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center text-white text-[10px] font-bold">JC</span> });
@@ -114,17 +114,17 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
     }
     // Fallback: If nothing is configured, show COD + Bank Transfer
     if (availableMethods.length === 0) {
-        availableMethods.push({ id: 'cod', label: 'Cash on Delivery', icon: <span className="text-lg">💵</span> });
+        availableMethods.push({ id: 'cod', label: t.cashOnDelivery, icon: <span className="text-lg">💵</span> });
     }
 
     const [paymentMethod, setPaymentMethod] = useState(availableMethods[0]?.id || 'cod');
 
     // Build fulfillment methods
     const allFulfillmentOptions: { id: string; label: string; icon: React.ReactNode }[] = [
-        { id: 'delivery', label: 'Delivery', icon: <Truck size={16} className="text-blue-600" /> },
-        { id: 'pickup', label: 'Pick Up', icon: <ShoppingBag size={16} className="text-green-600" /> },
-        { id: 'meetup', label: 'Meet Up', icon: <Users size={16} className="text-orange-600" /> },
-        { id: 'post', label: 'Delivery by Post', icon: <Package size={16} className="text-purple-600" /> },
+        { id: 'delivery', label: t.fulfillmentDelivery, icon: <Truck size={16} className="text-blue-600" /> },
+        { id: 'pickup', label: t.pickUp, icon: <ShoppingBag size={16} className="text-green-600" /> },
+        { id: 'meetup', label: t.meetUp, icon: <Users size={16} className="text-orange-600" /> },
+        { id: 'post', label: t.fulfillmentPost, icon: <Package size={16} className="text-purple-600" /> },
     ];
     const enabledFulfillment = fulfillmentMethodsProp && fulfillmentMethodsProp.length > 0
         ? allFulfillmentOptions.filter(o => fulfillmentMethodsProp.includes(o.id))
@@ -359,7 +359,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
             {/* Closed Banner */}
             {!isOpen && (
                 <div className="bg-red-50 border border-red-100 p-4 rounded-xl mb-6 text-center">
-                    <h3 className="font-bold text-red-800">Store is Currently Closed</h3>
+                    <h3 className="font-bold text-red-800">{t.storeCurrentlyClosed}</h3>
                     <p className="text-sm text-red-600 mt-1">We are not accepting orders right now. Please check back later!</p>
                 </div>
             )}
@@ -451,10 +451,10 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
 
             {/* Checkout Form */}
             <form onSubmit={handleSubmit} className={`space-y-4 ${!isOpen || belowMinimum ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
-                <h2 className="font-bold text-lg">Your Details</h2>
+                <h2 className="font-bold text-lg">{t.yourDetails}</h2>
                 
                 <div>
-                    <label className="form-label">Full Name</label>
+                    <label className="form-label">{t.fullName}</label>
                     <input 
                         required={isOpen}
                         className="form-input"
@@ -465,7 +465,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 </div>
 
                 <div>
-                    <label className="form-label">Phone Number (WhatsApp)</label>
+                    <label className="form-label">{t.phoneNumberWhatsapp}</label>
                     <input 
                         required={isOpen}
                         type="tel"
@@ -483,7 +483,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 {/* Fulfillment Method Selector */}
                 {!isDigitalOnly && enabledFulfillment.length > 1 && (
                     <div>
-                        <label className="form-label mb-2 block">Shipping Method</label>
+                        <label className="form-label mb-2 block">{t.shippingMethod}</label>
                         <div className="grid grid-cols-2 gap-2">
                             {enabledFulfillment.map((method) => (
                                 <label key={method.id} className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-all text-sm ${
@@ -511,7 +511,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 {/* Address / Email / Meeting Point based on fulfillment */}
                 {isDigitalOnly ? (
                     <div>
-                         <label className="form-label">Email Address (For Delivery)</label>
+                         <label className="form-label">{t.emailAddressForDelivery}</label>
                          <input
                             required={isOpen}
                             type="email"
@@ -524,7 +524,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     </div>
                 ) : needsAddress ? (
                     <div>
-                        <label className="form-label">{fulfillmentMethod === 'post' ? 'Shipping Address' : 'Delivery Address'}</label>
+                        <label className="form-label">{fulfillmentMethod === 'post' ? t.shippingAddress : t.deliveryAddress}</label>
                         <div className="flex gap-2">
                             <textarea
                                 required={isOpen}
@@ -550,7 +550,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     </div>
                 ) : needsMeetingPoint ? (
                     <div>
-                        <label className="form-label">Meeting Point</label>
+                        <label className="form-label">{t.meetingPoint}</label>
                         <textarea
                             required={isOpen}
                             className="form-input"
@@ -563,7 +563,7 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                 ) : null}
 
                 <div>
-                    <label className="form-label mb-2 block">Payment Method</label>
+                    <label className="form-label mb-2 block">{t.paymentMethod}</label>
                     <div className="space-y-2">
                         {availableMethods.map((method) => (
                             <label key={method.id} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${

@@ -35,6 +35,12 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
     } catch { /* noop */ }
     if (!initial) {
       initial = (tenant.language as Locale) || detectLocale();
+      // Persist the auto-resolved locale so navigations to /cart pick up
+      // the same language without re-detecting (or worse, defaulting back
+      // to English if tenant.language is unset).
+      try {
+        localStorage.setItem(`ovc_locale_${tenant.slug}`, initial);
+      } catch { /* noop */ }
     }
     setLocale(initial);
   }, [tenant.slug, tenant.language]);
