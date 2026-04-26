@@ -57,7 +57,9 @@ export default function LanguagePicker({ value, onChange, slug, className = '' }
                 aria-label="Change language"
             >
                 <Globe size={14} className="text-slate-400" />
-                <span className="text-base leading-none">{current.flag}</span>
+                <span className="inline-flex items-center justify-center text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 leading-none">
+                    {current.flag}
+                </span>
                 <span className="hidden sm:inline">{current.label}</span>
                 <ChevronDown size={12} className={`text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} />
             </button>
@@ -82,7 +84,9 @@ export default function LanguagePicker({ value, onChange, slug, className = '' }
                                 role="menuitem"
                             >
                                 <span className="flex items-center gap-2">
-                                    <span className="text-base leading-none">{l.flag}</span>
+                                    <span className="inline-flex items-center justify-center text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 leading-none w-7">
+                                        {l.flag}
+                                    </span>
                                     {l.label}
                                 </span>
                                 {active && <Check size={14} className="text-indigo-600" />}

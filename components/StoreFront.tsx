@@ -62,15 +62,15 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
     <main className="store-container" dir={rtl ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <div 
-        className="store-hero"
+        className="store-hero relative"
         style={{ 
           background: `linear-gradient(135deg, ${tenant.themeColor || '#6366f1'}15 0%, ${tenant.themeColor || '#6366f1'}08 50%, transparent 100%)`,
         }}
       >
+        <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
+          <LanguagePicker value={locale} onChange={setLocale} slug={tenant.slug} />
+        </div>
         <div className="store-hero-content">
-          <div className="flex items-start justify-end mb-2">
-            <LanguagePicker value={locale} onChange={setLocale} slug={tenant.slug} />
-          </div>
           <div className="flex items-center gap-4">
             {tenant.logoUrl && (
               <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 shadow-lg shrink-0" style={{ borderColor: `${tenant.themeColor || '#6366f1'}30` }}>

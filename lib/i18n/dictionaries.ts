@@ -21,12 +21,15 @@ export const RTL_LOCALES: Locale[] = ['ar'];
 export const isRTL = (locale: Locale) => RTL_LOCALES.includes(locale);
 
 export const SUPPORTED_LOCALES: { code: Locale; label: string; flag: string }[] = [
-    { code: 'en', label: 'English',    flag: '🇺🇸' },
-    { code: 'es', label: 'Español',    flag: '🇪🇸' },
-    { code: 'pt', label: 'Português',  flag: '🇧🇷' },
-    { code: 'fr', label: 'Français',   flag: '🇫🇷' },
-    { code: 'ar', label: 'العربية',     flag: '🇸🇦' },
-    { code: 'id', label: 'Indonesia',  flag: '🇮🇩' },
+    // Using ISO 639 codes instead of flag emojis: Windows lacks the
+    // regional-indicator-emoji font fallback, so 🇺🇸 renders as "US"
+    // rather than a flag. Plain codes look the same everywhere.
+    { code: 'en', label: 'English',    flag: 'EN' },
+    { code: 'es', label: 'Español',    flag: 'ES' },
+    { code: 'pt', label: 'Português',  flag: 'PT' },
+    { code: 'fr', label: 'Français',   flag: 'FR' },
+    { code: 'ar', label: 'العربية',     flag: 'AR' },
+    { code: 'id', label: 'Indonesia',  flag: 'ID' },
 ];
 
 export const dictionaries = {
