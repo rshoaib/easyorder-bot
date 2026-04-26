@@ -117,6 +117,12 @@ export const dictionaries = {
         payWithCard: 'Pay with Card (Stripe)',
         pickUp: 'Pick Up',
         meetUp: 'Meet Up',
+        // ── Site-wide chrome (banner / floating widgets) ────────
+        demoBannerText: 'This is a demo store.',
+        createYourFreeStore: 'Create Your Free Store →',
+        seeMerchantView: 'See Merchant View',
+        whatStoreOwnersGet: 'What store owners get',
+
     },
     es: {
         searchPlaceholder: "Buscar en el menú...",
@@ -196,6 +202,12 @@ export const dictionaries = {
         payWithCard: 'Pagar con tarjeta (Stripe)',
         pickUp: 'Recoger',
         meetUp: 'Punto de encuentro',
+        // ── Site-wide chrome (banner / floating widgets) ────────
+        demoBannerText: 'Esta es una tienda de demostración.',
+        createYourFreeStore: 'Crea tu tienda gratis →',
+        seeMerchantView: 'Vista del comerciante',
+        whatStoreOwnersGet: 'Lo que ven los dueños',
+
     },
     fr: {
         searchPlaceholder: "Rechercher...",
@@ -275,6 +287,12 @@ export const dictionaries = {
         payWithCard: 'Payer par carte (Stripe)',
         pickUp: 'Retrait',
         meetUp: 'Point de rendez-vous',
+        // ── Site-wide chrome (banner / floating widgets) ────────
+        demoBannerText: 'Ceci est une boutique de démonstration.',
+        createYourFreeStore: 'Créez votre boutique gratuite →',
+        seeMerchantView: 'Vue commerçant',
+        whatStoreOwnersGet: 'Ce que voient les commerçants',
+
     },
     ar: {
         searchPlaceholder: "ابحث في القائمة...",
@@ -354,6 +372,12 @@ export const dictionaries = {
         payWithCard: 'الدفع بالبطاقة (Stripe)',
         pickUp: 'استلام من المحل',
         meetUp: 'نقطة اللقاء',
+        // ── Site-wide chrome (banner / floating widgets) ────────
+        demoBannerText: 'هذا متجر تجريبي.',
+        createYourFreeStore: 'أنشئ متجرك المجاني →',
+        seeMerchantView: 'عرض التاجر',
+        whatStoreOwnersGet: 'ما يحصل عليه أصحاب المتاجر',
+
     },
     pt: {
         searchPlaceholder: "Buscar no cardápio...",
@@ -433,6 +457,12 @@ export const dictionaries = {
         payWithCard: 'Pagar com cartão (Stripe)',
         pickUp: 'Retirar',
         meetUp: 'Ponto de encontro',
+        // ── Site-wide chrome (banner / floating widgets) ────────
+        demoBannerText: 'Esta é uma loja de demonstração.',
+        createYourFreeStore: 'Crie sua loja grátis →',
+        seeMerchantView: 'Visão do lojista',
+        whatStoreOwnersGet: 'O que os lojistas veem',
+
     },
     id: {
         searchPlaceholder: "Cari menu...",
@@ -512,6 +542,12 @@ export const dictionaries = {
         payWithCard: 'Bayar dengan kartu (Stripe)',
         pickUp: 'Ambil sendiri',
         meetUp: 'Titik pertemuan',
+        // ── Site-wide chrome (banner / floating widgets) ────────
+        demoBannerText: 'Ini adalah toko demo.',
+        createYourFreeStore: 'Buat toko gratis Anda →',
+        seeMerchantView: 'Tampilan pemilik',
+        whatStoreOwnersGet: 'Yang didapat pemilik toko',
+
     },
 };
 

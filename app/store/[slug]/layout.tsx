@@ -2,6 +2,7 @@ import { getTenantRepository } from "@/lib/repository";
 import { FacebookPixel } from "@/components/FacebookPixel";
 import { Metadata, Viewport } from "next";
 import DemoAdminButton from "@/components/DemoAdminButton";
+import { getDictionary, type Locale } from "@/lib/i18n/dictionaries";
 
 export async function generateViewport({ params }: { params: Promise<{ slug: string }> }): Promise<Viewport> {
     const { slug } = await params;
@@ -56,6 +57,7 @@ export default async function StoreLayout({
   const { slug } = await params;
   const repo = getTenantRepository();
   const tenant = await repo.getTenantBySlug(slug);
+  const t = getDictionary(((tenant?.language as Locale) || 'en'));
 
   return (
     <>
@@ -64,12 +66,12 @@ export default async function StoreLayout({
       {/* Demo Store Banner */}
       {slug === 'demo' && (
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-center py-2.5 px-4 text-sm font-medium sticky top-0 z-[60]">
-          <span className="opacity-90">🎯 This is a demo store.</span>{' '}
+          <span className="opacity-90">🎯 {t.demoBannerText}</span>{' '}
           <a 
             href="/login?view=signup" 
             className="underline underline-offset-2 font-bold hover:text-indigo-200 transition-colors"
           >
-            Create Your Free Store →
+            {t.createYourFreeStore}
           </a>
         </div>
       )}

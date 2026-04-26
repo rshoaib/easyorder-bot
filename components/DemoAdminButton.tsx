@@ -1,10 +1,22 @@
 'use client';
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard } from "lucide-react";
+import { getDictionary, type Locale } from "@/lib/i18n/dictionaries";
 
 export default function DemoAdminButton() {
     const pathname = usePathname();
+    // Match the storefront's locale resolution so the floating widget
+    // speaks the same language the customer just chose.
+    const [locale, setLocale] = useState<Locale>('en');
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem('ovc_locale_demo') as Locale | null;
+            if (stored) setLocale(stored);
+        } catch { /* noop */ }
+    }, []);
+    const t = getDictionary(locale);
 
     // Don't show if we are already in the admin section
     if (pathname.includes('/admin')) return null;
@@ -22,8 +34,8 @@ export default function DemoAdminButton() {
               <LayoutDashboard size={16} />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="font-bold text-slate-800">See Merchant View</span>
-              <span className="text-[10px] text-slate-400 font-medium">What store owners get</span>
+              <span className="font-bold text-slate-800">{t.seeMerchantView}</span>
+              <span className="text-[10px] text-slate-400 font-medium">{t.whatStoreOwnersGet}</span>
             </div>
           </div>
         </a>
