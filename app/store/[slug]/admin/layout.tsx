@@ -97,11 +97,9 @@ export default async function AdminLayout({
                     <>
                     <Link href={`/store/${slug}/admin/integrations`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                         <Tag size={15} /> Integrations
-                        {tenant.plan !== 'pro' && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>}
                     </Link>
                     <Link href={`/store/${slug}/admin/blog`} className="px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-50 rounded-md flex items-center gap-1.5">
                         <BookOpen size={15} /> Blog
-                        {tenant.plan !== 'pro' && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold leading-none">PRO</span>}
                     </Link>
                     </>
                 )}
