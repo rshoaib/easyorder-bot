@@ -13,6 +13,10 @@ import {
     Mail,
     Copy,
     Check,
+    KeyRound,
+    Loader2,
+    X,
+    AlertCircle,
 } from 'lucide-react';
 import type { StoreRow } from '../types';
 import {
@@ -21,6 +25,7 @@ import {
     setProPlan,
     downgradePlan,
     clearOrderHistory,
+    generateRecoveryLink,
 } from '../actions';
 
 interface Props {
@@ -277,6 +282,7 @@ function StoreRowDetail({ store }: { store: StoreRow }) {
                                 </button>
                             </form>
                         )}
+                        <SendResetLinkButton tenantId={store.id} email={store.email} />
                         {isPro && (
                             <form action={downgradePlan}>
                                 <input type="hidden" name="id" value={store.id} />
@@ -517,3 +523,158 @@ function ConfirmFormButton({
         </form>
     );
 }
+
+// ─── Send reset link feature ────────────────────────────────────────────────
+
+function SendResetLinkButton({ tenantId, email }: { tenantId: string; email?: string }) {
+    const [open, setOpen] = useState(false);
+    const [link, setLink] = useState<string | null>(null);
+    const [resolvedEmail, setResolvedEmail] = useState<string | null>(null);
+    const [expiresAt, setExpiresAt] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    const disabled = !email;
+    const title = disabled
+        ? 'No email on file for this store — add one in tenants.email first'
+        : 'Generate a one-time password reset link to forward via WhatsApp';
+
+    async function handleClick() {
+        setOpen(true);
+        setError(null);
+        setLink(null);
+        setLoading(true);
+        try {
+            const res = await generateRecoveryLink(tenantId);
+            setLink(res.actionLink);
+            setResolvedEmail(res.email);
+            setExpiresAt(res.expiresAt);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to generate link');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return (
+        <>
+            <button
+                type="button"
+                onClick={handleClick}
+                disabled={disabled}
+                title={title}
+                className="h-8 px-3 rounded-md text-xs font-medium border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 inline-flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+                <KeyRound size={12} /> Send reset link
+            </button>
+            {open && (
+                <RecoveryLinkDialog
+                    onClose={() => setOpen(false)}
+                    loading={loading}
+                    error={error}
+                    link={link}
+                    email={resolvedEmail}
+                    expiresAt={expiresAt}
+                />
+            )}
+        </>
+    );
+}
+
+function RecoveryLinkDialog({
+    onClose,
+    loading,
+    error,
+    link,
+    email,
+    expiresAt,
+}: {
+    onClose: () => void;
+    loading: boolean;
+    error: string | null;
+    link: string | null;
+    email: string | null;
+    expiresAt: string | null;
+}) {
+    const [copied, setCopied] = useState(false);
+
+    async function copyLink() {
+        if (!link) return;
+        try {
+            await navigator.clipboard.writeText(link);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+        } catch {
+            /* noop */
+        }
+    }
+
+    const expiry = expiresAt
+        ? new Date(expiresAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+        : null;
+
+    return (
+        <div
+            className="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={onClose}
+        >
+            <div
+                className="bg-white rounded-xl shadow-2xl border border-zinc-200 max-w-md w-full p-5"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="flex items-start justify-between mb-3">
+                    <div>
+                        <h3 className="font-semibold text-zinc-900">Password reset link</h3>
+                        {email && <p className="text-xs text-zinc-500 mt-0.5">for {email}</p>}
+                    </div>
+                    <button onClick={onClose} className="p-1 rounded-md hover:bg-zinc-100 text-zinc-500" aria-label="Close">
+                        <X size={16} />
+                    </button>
+                </div>
+
+                {loading && (
+                    <div className="flex items-center justify-center py-8 text-zinc-400 text-sm">
+                        <Loader2 size={16} className="animate-spin mr-2" /> Generating link…
+                    </div>
+                )}
+
+                {error && (
+                    <div className="flex items-start gap-2 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                        <AlertCircle size={14} className="mt-0.5 shrink-0" />
+                        <span>{error}</span>
+                    </div>
+                )}
+
+                {link && !loading && !error && (
+                    <>
+                        <div className="text-xs text-zinc-500 mb-2">
+                            One-time link. Forward this to the merchant on WhatsApp. They click it once → land on the &ldquo;Set a new password&rdquo; page → done.
+                        </div>
+                        <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-3 mb-3 break-all text-[11px] font-mono text-zinc-700">
+                            {link}
+                        </div>
+                        {expiry && <div className="text-[11px] text-zinc-400 mb-3">Expires: {expiry}</div>}
+                        <div className="flex items-center justify-between gap-2">
+                            <button
+                                type="button"
+                                onClick={copyLink}
+                                className="flex-1 h-9 rounded-lg bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-800 inline-flex items-center justify-center gap-1.5"
+                            >
+                                {copied ? <Check size={14} /> : <Copy size={14} />}
+                                {copied ? 'Copied' : 'Copy link'}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="h-9 px-3 rounded-lg border border-zinc-200 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
+

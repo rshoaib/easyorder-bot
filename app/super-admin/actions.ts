@@ -207,3 +207,73 @@ export async function bulkDeleteStores(ids: string[]): Promise<{ deleted: number
     revalidatePath('/super-admin');
     return { deleted: count ?? safeIds.length };
 }
+
+/**
+ * Generate a one-time password-recovery link for a tenant.
+ *
+ * Intended use: when a merchant emails or WhatsApps support saying they
+ * can't log in, the super-admin clicks "Send reset link" on that tenant's
+ * row. This calls Supabase Auth's admin/generate_link endpoint and returns
+ * the URL — we copy it into WhatsApp or email and forward it manually.
+ *
+ * Why this exists as a feature (not just a curl one-off):
+ *   - The site's "Forgot password" form depends on Supabase SMTP, which
+ *     has been broken on this project for months (535 auth invalid).
+ *   - Generating a link via the admin API bypasses email entirely.
+ *   - Many merchants signed up via Google OAuth and never had a password
+ *     to "reset" — this flow lets them set one for the first time.
+ *
+ * Returns { actionLink, expiresAt, email }.
+ */
+export async function generateRecoveryLink(
+    tenantId: string
+): Promise<{ actionLink: string; expiresAt: string; email: string }> {
+    await verifySuperAdmin();
+
+    if (!tenantId) throw new Error("tenantId is required");
+
+    const sc = getServiceClient();
+
+    // Resolve the tenant's email (prefer tenants.email, fall back to the
+    // linked auth user's email).
+    const { data: tenant, error: tenantErr } = await sc
+        .from('tenants')
+        .select('id, email, user_id')
+        .eq('id', tenantId)
+        .single();
+    if (tenantErr || !tenant) throw new Error("Tenant not found");
+
+    let email = tenant.email as string | null;
+    if (!email && tenant.user_id) {
+        const { data: u } = await sc.auth.admin.getUserById(tenant.user_id);
+        email = u.user?.email ?? null;
+    }
+    if (!email) throw new Error("This store has no email on file. Add one in tenants.email first.");
+
+    // Call Supabase's auth admin endpoint to mint a recovery link. This
+    // does NOT send an email — it just returns the URL for us to forward.
+    const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/admin/generate_link`;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'apikey': serviceKey,
+            'Authorization': `Bearer ${serviceKey}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type: 'recovery', email }),
+    });
+    if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`Supabase generate_link failed (${res.status}): ${body || 'unknown error'}`);
+    }
+    const json = await res.json() as { action_link?: string };
+    const actionLink = json.action_link;
+    if (!actionLink) throw new Error("Supabase did not return an action_link");
+
+    // Recovery tokens default to 1-hour expiry on Supabase auth side.
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+    return { actionLink, expiresAt, email };
+}
+
