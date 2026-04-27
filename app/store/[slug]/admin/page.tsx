@@ -12,6 +12,7 @@ import RevenueChart from "@/components/admin/RevenueChart";
 import CustomDevCard from "@/components/admin/CustomDevCard";
 import TimezoneAutoDetect from "@/components/admin/TimezoneAutoDetect";
 import UpgradeProBanner from "@/components/admin/UpgradeProBanner";
+import { getDictionary, type Locale } from "@/lib/i18n/dictionaries";
 
 
 export const dynamic = 'force-dynamic';
@@ -49,6 +50,7 @@ async function getDashboardData(slug: string) {
 export default async function AdminPage({ params }: Props) {
   const { slug } = await params;
   const { tenant, analytics, productCount, chartOrders } = await getDashboardData(slug);
+  const t = getDictionary(((tenant?.language as Locale) || 'en'));
 
   if (!tenant) return <div className="p-10">Store not found</div>;
 
@@ -82,16 +84,16 @@ export default async function AdminPage({ params }: Props) {
       {/* Header Section */}
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-500 text-sm">Welcome back to {tenant.name}</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t.adminDashboard}</h1>
+          <p className="text-gray-500 text-sm">{t.adminWelcomeBack} {tenant.name}</p>
         </div>
         <div className="flex items-center gap-2">
           <a href={`/store/${slug}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 transition-colors px-3 py-2 bg-white border border-gray-200 rounded-lg">
-            👁️ <span className="hidden sm:inline">Preview Store</span><span className="sm:hidden">Preview</span>
+            👁️ <span className="hidden sm:inline">{t.adminPreviewStore}</span><span className="sm:hidden">{t.adminPreview}</span>
           </a>
           <form action="/auth/signout" method="post">
             <button type="submit" className="text-sm text-gray-400 hover:text-red-500 transition-colors px-3 py-2 bg-white border border-gray-200 rounded-lg">
-              Sign Out
+              {t.adminSignOut}
             </button>
           </form>
         </div>
@@ -108,11 +110,11 @@ export default async function AdminPage({ params }: Props) {
         <div className="grid grid-cols-2 gap-2">
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-xl p-3 text-center">
             <p className="text-lg font-bold text-green-700">{analytics?.totalOrders ?? 0}</p>
-            <p className="text-[10px] font-semibold text-green-500 uppercase tracking-wider">Total Orders</p>
+            <p className="text-[10px] font-semibold text-green-500 uppercase tracking-wider">{t.adminTotalOrders}</p>
           </div>
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 rounded-xl p-3 text-center">
             <p className="text-lg font-bold text-purple-700">{productCount}</p>
-            <p className="text-[10px] font-semibold text-purple-500 uppercase tracking-wider">Products</p>
+            <p className="text-[10px] font-semibold text-purple-500 uppercase tracking-wider">{t.adminProductsCount}</p>
           </div>
         </div>
       </div>
@@ -240,14 +242,14 @@ export default async function AdminPage({ params }: Props) {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <div className="flex items-center gap-3 text-gray-500 mb-2">
                         <div className="p-2 bg-green-50 text-green-600 rounded-lg"><DollarSign size={20} /></div>
-                        <span className="text-sm font-medium">Total Revenue</span>
+                        <span className="text-sm font-medium">{t.adminTotalRevenue}</span>
                     </div>
                     <div className="text-2xl font-bold text-gray-900 ml-1">{tenant.currency}{analytics.totalRevenue.toLocaleString()}</div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                     <div className="flex items-center gap-3 text-gray-500 mb-2">
                         <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><ShoppingBag size={20} /></div>
-                        <span className="text-sm font-medium">Total Orders</span>
+                        <span className="text-sm font-medium">{t.adminTotalOrders}</span>
                     </div>
                     <div className="text-2xl font-bold text-gray-900 ml-1">{analytics.totalOrders}</div>
                 </div>

@@ -172,6 +172,15 @@ export const dictionaries = {
         adminNeedHelp: 'Need help or customization?',
         adminContactSupport: 'Contact Support',
 
+        // ── Admin dashboard top strip ───────────────────────────
+        adminWelcomeBack: 'Welcome back to',
+        adminPreviewStore: 'Preview Store',
+        adminPreview: 'Preview',
+        adminSignOut: 'Sign Out',
+        adminTotalOrders: 'Total Orders',
+        adminTotalRevenue: 'Total Revenue',
+        adminProductsCount: 'Products',
+
     },
     es: {
         searchPlaceholder: "Buscar en el menú...",
@@ -305,6 +314,15 @@ export const dictionaries = {
         adminCreateYourStore: 'Crea tu tienda →',
         adminNeedHelp: '¿Necesitas ayuda o personalización?',
         adminContactSupport: 'Contactar soporte',
+
+        // ── Admin dashboard top strip ───────────────────────────
+        adminWelcomeBack: 'Bienvenido de nuevo a',
+        adminPreviewStore: 'Vista previa',
+        adminPreview: 'Vista',
+        adminSignOut: 'Cerrar sesión',
+        adminTotalOrders: 'Pedidos totales',
+        adminTotalRevenue: 'Ingresos totales',
+        adminProductsCount: 'Productos',
 
     },
     fr: {
@@ -440,6 +458,15 @@ export const dictionaries = {
         adminNeedHelp: "Besoin d'aide ou de personnalisation ?",
         adminContactSupport: 'Contacter le support',
 
+        // ── Admin dashboard top strip ───────────────────────────
+        adminWelcomeBack: 'Bon retour sur',
+        adminPreviewStore: 'Aperçu boutique',
+        adminPreview: 'Aperçu',
+        adminSignOut: 'Déconnexion',
+        adminTotalOrders: 'Commandes totales',
+        adminTotalRevenue: 'Revenu total',
+        adminProductsCount: 'Produits',
+
     },
     ar: {
         searchPlaceholder: "ابحث في القائمة...",
@@ -573,6 +600,15 @@ export const dictionaries = {
         adminCreateYourStore: 'أنشئ متجرك →',
         adminNeedHelp: 'هل تحتاج مساعدة أو تخصيص؟',
         adminContactSupport: 'تواصل مع الدعم',
+
+        // ── Admin dashboard top strip ───────────────────────────
+        adminWelcomeBack: 'مرحبا بعودتك إلى',
+        adminPreviewStore: 'معاينة المتجر',
+        adminPreview: 'معاينة',
+        adminSignOut: 'تسجيل الخروج',
+        adminTotalOrders: 'إجمالي الطلبات',
+        adminTotalRevenue: 'إجمالي الإيرادات',
+        adminProductsCount: 'المنتجات',
 
     },
     pt: {
@@ -708,6 +744,15 @@ export const dictionaries = {
         adminNeedHelp: 'Precisa de ajuda ou personalização?',
         adminContactSupport: 'Falar com suporte',
 
+        // ── Admin dashboard top strip ───────────────────────────
+        adminWelcomeBack: 'Bem-vindo de volta a',
+        adminPreviewStore: 'Pré-visualizar',
+        adminPreview: 'Prévia',
+        adminSignOut: 'Sair',
+        adminTotalOrders: 'Pedidos totais',
+        adminTotalRevenue: 'Receita total',
+        adminProductsCount: 'Produtos',
+
     },
     id: {
         searchPlaceholder: "Cari menu...",
@@ -841,6 +886,15 @@ export const dictionaries = {
         adminCreateYourStore: 'Buat toko Anda →',
         adminNeedHelp: 'Butuh bantuan atau kustomisasi?',
         adminContactSupport: 'Hubungi dukungan',
+
+        // ── Admin dashboard top strip ───────────────────────────
+        adminWelcomeBack: 'Selamat datang kembali ke',
+        adminPreviewStore: 'Pratinjau toko',
+        adminPreview: 'Pratinjau',
+        adminSignOut: 'Keluar',
+        adminTotalOrders: 'Total pesanan',
+        adminTotalRevenue: 'Total pendapatan',
+        adminProductsCount: 'Produk',
 
     },
 };
