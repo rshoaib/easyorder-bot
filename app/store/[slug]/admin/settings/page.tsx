@@ -1,5 +1,6 @@
 import { getTenantRepository } from "@/lib/repository";
 import { ArrowLeft, Save, Instagram, Facebook, Banknote, CheckCircle, CreditCard, Wallet, Truck, ShoppingBag, Users, Package } from "lucide-react";
+import { getDictionary, type Locale } from "@/lib/i18n/dictionaries";
 import Link from "next/link";
 import ServiceStatus from "@/components/admin/ServiceStatus";
 import { redirect } from "next/navigation";
@@ -127,15 +128,16 @@ export default async function SettingsPage({ params, searchParams }: Props) {
     const repo = getTenantRepository();
     const tenant = await repo.getTenantBySlug(slug);
 
-    if (!tenant) return <div>Store not found</div>;
+    if (!tenant) return <div>{getDictionary('en').adminStoreNotFound}</div>;
+    const t = getDictionary(((tenant.language as Locale) || 'en'));
 
     return (
         <main className="container pt-1 pb-10" style={{ maxWidth: '800px' }}>
             <ToastHandler />
             <div className="flex justify-between mb-4 items-center">
                 <div>
-                    <h1 className="text-2xl font-bold mb-1">Store Settings</h1>
-                    <p className="text-gray-500 text-sm">Manage your store profile and preferences</p>
+                    <h1 className="text-2xl font-bold mb-1">{t.settingsTitle}</h1>
+                    <p className="text-gray-500 text-sm">{t.settingsSubtitle}</p>
                 </div>
                 <Link href={`/store/${slug}/admin`}>
                     <button className="btn-secondary">
@@ -167,9 +169,9 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="p-5 border-b border-gray-100 bg-gray-50">
                         <h2 className="font-bold text-gray-900 flex items-center gap-2">
-                            <span className="text-xl">🏪</span> Store Configuration
+                            <span className="text-xl">🏪</span> {t.settingsStoreConfig}
                         </h2>
-                        <p className="text-sm text-gray-500 mt-1">Basic store settings and preferences.</p>
+                        <p className="text-sm text-gray-500 mt-1">{t.settingsStoreConfigSub}</p>
                     </div>
                     <div className="p-5 space-y-5">
                         {/* Store Type */}
@@ -314,8 +316,8 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                         {/* Store Status Toggle */}
                         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                             <div>
-                                <h3 className="font-bold text-gray-900">Store Status</h3>
-                                <p className="text-sm text-gray-500">Close your store when you&apos;re busy.</p>
+                                <h3 className="font-bold text-gray-900">{t.settingsStoreStatus}</h3>
+                                <p className="text-sm text-gray-500">{t.settingsStoreStatusSub}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input 
@@ -337,8 +339,8 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                         <div className="flex items-center gap-2">
                             <span className="text-xl">⚙️</span>
                             <div>
-                                <h2 className="font-bold text-gray-900">Advanced Settings</h2>
-                                <p className="text-sm text-gray-500">Social profiles, analytics, payment methods</p>
+                                <h2 className="font-bold text-gray-900">{t.settingsAdvanced}</h2>
+                                <p className="text-sm text-gray-500">{t.settingsAdvancedSub}</p>
                             </div>
                         </div>
                         <span className="text-gray-400 group-open:rotate-180 transition-transform duration-200">▼</span>
@@ -556,7 +558,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                 {/* Save Button */}
                 <div>
                     <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 active:scale-95">
-                        <Save size={20} /> Save All Settings
+                        <Save size={20} /> {t.settingsSaveAll}
                     </button>
                 </div>
             </form>
@@ -578,10 +580,10 @@ export default async function SettingsPage({ params, searchParams }: Props) {
             </div>
 
             <div className="mt-8 pt-8 border-t border-gray-200">
-                <h3 className="text-sm font-bold text-red-600 mb-2 uppercase tracking-wider">Danger Zone</h3>
+                <h3 className="text-sm font-bold text-red-600 mb-2 uppercase tracking-wider">{t.settingsDangerZone}</h3>
                 <div className="bg-red-50 border border-red-100 rounded-xl p-6 flex items-center justify-between">
                     <div>
-                        <h4 className="font-bold text-red-900">Delete this store</h4>
+                        <h4 className="font-bold text-red-900">{t.settingsDeleteStore}</h4>
                         <p className="text-sm text-red-700 mt-1">Once you delete a store, there is no going back. Please be certain.</p>
                     </div>
                     <DeleteStoreButton slug={slug} tenantId={tenant.id} />

@@ -181,6 +181,19 @@ export const dictionaries = {
         adminTotalRevenue: 'Total Revenue',
         adminProductsCount: 'Products',
 
+        // ── Settings page ───────────────────────────────────────
+        settingsTitle: 'Store Settings',
+        settingsSubtitle: 'Manage your store profile and preferences',
+        settingsStoreConfig: 'Store Configuration',
+        settingsStoreConfigSub: 'Basic store settings and preferences.',
+        settingsAdvanced: 'Advanced Settings',
+        settingsAdvancedSub: 'Social profiles, analytics, payment methods',
+        settingsStoreStatus: 'Store Status',
+        settingsStoreStatusSub: "Close your store when you're busy.",
+        settingsSaveAll: 'Save All Settings',
+        settingsDangerZone: 'Danger Zone',
+        settingsDeleteStore: 'Delete this store',
+
     },
     es: {
         searchPlaceholder: "Buscar en el menú...",
@@ -323,6 +336,19 @@ export const dictionaries = {
         adminTotalOrders: 'Pedidos totales',
         adminTotalRevenue: 'Ingresos totales',
         adminProductsCount: 'Productos',
+
+        // ── Settings page ───────────────────────────────────────
+        settingsTitle: 'Configuración de la tienda',
+        settingsSubtitle: 'Gestiona el perfil y preferencias de tu tienda',
+        settingsStoreConfig: 'Configuración de la tienda',
+        settingsStoreConfigSub: 'Ajustes básicos y preferencias.',
+        settingsAdvanced: 'Configuración avanzada',
+        settingsAdvancedSub: 'Perfiles sociales, analíticas, métodos de pago',
+        settingsStoreStatus: 'Estado de la tienda',
+        settingsStoreStatusSub: 'Cierra tu tienda cuando estés ocupado.',
+        settingsSaveAll: 'Guardar todos los cambios',
+        settingsDangerZone: 'Zona de peligro',
+        settingsDeleteStore: 'Eliminar esta tienda',
 
     },
     fr: {
@@ -467,6 +493,19 @@ export const dictionaries = {
         adminTotalRevenue: 'Revenu total',
         adminProductsCount: 'Produits',
 
+        // ── Settings page ───────────────────────────────────────
+        settingsTitle: 'Paramètres de la boutique',
+        settingsSubtitle: 'Gérez le profil et les préférences de votre boutique',
+        settingsStoreConfig: 'Configuration de la boutique',
+        settingsStoreConfigSub: 'Paramètres et préférences de base.',
+        settingsAdvanced: 'Paramètres avancés',
+        settingsAdvancedSub: 'Profils sociaux, analytique, modes de paiement',
+        settingsStoreStatus: 'État de la boutique',
+        settingsStoreStatusSub: 'Fermez votre boutique quand vous êtes occupé.',
+        settingsSaveAll: 'Enregistrer tous les paramètres',
+        settingsDangerZone: 'Zone de danger',
+        settingsDeleteStore: 'Supprimer cette boutique',
+
     },
     ar: {
         searchPlaceholder: "ابحث في القائمة...",
@@ -609,6 +648,19 @@ export const dictionaries = {
         adminTotalOrders: 'إجمالي الطلبات',
         adminTotalRevenue: 'إجمالي الإيرادات',
         adminProductsCount: 'المنتجات',
+
+        // ── Settings page ───────────────────────────────────────
+        settingsTitle: 'إعدادات المتجر',
+        settingsSubtitle: 'إدارة ملف وتفضيلات متجرك',
+        settingsStoreConfig: 'تكوين المتجر',
+        settingsStoreConfigSub: 'الإعدادات الأساسية والتفضيلات.',
+        settingsAdvanced: 'إعدادات متقدمة',
+        settingsAdvancedSub: 'الملفات الاجتماعية، التحليلات، طرق الدفع',
+        settingsStoreStatus: 'حالة المتجر',
+        settingsStoreStatusSub: 'أغلق متجرك عندما تكون مشغولا.',
+        settingsSaveAll: 'حفظ جميع الإعدادات',
+        settingsDangerZone: 'منطقة الخطر',
+        settingsDeleteStore: 'حذف هذا المتجر',
 
     },
     pt: {
@@ -753,6 +805,19 @@ export const dictionaries = {
         adminTotalRevenue: 'Receita total',
         adminProductsCount: 'Produtos',
 
+        // ── Settings page ───────────────────────────────────────
+        settingsTitle: 'Configurações da loja',
+        settingsSubtitle: 'Gerencie o perfil e preferências da sua loja',
+        settingsStoreConfig: 'Configuração da loja',
+        settingsStoreConfigSub: 'Configurações básicas e preferências.',
+        settingsAdvanced: 'Configurações avançadas',
+        settingsAdvancedSub: 'Perfis sociais, análises, métodos de pagamento',
+        settingsStoreStatus: 'Status da loja',
+        settingsStoreStatusSub: 'Feche sua loja quando estiver ocupado.',
+        settingsSaveAll: 'Salvar todas as configurações',
+        settingsDangerZone: 'Zona de perigo',
+        settingsDeleteStore: 'Excluir esta loja',
+
     },
     id: {
         searchPlaceholder: "Cari menu...",
@@ -895,6 +960,19 @@ export const dictionaries = {
         adminTotalOrders: 'Total pesanan',
         adminTotalRevenue: 'Total pendapatan',
         adminProductsCount: 'Produk',
+
+        // ── Settings page ───────────────────────────────────────
+        settingsTitle: 'Pengaturan toko',
+        settingsSubtitle: 'Kelola profil dan preferensi toko Anda',
+        settingsStoreConfig: 'Konfigurasi toko',
+        settingsStoreConfigSub: 'Pengaturan dan preferensi dasar.',
+        settingsAdvanced: 'Pengaturan lanjutan',
+        settingsAdvancedSub: 'Profil sosial, analitik, metode pembayaran',
+        settingsStoreStatus: 'Status toko',
+        settingsStoreStatusSub: 'Tutup toko Anda saat sibuk.',
+        settingsSaveAll: 'Simpan semua pengaturan',
+        settingsDangerZone: 'Zona berbahaya',
+        settingsDeleteStore: 'Hapus toko ini',
 
     },
 };
