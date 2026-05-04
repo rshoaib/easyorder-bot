@@ -75,16 +75,26 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
       >
         <div className="store-hero-content">
           <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-            {tenant.logoUrl && (
-              <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 shadow-lg shrink-0" style={{ borderColor: `${tenant.themeColor || '#6366f1'}30` }}>
+            <div
+              className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 shadow-lg shrink-0 flex items-center justify-center"
+              style={{
+                borderColor: `${tenant.themeColor || '#6366f1'}30`,
+                backgroundColor: tenant.logoUrl ? undefined : (tenant.themeColor || '#6366f1'),
+              }}
+            >
+              {tenant.logoUrl ? (
                 <ImageWithFallback
                   src={tenant.logoUrl}
                   alt={tenant.name}
                   fill
                   className="object-cover"
                 />
-              </div>
-            )}
+              ) : (
+                <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white select-none" aria-hidden="true">
+                  {tenant.name?.trim()?.[0]?.toUpperCase() || '?'}
+                </span>
+              )}
+            </div>
             <div className="flex-1 min-w-0">
               <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight text-slate-900 truncate">{tenant.name}</h1>
               <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mt-1.5">
