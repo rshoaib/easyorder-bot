@@ -35,4 +35,4 @@ export interface SubscriptionRow {
     createdAt: string;
 }
 
-export type TabKey = "overview" | "stores" | "cleanup" | "subscriptions";
+export type TabKey = "active" | "overview" | "stores" | "cleanup" | "subscriptions";
