@@ -171,6 +171,11 @@ export const dictionaries = {
         adminCreateYourStore: 'Create Your Store →',
         adminNeedHelp: 'Need help or customization?',
         adminContactSupport: 'Contact Support',
+        adminSupportTitle: 'How can we help?',
+        adminSupportHelp: 'Help with my store',
+        adminSupportHelpDesc: 'Bugs, questions, account issues',
+        adminSupportCustom: 'Customization request',
+        adminSupportCustomDesc: 'Logo, custom domain, theme, integration',
 
         // ── Admin dashboard top strip ───────────────────────────
         adminWelcomeBack: 'Welcome back to',
@@ -327,6 +332,11 @@ export const dictionaries = {
         adminCreateYourStore: 'Crea tu tienda →',
         adminNeedHelp: '¿Necesitas ayuda o personalización?',
         adminContactSupport: 'Contactar soporte',
+        adminSupportTitle: '¿En qué podemos ayudarte?',
+        adminSupportHelp: 'Ayuda con mi tienda',
+        adminSupportHelpDesc: 'Errores, dudas, problemas de cuenta',
+        adminSupportCustom: 'Solicitud de personalización',
+        adminSupportCustomDesc: 'Logo, dominio, tema, integración',
 
         // ── Admin dashboard top strip ───────────────────────────
         adminWelcomeBack: 'Bienvenido de nuevo a',
@@ -483,6 +493,11 @@ export const dictionaries = {
         adminCreateYourStore: 'Créez votre boutique →',
         adminNeedHelp: "Besoin d'aide ou de personnalisation ?",
         adminContactSupport: 'Contacter le support',
+        adminSupportTitle: 'Comment pouvons-nous aider ?',
+        adminSupportHelp: 'Aide pour ma boutique',
+        adminSupportHelpDesc: 'Bugs, questions, problèmes de compte',
+        adminSupportCustom: 'Demande de personnalisation',
+        adminSupportCustomDesc: 'Logo, domaine, thème, intégration',
 
         // ── Admin dashboard top strip ───────────────────────────
         adminWelcomeBack: 'Bon retour sur',
@@ -639,6 +654,11 @@ export const dictionaries = {
         adminCreateYourStore: 'أنشئ متجرك →',
         adminNeedHelp: 'هل تحتاج مساعدة أو تخصيص؟',
         adminContactSupport: 'تواصل مع الدعم',
+        adminSupportTitle: 'كيف يمكننا مساعدتك؟',
+        adminSupportHelp: 'مساعدة بشأن متجري',
+        adminSupportHelpDesc: 'أخطاء، أسئلة، مشاكل في الحساب',
+        adminSupportCustom: 'طلب تخصيص',
+        adminSupportCustomDesc: 'شعار، نطاق مخصص، ثيم، تكامل',
 
         // ── Admin dashboard top strip ───────────────────────────
         adminWelcomeBack: 'مرحبا بعودتك إلى',
@@ -795,6 +815,11 @@ export const dictionaries = {
         adminCreateYourStore: 'Crie sua loja →',
         adminNeedHelp: 'Precisa de ajuda ou personalização?',
         adminContactSupport: 'Falar com suporte',
+        adminSupportTitle: 'Como podemos ajudar?',
+        adminSupportHelp: 'Ajuda com minha loja',
+        adminSupportHelpDesc: 'Bugs, dúvidas, problemas de conta',
+        adminSupportCustom: 'Solicitação de personalização',
+        adminSupportCustomDesc: 'Logo, domínio, tema, integração',
 
         // ── Admin dashboard top strip ───────────────────────────
         adminWelcomeBack: 'Bem-vindo de volta a',
@@ -951,6 +976,11 @@ export const dictionaries = {
         adminCreateYourStore: 'Buat toko Anda →',
         adminNeedHelp: 'Butuh bantuan atau kustomisasi?',
         adminContactSupport: 'Hubungi dukungan',
+        adminSupportTitle: 'Bagaimana kami bisa membantu?',
+        adminSupportHelp: 'Bantuan untuk toko saya',
+        adminSupportHelpDesc: 'Bug, pertanyaan, masalah akun',
+        adminSupportCustom: 'Permintaan kustomisasi',
+        adminSupportCustomDesc: 'Logo, domain, tema, integrasi',
 
         // ── Admin dashboard top strip ───────────────────────────
         adminWelcomeBack: 'Selamat datang kembali ke',

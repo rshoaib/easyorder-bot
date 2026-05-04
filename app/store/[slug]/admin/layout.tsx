@@ -193,7 +193,16 @@ export default async function AdminLayout({
       )}
 
       {/* Floating WhatsApp Support Button */}
-      <WhatsAppSupportButton storeName={tenant.name} />
+      <WhatsAppSupportButton
+        storeName={tenant.name}
+        labels={{
+          title: t.adminSupportTitle,
+          help: t.adminSupportHelp,
+          helpDesc: t.adminSupportHelpDesc,
+          custom: t.adminSupportCustom,
+          customDesc: t.adminSupportCustomDesc,
+        }}
+      />
 
       <div className="container mx-auto px-4 py-8 text-center text-sm text-gray-400">
         <p>{t.adminNeedHelp}</p>
