@@ -331,10 +331,3 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
           </div>
     )
 }
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
-    )
-}
