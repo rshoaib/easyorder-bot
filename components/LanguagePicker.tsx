@@ -53,10 +53,10 @@ export default function LanguagePicker({ value, onChange, slug, className = '' }
             <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
-                className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/90 backdrop-blur border border-slate-200 text-sm font-medium text-slate-700 hover:bg-white shadow-sm"
+                className="inline-flex items-center gap-1 sm:gap-1.5 h-9 px-2 sm:px-3 rounded-full bg-white/90 backdrop-blur border border-slate-200 text-sm font-medium text-slate-700 hover:bg-white shadow-sm shrink-0"
                 aria-label="Change language"
             >
-                <Globe size={14} className="text-slate-400" />
+                <Globe size={14} className="hidden sm:inline text-slate-400" />
                 <span className="inline-flex items-center justify-center text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 leading-none">
                     {current.flag}
                 </span>

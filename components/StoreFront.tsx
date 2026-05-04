@@ -74,20 +74,20 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
         }}
       >
         <div className="store-hero-content">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
             {tenant.logoUrl && (
-              <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 shadow-lg shrink-0" style={{ borderColor: `${tenant.themeColor || '#6366f1'}30` }}>
-                <ImageWithFallback 
-                  src={tenant.logoUrl} 
-                  alt={tenant.name} 
-                  fill 
+              <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 shadow-lg shrink-0" style={{ borderColor: `${tenant.themeColor || '#6366f1'}30` }}>
+                <ImageWithFallback
+                  src={tenant.logoUrl}
+                  alt={tenant.name}
+                  fill
                   className="object-cover"
                 />
               </div>
             )}
-            <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl font-extrabold leading-tight text-slate-900">{tenant.name}</h1>
-              <div className="flex items-center gap-3 mt-1.5">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight text-slate-900 truncate">{tenant.name}</h1>
+              <div className="flex items-center flex-wrap gap-x-3 gap-y-1 mt-1.5">
                 {/* Open/Closed badge */}
                 <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full ${
                   isOpen 
@@ -114,7 +114,7 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
           </div>
           
           {/* Right-side: language picker + cart, aligned horizontally */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-2">
             <LanguagePicker value={locale} onChange={setLocale} slug={tenant.slug} />
             <div className="cart-btn-wrapper">
               <Link href={`/store/${tenant.slug}/cart`}>
@@ -324,6 +324,13 @@ function ProductCard({ product, tenant, dict }: { product: Product, tenant: Tena
                   onClick={(e) => { e.stopPropagation(); setShowSizePicker(false); }}
                   className="text-[10px] text-gray-400 hover:text-gray-600"
                 >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+    )
+}
                   Cancel
                 </button>
               </div>
