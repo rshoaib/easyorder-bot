@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useCart } from "@/context/CartContext";
-import { Plus, ShoppingBag, Search, Check, Clock } from "lucide-react";
+import { Plus, ShoppingBag, Search, Check, Clock, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { getDictionary, detectLocale, isRTL, type Locale } from "@/lib/i18n/dictionaries";
@@ -113,9 +113,21 @@ export default function StoreFront({ initialProducts, tenant }: StoreFrontProps)
             </div>
           </div>
           
-          {/* Right-side: language picker + cart, aligned horizontally */}
+          {/* Right-side: language picker + WhatsApp + cart, aligned horizontally */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-2">
             <LanguagePicker value={locale} onChange={setLocale} slug={tenant.slug} />
+            {tenant.ownerPhone && (
+              <a
+                href={`https://wa.me/${tenant.ownerPhone.replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Chat on WhatsApp: ${tenant.ownerPhone}`}
+                className="cart-btn flex items-center gap-2 no-underline text-slate-900 hover:text-emerald-600 transition-colors"
+              >
+                <MessageCircle size={22} className="text-emerald-600" />
+                <span className="hidden sm:inline text-sm font-semibold">{tenant.ownerPhone}</span>
+              </a>
+            )}
             <div className="cart-btn-wrapper">
               <Link href={`/store/${tenant.slug}/cart`}>
                 <button className="cart-btn">
