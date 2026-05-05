@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search, ShoppingBag, Clock } from 'lucide-react';
+import { Search, ShoppingBag, Clock, ExternalLink } from 'lucide-react';
 import type { StoreRow } from '../types';
 
 interface Props {
@@ -122,24 +122,37 @@ function ActiveStoreCard({ store }: { store: StoreRow }) {
                 </span>
             </div>
 
-            {store.ownerPhone ? (
+            <div className="mt-3 flex items-stretch gap-2">
+                {store.ownerPhone ? (
+                    <a
+                        href={whatsappUrl(store.ownerPhone, store.name)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-2 h-11 rounded-lg bg-[#25D366] text-white text-sm font-semibold hover:bg-[#1ebe57] transition-colors no-underline"
+                        aria-label={`Chat with ${store.name} on WhatsApp at ${store.ownerPhone}`}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-4 h-4 shrink-0">
+                            <path d={WHATSAPP_ICON} />
+                        </svg>
+                        <span className="truncate">{store.ownerPhone}</span>
+                    </a>
+                ) : (
+                    <div className="flex-1 flex items-center justify-center gap-2 h-11 rounded-lg bg-zinc-100 text-zinc-400 text-xs font-medium">
+                        No phone number on file
+                    </div>
+                )}
                 <a
-                    href={whatsappUrl(store.ownerPhone, store.name)}
+                    href={`/store/${store.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 flex items-center justify-center gap-2 w-full h-11 rounded-lg bg-[#25D366] text-white text-sm font-semibold hover:bg-[#1ebe57] transition-colors no-underline"
-                    aria-label={`Chat with ${store.name} on WhatsApp at ${store.ownerPhone}`}
+                    className="inline-flex items-center justify-center gap-1.5 h-11 px-4 rounded-lg border border-zinc-200 bg-white text-zinc-700 text-sm font-medium hover:bg-zinc-50 transition-colors no-underline shrink-0"
+                    aria-label={`Open ${store.name} storefront`}
+                    title="Open storefront"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-4 h-4">
-                        <path d={WHATSAPP_ICON} />
-                    </svg>
-                    <span>{store.ownerPhone}</span>
+                    <ExternalLink size={14} />
+                    <span className="hidden sm:inline">Storefront</span>
                 </a>
-            ) : (
-                <div className="mt-3 flex items-center justify-center gap-2 w-full h-11 rounded-lg bg-zinc-100 text-zinc-400 text-xs font-medium">
-                    No phone number on file
-                </div>
-            )}
+            </div>
         </li>
     );
 }

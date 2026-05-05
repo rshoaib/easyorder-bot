@@ -95,9 +95,10 @@ export default function OverviewTab({ stores, subscriptions, onJump }: Props) {
                                 <li key={s.id} className="flex items-center justify-between py-3">
                                     <div className="min-w-0">
                                         <Link
-                                            href={`/store/${s.slug}/admin`}
+                                            href={`/store/${s.slug}`}
                                             target="_blank"
                                             className="font-medium text-sm text-zinc-900 hover:underline truncate block"
+                                            title="Open storefront"
                                         >
                                             {s.name}
                                         </Link>
@@ -126,9 +127,10 @@ export default function OverviewTab({ stores, subscriptions, onJump }: Props) {
                                 <li key={s.id} className="flex items-center justify-between py-3">
                                     <div className="min-w-0">
                                         <Link
-                                            href={`/store/${s.slug}/admin`}
+                                            href={`/store/${s.slug}`}
                                             target="_blank"
                                             className="font-medium text-sm text-zinc-900 hover:underline truncate block"
+                                            title="Open storefront"
                                         >
                                             {s.name}
                                         </Link>

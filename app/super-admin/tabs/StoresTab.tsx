@@ -177,9 +177,10 @@ function StoreRowItem({ store }: { store: StoreRow }) {
                 <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                         <Link
-                            href={`/store/${store.slug}/admin`}
+                            href={`/store/${store.slug}`}
                             target="_blank"
                             className="font-medium text-sm text-zinc-900 truncate hover:underline"
+                            title="Open storefront"
                         >
                             {store.name}
                         </Link>
@@ -259,13 +260,6 @@ function StoreRowDetail({ store }: { store: StoreRow }) {
                             className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-xs font-medium border border-zinc-200 text-zinc-700 bg-white hover:bg-zinc-50"
                         >
                             <ExternalLink size={12} /> Storefront
-                        </Link>
-                        <Link
-                            href={`/store/${store.slug}/admin`}
-                            target="_blank"
-                            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-xs font-medium border border-zinc-900 bg-zinc-900 text-white hover:bg-zinc-800"
-                        >
-                            Admin →
                         </Link>
                         {store.status !== 'active' ? (
                             <form action={activateTenant}>
