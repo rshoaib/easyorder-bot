@@ -4,9 +4,9 @@
 
 ### Priority 1 — High commercial intent
 - [ ] **"How to take orders on WhatsApp for your restaurant"**
-- [ ] **"WhatsApp Business vs WhatsApp Business API: which do you need"**
+- [x] **"WhatsApp Business vs WhatsApp Business API: which do you need"** → `whatsapp-business-vs-api-restaurant-guide` (2026-05-13)
 - [ ] **"Instagram DM orders: setup guide for small e-commerce"**
-- [ ] **"How to reduce order friction (and lift conversion)"**
+- [x] **"How to reduce order friction (and lift conversion)"** → `reduce-order-friction-lift-conversion` (2026-05-15)
 
 ### Priority 2 — Comparisons & operator decisions
 - [ ] **"Chat ordering vs delivery app commission: the real math"**
