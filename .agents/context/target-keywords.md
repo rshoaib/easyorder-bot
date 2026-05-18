@@ -9,7 +9,7 @@
 - [x] **"How to reduce order friction (and lift conversion)"** → `reduce-order-friction-lift-conversion` (2026-05-15)
 
 ### Priority 2 — Comparisons & operator decisions
-- [ ] **"Chat ordering vs delivery app commission: the real math"**
+- [x] **"Chat ordering vs delivery app commission: the real math"** → `chat-ordering-vs-delivery-app-commission-real-math` (2026-05-18)
 - [ ] **"WhatsApp Pay, Mada, STC Pay: payment integration for chat orders"**
 - [ ] **"Bot platforms compared: build vs buy decision"**
 
