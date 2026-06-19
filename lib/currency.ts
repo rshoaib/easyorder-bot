@@ -6,6 +6,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
     GBP: '£',
     INR: '₹',
     PKR: 'Rs.',
+    MYR: 'RM',
     AED: 'AED',
     SAR: 'SAR',
     EGP: 'E£',

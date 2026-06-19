@@ -215,6 +215,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
                                 <option value="SAR">SAR (﷼)</option>
                                 <option value="MRU">MRU (UM)</option>
                                 <option value="MUR">MUR (₨)</option>
+                                <option value="MYR">MYR (RM) — Malaysian Ringgit</option>
                                 <option value="ZAR">ZAR (R) — South African Rand</option>
                                 <option value="NGN">NGN (₦) — Nigerian Naira</option>
                             </select>
