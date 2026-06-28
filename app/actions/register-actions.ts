@@ -3,8 +3,14 @@
 import { getTenantRepository } from "@/lib/repository";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { DEMO_MODE, CLOSURE_MESSAGE } from "@/lib/config";
 
 export async function registerTenant(formData: FormData) {
+    // Demo-only mode: new store creation is permanently disabled.
+    if (DEMO_MODE) {
+        return { error: CLOSURE_MESSAGE };
+    }
+
     const supabase = await createClient(); // Await the async createClient
     const { data: { user } } = await supabase.auth.getUser();
 

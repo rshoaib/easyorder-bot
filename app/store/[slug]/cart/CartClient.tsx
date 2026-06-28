@@ -15,6 +15,7 @@ import { runFireworks } from "@/components/ui/Confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatPrice, getCurrencySymbol } from '@/lib/currency';
 import { getDictionary, type Locale } from '@/lib/i18n/dictionaries';
+import { DEMO_MODE, DEMO_ORDER_MESSAGE } from '@/lib/config';
 
 // Helper to calc discount
 function calculateDiscount(subtotal: number, promo: Pick<PromoCode, 'discountType' | 'value'>) {
@@ -212,7 +213,13 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
+        // Demo-only mode: ordering is disabled. Show the contact message instead.
+        if (DEMO_MODE) {
+            toast.info(DEMO_ORDER_MESSAGE);
+            return;
+        }
+
         if (!isOpen) {
             toast.error("Sorry, the store is currently closed.");
             return;
@@ -355,6 +362,18 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                    </div>
                 )}
             </div>
+
+            {/* Demo Mode Banner */}
+            {DEMO_MODE && (
+                <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-xl mb-6 text-center">
+                    <h3 className="font-bold text-indigo-900">👀 This is a demo store</h3>
+                    <p className="text-sm text-indigo-700 mt-1">
+                        Ordering is disabled. Like what you see?{' '}
+                        <a href="mailto:segmentbi@gmail.com" className="font-bold underline">Contact us</a>{' '}
+                        to get your own store.
+                    </p>
+                </div>
+            )}
 
             {/* Closed Banner */}
             {!isOpen && (
@@ -677,12 +696,14 @@ export default function CartClient({ tenantId, slug, isOpen, currency, paypalLin
                     />
                 </div>
 
-                <button 
-                    type="submit" 
+                <button
+                    type="submit"
                     disabled={isSubmitting || slipUploading || !isOpen || belowMinimum}
                     className="btn-primary w-full mt-4 flex items-center justify-center gap-2 py-4 text-base shadow-lg shadow-blue-500/20 disabled:bg-gray-300 disabled:shadow-none"
                 >
-                    {slipUploading ? (
+                    {DEMO_MODE ? (
+                        'Demo store — ordering disabled'
+                    ) : slipUploading ? (
                         'Uploading Slip...'
                     ) : isSubmitting ? (
                         'Sending Order...'
