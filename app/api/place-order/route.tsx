@@ -4,6 +4,7 @@ import { Order } from '@/lib/repository/types';
 import { getCurrencySymbol } from '@/lib/currency';
 import { getDictionary, type Locale } from '@/lib/i18n/dictionaries';
 import { sanitizeCustomerInput } from '@/lib/sanitize';
+import { DEMO_MODE, DEMO_ORDER_MESSAGE } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,6 +27,11 @@ function checkRateLimit(ip: string): boolean {
 
 export async function POST(req: NextRequest) {
     try {
+        // Demo-only mode: ordering is permanently disabled across every store.
+        if (DEMO_MODE) {
+            return NextResponse.json({ error: DEMO_ORDER_MESSAGE }, { status: 403 });
+        }
+
         // Rate limiting
         const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown';
         if (!checkRateLimit(ip)) {

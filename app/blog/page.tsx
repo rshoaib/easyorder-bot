@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllPosts } from '@/lib/blog';
 import { ArrowRight, BookOpen, ShoppingBag } from 'lucide-react';
+import { CONTACT_MAILTO, DEMO_STORE_SLUG } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,12 +26,15 @@ export default async function BlogIndex() {
                         </div>
                         <span className="tracking-tight">OrderViaChat</span>
                     </Link>
-                    <div className="flex gap-4">
-                        <Link href="/register">
-                            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition-all text-sm">
-                                Create Store
-                            </button>
+                    <div className="flex gap-3 items-center">
+                        <Link href={`/store/${DEMO_STORE_SLUG}`} className="hidden sm:block text-sm text-slate-500 font-medium hover:text-indigo-600 transition-colors px-3 py-2">
+                            Live Demo
                         </Link>
+                        <a href={CONTACT_MAILTO}>
+                            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition-all text-sm">
+                                Contact Us
+                            </button>
+                        </a>
                     </div>
                 </div>
             </nav>

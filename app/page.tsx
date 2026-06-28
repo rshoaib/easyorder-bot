@@ -1,68 +1,39 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  CheckCircle2,
   ShoppingBag,
   Smartphone,
-  Share2,
   MessageCircle,
   Sparkles,
   LayoutDashboard,
   Palette,
-  Zap,
+  Share2,
   UtensilsCrossed,
   Home,
   Cake,
   Store,
-  Send,
-  Globe,
-  TrendingUp,
-  Star,
-  Users,
-  Clock,
-  XCircle,
-  CheckCircle,
-  HelpCircle,
+  Mail,
   BookOpen,
+  Eye,
+  Code2,
 } from "lucide-react";
 import ScrollFadeIn from "@/components/landing/ScrollFadeIn";
-import AnimatedCounter from "@/components/landing/AnimatedCounter";
 import HeroDemo from "@/components/landing/HeroDemo";
-import FAQ from "@/components/landing/FAQ";
-import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
 import { getAllPosts } from "@/lib/blog";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { getTenantRepository } from "@/lib/repository";
-
-const WHATSAPP_SHARE_URL = `https://wa.me/?text=${encodeURIComponent(
-  "Check out OrderViaChat — create a digital menu and get orders on WhatsApp! Totally free 🚀\nhttps://orderviachat.com"
-)}`;
+import { CONTACT_EMAIL, CONTACT_MAILTO, DEMO_STORE_SLUG } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const params = await searchParams;
-
-  // If OAuth or password-recovery redirected here with a ?code= param
-  // (instead of /auth/callback), forward to the callback route to exchange
-  // the code for a session. For recovery flows, send the user to
-  // /reset-password so they can choose a new password; otherwise default
-  // to /register for new sign-ups.
-  if (params.code) {
-    const code = Array.isArray(params.code) ? params.code[0] : params.code;
-    const type = Array.isArray(params.type) ? params.type[0] : params.type;
-    const next = type === 'recovery' ? '/reset-password' : '/register';
-    redirect(`/auth/callback?code=${code}&next=${encodeURIComponent(next)}`);
-  }
-
-  // If logged-in user already has a store, redirect to their admin dashboard
+export default async function HomePage() {
+  // Existing owners who still have a valid session land on their dashboard,
+  // where they'll see the permanent service-closure notice.
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (user) {
     const repo = getTenantRepository();
     const tenant = await repo.getTenantByUserId(user.id);
@@ -82,24 +53,16 @@ export default async function HomePage({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "OrderViaChat",
-            "url": "https://orderviachat.com",
-            "applicationCategory": "BusinessApplication",
-            "operatingSystem": "Web",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
-            },
-            "description": "WhatsApp ordering system for restaurants and small businesses. Free to start, no commissions. Create a digital menu, share your store link, and receive orders on WhatsApp.",
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "ratingCount": "120"
-            }
-          })
+            name: "OrderViaChat",
+            url: "https://orderviachat.com",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            description:
+              "OrderViaChat is a WhatsApp ordering platform for restaurants and small businesses — now available as an interactive demo and portfolio showcase.",
+          }),
         }}
       />
+
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 glass border-b border-slate-100 transition-all duration-300">
         <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
@@ -114,13 +77,7 @@ export default async function HomePage({
           </Link>
           <div className="flex gap-3 items-center">
             <Link
-              href="/services"
-              className="hidden sm:block text-sm text-slate-500 font-medium hover:text-indigo-600 transition-colors px-3 py-2"
-            >
-              Services
-            </Link>
-            <Link
-              href="/store/demo"
+              href={`/store/${DEMO_STORE_SLUG}`}
               className="hidden sm:block text-sm text-slate-500 font-medium hover:text-indigo-600 transition-colors px-3 py-2"
             >
               Live Demo
@@ -131,23 +88,17 @@ export default async function HomePage({
             >
               Blog
             </Link>
-            <Link href="/login">
-              <button className="text-sm text-slate-600 font-medium hover:text-slate-900 transition-colors px-3 py-2">
-                Log in
+            <a href={CONTACT_MAILTO}>
+              <button className="bg-indigo-600 text-white px-5 py-2.5 rounded-full font-semibold hover:bg-indigo-700 transition-all text-sm shadow-md shadow-indigo-500/20 flex items-center gap-2">
+                <Mail size={15} /> Contact Us
               </button>
-            </Link>
-            <Link href="/login?view=signup">
-              <button className="bg-indigo-600 text-white px-5 py-2.5 rounded-full font-semibold hover:bg-indigo-700 transition-all text-sm shadow-md shadow-indigo-500/20">
-                Start Free
-              </button>
-            </Link>
+            </a>
           </div>
         </div>
       </nav>
 
       {/* ─── Hero Section ─── */}
       <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden">
-        {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/60 via-white to-white -z-10" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-indigo-100/40 rounded-full blur-[120px] -z-10" />
 
@@ -155,102 +106,74 @@ export default async function HomePage({
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left — Copy */}
             <div className="text-center lg:text-left space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold border border-indigo-100 animate-fade-in">
-                <Zap size={12} fill="currentColor" />
-                <span>Start Free Today</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold border border-amber-100">
+                <Eye size={12} />
+                <span>Interactive Demo &amp; Portfolio Showcase</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] text-slate-900 animate-fade-in delay-100">
-                Turn WhatsApp into Your{" "}
-                <span className="text-gradient">Order Machine</span>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] text-slate-900">
+                A WhatsApp{" "}
+                <span className="text-gradient">Ordering Platform</span>, Built
+                End-to-End
               </h1>
 
-              <p className="text-lg text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fade-in delay-200">
-                Your customers are already on WhatsApp. Give them a beautiful
-                store to order from — no app downloads, no commissions. 100%
-                free, no plans, no upgrades.
+              <p className="text-lg text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                OrderViaChat let small businesses turn WhatsApp into a complete
+                ordering system — digital menus, a branded storefront, an order
+                dashboard, and more. This site is a <strong>live demo</strong> of
+                that product. Explore it freely, then reach out if you&apos;d like
+                one built for you.
               </p>
 
-              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 animate-fade-in delay-300">
-                <Link href="/login?view=signup">
-                  <button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white text-base font-bold py-3.5 px-7 rounded-xl shadow-lg shadow-indigo-500/25 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 animate-pulse-subtle">
-                    Create My Free Store <ArrowRight size={18} />
+              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3">
+                <Link href={`/store/${DEMO_STORE_SLUG}`}>
+                  <button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white text-base font-bold py-3.5 px-7 rounded-xl shadow-lg shadow-indigo-500/25 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    Browse the Demo Store <ArrowRight size={18} />
                   </button>
                 </Link>
-                <Link href="/store/demo">
-                  <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all text-base">
-                    See Live Demo
+                <a href={CONTACT_MAILTO}>
+                  <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all text-base flex items-center justify-center gap-2">
+                    <Mail size={16} /> Contact Us
                   </button>
-                </Link>
-              </div>
-
-              {/* Trust badges */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-slate-400 text-sm pt-2 animate-fade-in delay-300">
-                <div className="flex items-center gap-1.5">
-                  <Zap size={14} className="text-amber-500" />
-                  <span>2-min setup</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-green-500" />
-                  <span>No credit card</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-green-500" />
-                  <span>Zero commission</span>
-                </div>
-              </div>
-
-              {/* WhatsApp Share */}
-              <div className="animate-fade-in delay-300">
-                <a
-                  href={WHATSAPP_SHARE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-green-600 transition-colors group"
-                >
-                  <Send
-                    size={14}
-                    className="group-hover:text-green-500 transition-colors"
-                  />
-                  Know a business owner?{" "}
-                  <span className="underline underline-offset-2 font-medium text-slate-500 group-hover:text-green-600">
-                    Share via WhatsApp
-                  </span>
                 </a>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-slate-400 text-sm pt-2">
+                <div className="flex items-center gap-1.5">
+                  <Eye size={14} className="text-indigo-500" />
+                  <span>Fully browsable demo</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <LayoutDashboard size={14} className="text-indigo-500" />
+                  <span>Live admin dashboard</span>
+                </div>
               </div>
             </div>
 
             {/* Right — Interactive Demo */}
-            <div className="relative flex items-center justify-center animate-fade-in delay-200">
+            <div className="relative flex items-center justify-center">
               <HeroDemo />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── Stats Counter ─── */}
-      <section className="py-12 md:py-16 border-y border-slate-100 bg-slate-50/50">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="grid grid-cols-3 gap-6 md:gap-12">
-            <AnimatedCounter
-              end={120}
-              suffix="+"
-              label="Stores Created"
-              icon={<Store size={22} />}
-            />
-            <AnimatedCounter
-              end={2500}
-              suffix="+"
-              label="Orders Processed"
-              icon={<TrendingUp size={22} />}
-            />
-            <AnimatedCounter
-              end={15}
-              suffix="+"
-              label="Countries"
-              icon={<Globe size={22} />}
-            />
-          </div>
+      {/* ─── Closure / Demo Notice ─── */}
+      <section className="py-8 border-y border-slate-100 bg-slate-50/60">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <p className="text-sm text-slate-500 leading-relaxed">
+            <strong className="text-slate-700">Note:</strong> OrderViaChat is no
+            longer accepting new sign-ups — the hosted service has been retired.
+            What remains is this interactive showcase of the full platform. If you
+            want a system like this for your business,{" "}
+            <a
+              href={CONTACT_MAILTO}
+              className="text-indigo-600 font-semibold underline underline-offset-2"
+            >
+              get in touch
+            </a>
+            .
+          </p>
         </div>
       </section>
 
@@ -259,23 +182,22 @@ export default async function HomePage({
         <div className="max-w-5xl mx-auto px-6">
           <ScrollFadeIn className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-              Up and Running in 3 Steps
+              How the Product Works
             </h2>
             <p className="text-slate-500 text-lg max-w-lg mx-auto">
-              No coding. No downloads. Just you and your products.
+              Three simple steps from menu to order — no app downloads, no
+              commissions.
             </p>
           </ScrollFadeIn>
 
           <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
-            {/* Connecting line (desktop) */}
             <div className="hidden md:block absolute top-14 left-[20%] right-[20%] h-px bg-slate-200" />
-
             <ScrollFadeIn delay={0}>
               <StepCard
                 number={1}
                 icon={<ShoppingBag size={22} />}
-                title="Add Your Products"
-                description="Sign up and add your items. Or let our AI generate your entire menu in seconds."
+                title="Build a Digital Menu"
+                description="Add products with photos, prices, and categories — or generate an entire catalog with AI in seconds."
                 color="indigo"
               />
             </ScrollFadeIn>
@@ -283,8 +205,8 @@ export default async function HomePage({
               <StepCard
                 number={2}
                 icon={<Share2 size={22} />}
-                title="Share Your Link"
-                description="Get your unique store URL instantly. Share it on Instagram, WhatsApp, or print a QR code."
+                title="Share the Store Link"
+                description="Every store gets a clean URL and QR code to share on Instagram, WhatsApp, or in person."
                 color="purple"
               />
             </ScrollFadeIn>
@@ -292,8 +214,8 @@ export default async function HomePage({
               <StepCard
                 number={3}
                 icon={<MessageCircle size={22} />}
-                title="Orders Hit Your WhatsApp"
-                description="Customers browse, tap to order, and you get a clean message on WhatsApp. That's it!"
+                title="Orders Arrive on WhatsApp"
+                description="Customers browse, tap to order, and the merchant receives a clean, itemized message on WhatsApp."
                 color="green"
               />
             </ScrollFadeIn>
@@ -301,111 +223,66 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ─── Before / After ─── */}
+      {/* ─── Try the Demo (Showcase) ─── */}
       <section className="py-20 md:py-24 bg-slate-50 border-y border-slate-100">
         <div className="max-w-5xl mx-auto px-6">
-          <ScrollFadeIn className="text-center mb-14">
+          <ScrollFadeIn className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <Eye size={20} className="text-indigo-600" />
+              <span className="text-sm font-bold text-indigo-600 uppercase tracking-wide">
+                Try It Yourself
+              </span>
+            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-              Stop Losing Orders in Chat
+              Explore the Live Demo
             </h2>
-            <p className="text-slate-500 text-lg max-w-xl mx-auto">
-              See the difference OrderViaChat makes for your business.
+            <p className="text-slate-500 text-lg max-w-lg mx-auto">
+              Browse a real storefront and peek inside the merchant dashboard.
+              Everything is interactive — ordering is disabled in demo mode.
             </p>
           </ScrollFadeIn>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <ScrollFadeIn>
-              <div className="bg-red-50/80 border border-red-100 rounded-2xl p-6 space-y-4">
-                <div className="flex items-center gap-2 text-red-700 font-bold text-lg">
-                  <XCircle size={20} />
-                  Before
+              <Link href={`/store/${DEMO_STORE_SLUG}`} className="group block h-full">
+                <div className="bg-white rounded-2xl border border-slate-100 p-7 h-full hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                  <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <Store size={24} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1.5">
+                    The Demo Storefront
+                  </h3>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-4">
+                    A restaurant menu with categories, search, photos, and a
+                    working cart — exactly what a customer would see.
+                  </p>
+                  <span className="text-sm font-semibold text-indigo-600 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Open storefront <ArrowRight size={14} />
+                  </span>
                 </div>
-                <ul className="space-y-3 text-sm text-red-800/80">
-                  <li className="flex items-start gap-2">
-                    <XCircle
-                      size={14}
-                      className="mt-0.5 shrink-0 text-red-400"
-                    />
-                    <span>
-                      Customers send confusing messages — "I want that thing
-                      from yesterday"
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <XCircle
-                      size={14}
-                      className="mt-0.5 shrink-0 text-red-400"
-                    />
-                    <span>
-                      You type prices manually, make mistakes, lose orders
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <XCircle
-                      size={14}
-                      className="mt-0.5 shrink-0 text-red-400"
-                    />
-                    <span>No menu to share — customers don&apos;t know what you sell</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <XCircle
-                      size={14}
-                      className="mt-0.5 shrink-0 text-red-400"
-                    />
-                    <span>
-                      Juggling multiple chats, losing track of who ordered what
-                    </span>
-                  </li>
-                </ul>
-              </div>
+              </Link>
             </ScrollFadeIn>
-
-            <ScrollFadeIn delay={200}>
-              <div className="bg-green-50/80 border border-green-100 rounded-2xl p-6 space-y-4">
-                <div className="flex items-center gap-2 text-green-700 font-bold text-lg">
-                  <CheckCircle size={20} />
-                  After
+            <ScrollFadeIn delay={150}>
+              <Link
+                href={`/store/${DEMO_STORE_SLUG}/admin`}
+                className="group block h-full"
+              >
+                <div className="bg-white rounded-2xl border border-slate-100 p-7 h-full hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                  <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <LayoutDashboard size={24} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1.5">
+                    The Admin Dashboard
+                  </h3>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-4">
+                    A read-only look at the merchant side — analytics, orders,
+                    menu management, and store settings.
+                  </p>
+                  <span className="text-sm font-semibold text-indigo-600 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Open dashboard <ArrowRight size={14} />
+                  </span>
                 </div>
-                <ul className="space-y-3 text-sm text-green-800/80">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle
-                      size={14}
-                      className="mt-0.5 shrink-0 text-green-500"
-                    />
-                    <span>
-                      Beautiful store link customers can browse and order from
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle
-                      size={14}
-                      className="mt-0.5 shrink-0 text-green-500"
-                    />
-                    <span>
-                      Clean WhatsApp message with items, prices, and totals
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle
-                      size={14}
-                      className="mt-0.5 shrink-0 text-green-500"
-                    />
-                    <span>
-                      Professional menu with photos that makes your brand shine
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle
-                      size={14}
-                      className="mt-0.5 shrink-0 text-green-500"
-                    />
-                    <span>
-                      Dashboard to track all orders and manage everything in one
-                      place
-                    </span>
-                  </li>
-                </ul>
-              </div>
+              </Link>
             </ScrollFadeIn>
           </div>
         </div>
@@ -416,10 +293,11 @@ export default async function HomePage({
         <div className="max-w-5xl mx-auto px-6">
           <ScrollFadeIn className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-              Everything You Need to Sell Online
+              What the Platform Includes
             </h2>
             <p className="text-slate-500 text-lg max-w-lg mx-auto">
-              A complete toolkit — zero technical skills required.
+              A complete commerce toolkit — built with Next.js, Supabase, and a
+              multi-tenant architecture.
             </p>
           </ScrollFadeIn>
 
@@ -428,7 +306,7 @@ export default async function HomePage({
               <FeatureCard
                 icon={<Smartphone size={22} className="text-blue-600" />}
                 title="Mobile-First Storefront"
-                description="Your store looks like a real app on any phone. Fast, beautiful, and designed to convert visitors into customers."
+                description="Each store looks like a real app on any phone — fast, beautiful, and built to convert."
                 bgColor="bg-blue-50"
               />
             </ScrollFadeIn>
@@ -436,18 +314,15 @@ export default async function HomePage({
               <FeatureCard
                 icon={<Sparkles size={22} className="text-purple-600" />}
                 title="AI Menu Generator"
-                description="Just describe your business. Our AI creates your entire product catalog — names, descriptions, and categories — in seconds."
+                description="Describe a business and AI drafts the full product catalog — names, descriptions, and categories."
                 bgColor="bg-purple-50"
-                badge="🔥 Popular"
               />
             </ScrollFadeIn>
             <ScrollFadeIn delay={200}>
               <FeatureCard
-                icon={
-                  <LayoutDashboard size={22} className="text-emerald-600" />
-                }
+                icon={<LayoutDashboard size={22} className="text-emerald-600" />}
                 title="Order Dashboard"
-                description="See every order, track your revenue, and manage your menu. Like having a POS system in your pocket."
+                description="Track revenue, manage orders, and edit the menu — a lightweight POS in the merchant's pocket."
                 bgColor="bg-emerald-50"
               />
             </ScrollFadeIn>
@@ -455,7 +330,7 @@ export default async function HomePage({
               <FeatureCard
                 icon={<Palette size={22} className="text-rose-600" />}
                 title="Brand Customization"
-                description="Upload your logo, choose brand colors, add a banner. Your store, your identity — no generic templates."
+                description="Logos, brand colors, banners, custom domains, and multi-language storefronts."
                 bgColor="bg-rose-50"
               />
             </ScrollFadeIn>
@@ -463,310 +338,140 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ─── Testimonials ─── */}
+      {/* ─── Built For ─── */}
       <section className="py-20 md:py-24 bg-slate-50 border-y border-slate-100">
         <div className="max-w-5xl mx-auto px-6">
           <ScrollFadeIn className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-              Loved By Small Businesses
+              Designed For Every Kind of Business
             </h2>
             <p className="text-slate-500 text-lg max-w-lg mx-auto">
-              See why business owners are switching to OrderViaChat.
-            </p>
-          </ScrollFadeIn>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <ScrollFadeIn>
-              <TestimonialCard
-                quote="I set up my bakery menu in literally 2 minutes. Now I just share the link on Instagram and orders come straight to WhatsApp. Game changer!"
-                name="Fatima A."
-                role="Home Baker"
-                color="bg-pink-100"
-                emoji="🍰"
-              />
-            </ScrollFadeIn>
-            <ScrollFadeIn delay={150}>
-              <TestimonialCard
-                quote="No more typing prices over and over. Customers browse my store, pick what they want, and I get a clean order message. So much easier."
-                name="Ahmed K."
-                role="Café Owner"
-                color="bg-amber-100"
-                emoji="☕"
-              />
-            </ScrollFadeIn>
-            <ScrollFadeIn delay={300}>
-              <TestimonialCard
-                quote="I was paying 30% to food delivery apps. With OrderViaChat, I keep every dollar and my customers love ordering directly."
-                name="Maria L."
-                role="Restaurant Owner"
-                color="bg-indigo-100"
-                emoji="🍕"
-              />
-            </ScrollFadeIn>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Perfect For (Use Cases) ─── */}
-      <section className="py-20 md:py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <ScrollFadeIn className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-              Built For Every Kind of Business
-            </h2>
-            <p className="text-slate-500 text-lg max-w-lg mx-auto">
-              If you sell something, OrderViaChat works for you.
+              The platform was built to fit any small business that takes orders.
             </p>
           </ScrollFadeIn>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <ScrollFadeIn>
-              <UseCaseCard
-                icon={<UtensilsCrossed size={28} />}
-                title="Restaurants & Cafes"
-                color="orange"
-              />
+              <UseCaseCard icon={<UtensilsCrossed size={28} />} title="Restaurants & Cafes" color="orange" />
             </ScrollFadeIn>
             <ScrollFadeIn delay={100}>
-              <UseCaseCard
-                icon={<Home size={28} />}
-                title="Home Businesses"
-                color="indigo"
-              />
+              <UseCaseCard icon={<Home size={28} />} title="Home Businesses" color="indigo" />
             </ScrollFadeIn>
             <ScrollFadeIn delay={200}>
-              <UseCaseCard
-                icon={<Cake size={28} />}
-                title="Bakers & Caterers"
-                color="pink"
-              />
+              <UseCaseCard icon={<Cake size={28} />} title="Bakers & Caterers" color="pink" />
             </ScrollFadeIn>
             <ScrollFadeIn delay={300}>
-              <UseCaseCard
-                icon={<Store size={28} />}
-                title="Small Retailers"
-                color="emerald"
-              />
+              <UseCaseCard icon={<Store size={28} />} title="Small Retailers" color="emerald" />
             </ScrollFadeIn>
           </div>
         </div>
       </section>
 
-      {/* ─── FAQ ─── */}
-      <section className="py-20 md:py-24 bg-slate-50 border-y border-slate-100">
-        <div className="max-w-5xl mx-auto px-6">
-          <ScrollFadeIn className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <HelpCircle size={20} className="text-indigo-600" />
-              <span className="text-sm font-bold text-indigo-600 uppercase tracking-wide">
-                FAQ
-              </span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-              Got Questions?
-            </h2>
-            <p className="text-slate-500 text-lg max-w-lg mx-auto">
-              Everything you need to know before getting started.
-            </p>
-          </ScrollFadeIn>
-
-          <ScrollFadeIn>
-            <FAQ />
-          </ScrollFadeIn>
-        </div>
-      </section>
-
-      {/* ─── Latest Guides (SEO Internal Linking) ─── */}
-      <section className="py-20 md:py-24 bg-white border-t border-slate-100">
-        <div className="max-w-5xl mx-auto px-6">
-          <ScrollFadeIn className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <BookOpen size={20} className="text-indigo-600" />
-              <span className="text-sm font-bold text-indigo-600 uppercase tracking-wide">
-                Blog
-              </span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-              Latest Guides & Tips
-            </h2>
-            <p className="text-slate-500 text-lg max-w-lg mx-auto">
-              Learn how to grow your business with WhatsApp ordering.
-            </p>
-          </ScrollFadeIn>
-
-          <div className="grid sm:grid-cols-2 gap-6">
-            {posts.map((post, i) => (
-              <ScrollFadeIn key={post.slug} delay={i * 100}>
-                <Link href={`/blog/${post.slug}`} className="group block">
-                  <div className="bg-slate-50 rounded-2xl border border-slate-100 p-6 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                    <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
-                      {post.category}
-                    </span>
-                    <h3 className="text-lg font-bold text-slate-900 mt-3 mb-2 group-hover:text-indigo-600 transition-colors leading-snug">
-                      {post.title}
-                    </h3>
-                    <p className="text-slate-500 text-sm leading-relaxed line-clamp-2">
-                      {post.excerpt}
-                    </p>
-                    <div className="mt-4 text-sm font-semibold text-indigo-600 flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Read Guide <ArrowRight size={14} />
-                    </div>
-                  </div>
-                </Link>
-              </ScrollFadeIn>
-            ))}
-          </div>
-
-          <ScrollFadeIn delay={400}>
-            <div className="text-center mt-10">
-              <Link href="/blog">
-                <button className="text-indigo-600 hover:text-indigo-700 font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all">
-                  View All Guides <ArrowRight size={16} />
-                </button>
-              </Link>
-            </div>
-          </ScrollFadeIn>
-        </div>
-      </section>
-
-      {/* ─── Custom Development CTA ─── */}
-      <section className="py-20 md:py-24 bg-white border-t border-slate-100">
-        <div className="max-w-4xl mx-auto px-6">
-          <ScrollFadeIn>
-            <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
-              {/* Decorative */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl" />
-
-              <div className="relative grid md:grid-cols-2 gap-8 items-center">
-                {/* Left — Copy */}
-                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold mb-4">
-                    <Sparkles size={12} /> CUSTOM DEVELOPMENT
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-extrabold mb-3 leading-tight">
-                    Need Something{" "}
-                    <span className="text-indigo-400">More Custom?</span>
-                  </h2>
-                  <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                    Whether you need a full mobile app, a custom website, or a WhatsApp chatbot — our team builds tailored solutions at amazingly discounted rates.
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="flex items-center gap-2.5 text-sm text-slate-300">
-                      <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
-                        <Globe size={14} className="text-blue-400" />
-                      </div>
-                      Web Apps
-                    </div>
-                    <div className="flex items-center gap-2.5 text-sm text-slate-300">
-                      <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
-                        <Smartphone size={14} className="text-purple-400" />
-                      </div>
-                      Mobile Apps
-                    </div>
-                    <div className="flex items-center gap-2.5 text-sm text-slate-300">
-                      <div className="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center shrink-0">
-                        <MessageCircle size={14} className="text-green-400" />
-                      </div>
-                      WhatsApp Bots
-                    </div>
-                    <div className="flex items-center gap-2.5 text-sm text-slate-300">
-                      <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
-                        <Zap size={14} className="text-amber-400" />
-                      </div>
-                      E-commerce
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right — CTA */}
-                <div className="text-center md:text-left">
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-                    <p className="text-lg font-bold text-white mb-1">Free Consultation</p>
-                    <p className="text-slate-400 text-sm mb-5">Tell us your idea — we&apos;ll give you a quote within hours</p>
-                    <a
-                      href={`https://wa.me/923224609117?text=${encodeURIComponent("Hi! I found you on OrderViaChat. I have a custom development requirement and would love to discuss. Can you help?")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2.5 transition-all hover:scale-[1.02] active:scale-95 mb-3"
-                    >
-                      <MessageCircle size={18} />
-                      Chat on WhatsApp
-                    </a>
-                    <Link
-                      href="/services"
-                      className="w-full border border-white/20 text-white/80 hover:text-white hover:border-white/40 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all text-sm"
-                    >
-                      See All Services & Pricing <ArrowRight size={14} />
-                    </Link>
-                    <p className="text-xs text-slate-500 mt-3">
-                      Discounted rates • Fast delivery • Satisfaction guaranteed
-                    </p>
-                  </div>
-                </div>
+      {/* ─── Latest Guides (Blog) ─── */}
+      {posts.length > 0 && (
+        <section className="py-20 md:py-24 bg-white border-t border-slate-100">
+          <div className="max-w-5xl mx-auto px-6">
+            <ScrollFadeIn className="text-center mb-14">
+              <div className="inline-flex items-center gap-2 mb-4">
+                <BookOpen size={20} className="text-indigo-600" />
+                <span className="text-sm font-bold text-indigo-600 uppercase tracking-wide">
+                  Blog
+                </span>
               </div>
-            </div>
-          </ScrollFadeIn>
-        </div>
-      </section>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
+                Guides &amp; Insights
+              </h2>
+              <p className="text-slate-500 text-lg max-w-lg mx-auto">
+                Articles on WhatsApp commerce and growing a small business online.
+              </p>
+            </ScrollFadeIn>
 
-      {/* ─── Final CTA ─── */}
+            <div className="grid sm:grid-cols-2 gap-6">
+              {posts.map((post, i) => (
+                <ScrollFadeIn key={post.slug} delay={i * 100}>
+                  <Link href={`/blog/${post.slug}`} className="group block">
+                    <div className="bg-slate-50 rounded-2xl border border-slate-100 p-6 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                      <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
+                        {post.category}
+                      </span>
+                      <h3 className="text-lg font-bold text-slate-900 mt-3 mb-2 group-hover:text-indigo-600 transition-colors leading-snug">
+                        {post.title}
+                      </h3>
+                      <p className="text-slate-500 text-sm leading-relaxed line-clamp-2">
+                        {post.excerpt}
+                      </p>
+                      <div className="mt-4 text-sm font-semibold text-indigo-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Read Guide <ArrowRight size={14} />
+                      </div>
+                    </div>
+                  </Link>
+                </ScrollFadeIn>
+              ))}
+            </div>
+
+            <ScrollFadeIn delay={400}>
+              <div className="text-center mt-10">
+                <Link href="/blog">
+                  <button className="text-indigo-600 hover:text-indigo-700 font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all">
+                    View All Guides <ArrowRight size={16} />
+                  </button>
+                </Link>
+              </div>
+            </ScrollFadeIn>
+          </div>
+        </section>
+      )}
+
+      {/* ─── Contact CTA ─── */}
       <section className="py-20 md:py-28 bg-gradient-mesh text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(99,102,241,0.3),transparent_60%)]" />
         <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
           <ScrollFadeIn>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white/80 text-xs font-semibold border border-white/10 mb-6">
-              <Sparkles size={12} />
-              <span>Join our growing community</span>
+              <Code2 size={12} />
+              <span>Want something like this built?</span>
             </div>
           </ScrollFadeIn>
 
           <ScrollFadeIn delay={100}>
             <h2 className="text-3xl md:text-5xl font-extrabold mb-6 leading-tight">
-              Your Store is Just
-              <br />
-              <span className="text-indigo-400">2 Minutes Away</span>
+              Like What You See?
             </h2>
           </ScrollFadeIn>
 
           <ScrollFadeIn delay={200}>
             <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-xl mx-auto leading-relaxed">
-              Create your free store today — no credit card, no contracts, no
-              paid plans to worry about.
+              This is a real, production-grade platform — multi-tenant storefronts,
+              an admin dashboard, payments, and more. If you&apos;d like a custom
+              ordering system, web app, or mobile app, let&apos;s talk.
             </p>
           </ScrollFadeIn>
 
           <ScrollFadeIn delay={300}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/login?view=signup">
-                <button className="bg-white text-slate-900 text-lg font-bold py-4 px-10 rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all inline-flex items-center gap-2 animate-pulse-subtle">
-                  Create Free Store <ArrowRight size={20} />
+              <a href={CONTACT_MAILTO}>
+                <button className="bg-white text-slate-900 text-lg font-bold py-4 px-10 rounded-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                  <Mail size={20} /> Contact Us
                 </button>
-              </Link>
-              <Link href="/store/demo">
+              </a>
+              <Link href={`/store/${DEMO_STORE_SLUG}`}>
                 <button className="text-white/70 hover:text-white text-base font-medium py-4 px-6 rounded-xl transition-all hover:bg-white/5 inline-flex items-center gap-2">
-                  See Demo First <ArrowRight size={16} />
+                  Browse the Demo <ArrowRight size={16} />
                 </button>
               </Link>
             </div>
           </ScrollFadeIn>
 
           <ScrollFadeIn delay={400}>
-            <div className="flex items-center justify-center gap-6 mt-8 text-slate-400 text-sm">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-green-400" /> Free
-                forever
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-green-400" /> No credit
-                card
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-green-400" /> 2-min
-                setup
-              </div>
-            </div>
+            <p className="mt-8 text-slate-400 text-sm">
+              Reach us anytime at{" "}
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="text-white font-semibold underline underline-offset-2"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </p>
           </ScrollFadeIn>
         </div>
       </section>
@@ -781,45 +486,33 @@ export default async function HomePage({
                 <span>OrderViaChat</span>
               </div>
               <p className="text-sm max-w-xs leading-relaxed">
-                The simplest way for small businesses to accept orders on
-                WhatsApp. Free to start.
+                A WhatsApp ordering platform for small businesses — now an
+                interactive demo and portfolio showcase.
               </p>
             </div>
             <div className="flex gap-12 text-sm">
               <div>
-                <h4 className="text-white font-semibold mb-3">Product</h4>
+                <h4 className="text-white font-semibold mb-3">Explore</h4>
                 <ul className="space-y-2">
                   <li>
-                    <Link
-                      href="/store/demo"
-                      className="hover:text-white transition-colors"
-                    >
+                    <Link href={`/store/${DEMO_STORE_SLUG}`} className="hover:text-white transition-colors">
                       Live Demo
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/blog"
-                      className="hover:text-white transition-colors"
-                    >
+                    <Link href={`/store/${DEMO_STORE_SLUG}/admin`} className="hover:text-white transition-colors">
+                      Demo Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/blog" className="hover:text-white transition-colors">
                       Blog
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/services"
-                      className="hover:text-white transition-colors"
-                    >
-                      Services
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/login?view=signup"
-                      className="hover:text-white transition-colors"
-                    >
-                      Create Store
-                    </Link>
+                    <a href={CONTACT_MAILTO} className="hover:text-white transition-colors">
+                      Contact Us
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -827,108 +520,30 @@ export default async function HomePage({
                 <h4 className="text-white font-semibold mb-3">Legal</h4>
                 <ul className="space-y-2">
                   <li>
-                    <Link
-                      href="/privacy-policy"
-                      className="hover:text-white transition-colors"
-                    >
+                    <Link href="/privacy-policy" className="hover:text-white transition-colors">
                       Privacy Policy
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/terms"
-                      className="hover:text-white transition-colors"
-                    >
+                    <Link href="/terms" className="hover:text-white transition-colors">
                       Terms of Service
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/refund"
-                      className="hover:text-white transition-colors"
-                    >
-                      Refund Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <a
-                      href="mailto:support@orderviachat.com"
-                      className="hover:text-white transition-colors"
-                    >
-                      Contact Us
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-white transition-colors">
+                      {CONTACT_EMAIL}
                     </a>
                   </li>
                 </ul>
               </div>
-              <div>
-                <h4 className="text-white font-semibold mb-3">Free Tools</h4>
-                <ul className="space-y-2">
-                  <li>
-                    <a
-                      href="https://legalpolicygen.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-white transition-colors"
-                    >
-                      Legal Policy Generator
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://onlineimageshrinker.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-white transition-colors"
-                    >
-                      Image Compressor
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://tinypdftools.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-white transition-colors"
-                    >
-                      PDF Tools
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://dailysmartcalc.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-white transition-colors"
-                    >
-                      Smart Calculators
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
             </div>
           </div>
           <div className="mt-10 pt-6 border-t border-slate-800 text-xs text-center text-slate-500">
-            &copy; {new Date().getFullYear()} OrderViaChat. All rights reserved.
+            &copy; {new Date().getFullYear()} OrderViaChat. Demo &amp; portfolio
+            showcase. All rights reserved.
           </div>
         </div>
       </footer>
-
-      {/* ─── Floating WhatsApp Share Button ─── */}
-      <a
-        href={WHATSAPP_SHARE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full shadow-lg shadow-green-500/30 flex items-center justify-center hover:scale-110 active:scale-95 transition-all group hidden md:flex"
-        aria-label="Share on WhatsApp"
-      >
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
-      </a>
-
-      {/* Sticky Mobile CTA */}
-      <StickyMobileCTA />
     </main>
   );
 }
@@ -957,11 +572,12 @@ function StepCard({
   return (
     <div className="relative text-center group">
       <div className="w-20 h-20 bg-white rounded-2xl border-2 border-slate-100 shadow-lg flex items-center justify-center mx-auto mb-6 group-hover:scale-105 group-hover:shadow-xl transition-all duration-300">
-        <div
-          className={`w-11 h-11 rounded-xl flex items-center justify-center ${colorMap[color]}`}
-        >
+        <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${colorMap[color]}`}>
           {icon}
         </div>
+      </div>
+      <div className="absolute top-0 right-1/2 translate-x-10 -translate-y-1 w-6 h-6 bg-slate-900 text-white text-xs font-bold rounded-full flex items-center justify-center">
+        {number}
       </div>
       <h3 className="text-lg font-bold text-slate-900 mb-2">{title}</h3>
       <p className="text-slate-500 text-sm leading-relaxed max-w-[260px] mx-auto">
@@ -976,24 +592,15 @@ function FeatureCard({
   title,
   description,
   bgColor,
-  badge,
 }: {
   icon: React.ReactNode;
   title: string;
   description: string;
   bgColor: string;
-  badge?: string;
 }) {
   return (
     <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative">
-      {badge && (
-        <span className="absolute top-4 right-4 text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-          {badge}
-        </span>
-      )}
-      <div
-        className={`w-11 h-11 ${bgColor} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-      >
+      <div className={`w-11 h-11 ${bgColor} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
         {icon}
       </div>
       <h3 className="text-lg font-bold text-slate-900 mb-1.5">{title}</h3>
@@ -1012,66 +619,18 @@ function UseCaseCard({
   color: string;
 }) {
   const colorMap: Record<string, string> = {
-    orange:
-      "bg-orange-50 text-orange-600 border-orange-100 hover:border-orange-200 hover:shadow-lg",
-    indigo:
-      "bg-indigo-50 text-indigo-600 border-indigo-100 hover:border-indigo-200 hover:shadow-lg",
+    orange: "bg-orange-50 text-orange-600 border-orange-100 hover:border-orange-200 hover:shadow-lg",
+    indigo: "bg-indigo-50 text-indigo-600 border-indigo-100 hover:border-indigo-200 hover:shadow-lg",
     pink: "bg-pink-50 text-pink-600 border-pink-100 hover:border-pink-200 hover:shadow-lg",
-    emerald:
-      "bg-emerald-50 text-emerald-600 border-emerald-100 hover:border-emerald-200 hover:shadow-lg",
+    emerald: "bg-emerald-50 text-emerald-600 border-emerald-100 hover:border-emerald-200 hover:shadow-lg",
   };
 
   return (
-    <div
-      className={`p-5 rounded-2xl border text-center transition-all duration-300 group ${colorMap[color]}`}
-    >
+    <div className={`p-5 rounded-2xl border text-center transition-all duration-300 group ${colorMap[color]}`}>
       <div className="flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
         {icon}
       </div>
       <h3 className="font-bold text-slate-800 text-sm">{title}</h3>
-    </div>
-  );
-}
-
-function TestimonialCard({
-  quote,
-  name,
-  role,
-  color,
-  emoji,
-}: {
-  quote: string;
-  name: string;
-  role: string;
-  color: string;
-  emoji: string;
-}) {
-  return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-      <div className="flex items-center gap-1 mb-3">
-        {[...Array(5)].map((_, i) => (
-          <Star
-            key={i}
-            size={14}
-            className="text-amber-400"
-            fill="currentColor"
-          />
-        ))}
-      </div>
-      <p className="text-slate-600 text-sm leading-relaxed mb-5 italic">
-        &ldquo;{quote}&rdquo;
-      </p>
-      <div className="flex items-center gap-3">
-        <div
-          className={`w-10 h-10 ${color} rounded-full flex items-center justify-center text-lg`}
-        >
-          {emoji}
-        </div>
-        <div>
-          <div className="font-bold text-slate-900 text-sm">{name}</div>
-          <div className="text-slate-400 text-xs">{role}</div>
-        </div>
-      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, Calendar, User, ShoppingBag } from 'lucide-react
 import ShareButtons from '@/components/blog/ShareButtons';
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
 import { Metadata } from 'next';
+import { CONTACT_MAILTO, DEMO_STORE_SLUG } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -100,11 +101,14 @@ export default async function BlogPost({ params }: Props) {
                         <Link href="/blog" className="text-slate-500 hover:text-indigo-600 font-medium transition-colors">
                             All Guides
                         </Link>
-                        <Link href="/register">
-                            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition-all text-sm">
-                                Create Store
-                            </button>
+                        <Link href={`/store/${DEMO_STORE_SLUG}`} className="hidden sm:inline-flex items-center text-slate-500 hover:text-indigo-600 font-medium transition-colors">
+                            Live Demo
                         </Link>
+                        <a href={CONTACT_MAILTO}>
+                            <button className="bg-slate-900 text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition-all text-sm">
+                                Contact Us
+                            </button>
+                        </a>
                     </div>
                 </div>
             </nav>
@@ -167,15 +171,22 @@ export default async function BlogPost({ params }: Props) {
             {/* CTA */}
             <section className="bg-slate-50 py-20 border-t border-slate-200">
                 <div className="max-w-4xl mx-auto px-6 text-center">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-6">Ready to apply what you learned?</h2>
+                    <h2 className="text-3xl font-bold text-slate-900 mb-6">Want to see it in action?</h2>
                     <p className="text-xl text-slate-500 mb-8">
-                        Join thousands of restaurant owners growing their business with OrderViaChat.
+                        OrderViaChat is now an interactive demo. Explore the live store, or get in touch for one of your own.
                     </p>
-                    <Link href="/register">
-                         <button className="bg-indigo-600 hover:bg-indigo-500 text-white text-lg font-bold py-4 px-10 rounded-2xl shadow-xl shadow-indigo-600/30 transition-all hover:-translate-y-1">
-                            Start Your Free Store
-                        </button>
-                    </Link>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <Link href={`/store/${DEMO_STORE_SLUG}`}>
+                             <button className="bg-indigo-600 hover:bg-indigo-500 text-white text-lg font-bold py-4 px-10 rounded-2xl shadow-xl shadow-indigo-600/30 transition-all hover:-translate-y-1">
+                                Browse the Demo Store
+                            </button>
+                        </Link>
+                        <a href={CONTACT_MAILTO}>
+                             <button className="bg-white border border-slate-200 text-slate-700 text-lg font-bold py-4 px-10 rounded-2xl hover:bg-slate-50 transition-all">
+                                Contact Us
+                            </button>
+                        </a>
+                    </div>
                 </div>
             </section>
 

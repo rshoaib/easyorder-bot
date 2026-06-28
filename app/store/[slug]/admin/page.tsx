@@ -13,6 +13,7 @@ import CustomDevCard from "@/components/admin/CustomDevCard";
 import TimezoneAutoDetect from "@/components/admin/TimezoneAutoDetect";
 import UpgradeProBanner from "@/components/admin/UpgradeProBanner";
 import { getDictionary, type Locale } from "@/lib/i18n/dictionaries";
+import { DEMO_MODE, CLOSURE_MESSAGE, CONTACT_EMAIL } from "@/lib/config";
 
 
 export const dynamic = 'force-dynamic';
@@ -73,6 +74,25 @@ export default async function AdminPage({ params }: Props) {
 
   return (
     <main className="container pt-1 pb-10" style={{ maxWidth: '900px' }}>
+      {/* Permanent service-closure notice for store owners */}
+      {DEMO_MODE && slug !== 'demo' && (
+        <div className="mb-6 p-5 bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-300 rounded-2xl">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-red-100 text-red-600 rounded-full shrink-0 mt-0.5">
+              <AlertCircle size={22} />
+            </div>
+            <div>
+              <h3 className="font-bold text-red-900 text-base">⚠️ Service permanently closed</h3>
+              <p className="text-red-800 text-sm mt-1 leading-relaxed">{CLOSURE_MESSAGE}</p>
+              <p className="text-red-700 text-sm mt-2">
+                Questions? Contact us at{' '}
+                <a href={`mailto:${CONTACT_EMAIL}`} className="font-bold underline">{CONTACT_EMAIL}</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Silent timezone auto-detection — no UI, runs once */}
       <TimezoneAutoDetect tenantId={tenant.id} slug={slug} currentTimezone={tenant.timezone} />
       

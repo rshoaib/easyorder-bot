@@ -1,6 +1,17 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { updateSession } from '@/utils/supabase/middleware';
+import { DEMO_MODE } from '@/lib/config';
+
+// Routes that handle signup / login / store creation. In DEMO_MODE these are
+// permanently disabled — every visitor is bounced back to the landing page.
+const BLOCKED_PREFIXES_IN_DEMO = [
+    '/login',
+    '/register',
+    '/dev-login',
+    '/reset-password',
+    '/auth/callback', // Google SSO / magic-link completion
+];
 
 export async function middleware(request: NextRequest) {
     const { supabaseResponse, user } = await updateSession(request);
@@ -10,6 +21,11 @@ export async function middleware(request: NextRequest) {
     // 0. Canonical Domain Redirect
     if (hostname.includes('easyorder-bot.vercel.app')) {
         return NextResponse.redirect(`https://orderviachat.com${url.pathname}${url.search}`);
+    }
+
+    // 0.5 Demo-only mode — disable all signup / login / store-creation flows.
+    if (DEMO_MODE && BLOCKED_PREFIXES_IN_DEMO.some(p => url.pathname === p || url.pathname.startsWith(p + '/'))) {
+        return NextResponse.redirect(new URL('/?closed=1', request.url));
     }
 
     // 1. Admin Protection (Supabase Auth)

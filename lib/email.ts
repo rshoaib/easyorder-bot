@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
+import { CLOSURE_MESSAGE, CONTACT_EMAIL } from '@/lib/config';
 
-const FROM_EMAIL = 'EasyOrder <onboarding@resend.dev>'; // Default Resend test email
+const FROM_EMAIL = 'OrderViaChat <onboarding@resend.dev>'; // Default Resend test email
 
 interface SendEmailParams {
     to: string;
@@ -47,6 +48,28 @@ export async function sendWelcomeEmail(email: string, name: string, slug: string
         to: email,
         subject: 'Welcome to OrderViaChat!',
         html
+    });
+}
+
+export async function sendClosureNotice(email: string, name?: string) {
+    const greeting = name ? `Hi ${name},` : 'Hello,';
+    const html = `
+        <div style="font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 560px; margin: 0 auto; color: #1e293b;">
+            <h1 style="font-size: 20px;">OrderViaChat — Service Closure Notice</h1>
+            <p>${greeting}</p>
+            <p>${CLOSURE_MESSAGE}</p>
+            <p>We're grateful for the time you spent building your store with us.</p>
+            <p>If you have any questions, just reply to this email or reach us at
+                <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.
+            </p>
+            <p style="color:#64748b; font-size: 13px; margin-top: 24px;">— The OrderViaChat Team</p>
+        </div>
+    `;
+
+    return sendEmail({
+        to: email,
+        subject: 'Important: OrderViaChat has been permanently closed',
+        html,
     });
 }
 

@@ -5,6 +5,7 @@ import WhatsAppSupportButton from "@/components/admin/WhatsAppSupportButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { getDictionary, type Locale } from "@/lib/i18n/dictionaries";
+import { CONTACT_MAILTO } from "@/lib/config";
 
 export default async function AdminLayout({
   children,
@@ -172,11 +173,11 @@ export default async function AdminLayout({
             <div className="flex items-center gap-2 text-sm">
               <span className="text-lg">👀</span>
               <span className="font-bold">{t.adminDemoMode}</span>
-              <span className="hidden sm:inline text-indigo-100">— {t.adminDemoSubtitle}</span>
+              <span className="hidden sm:inline text-indigo-100">— Read-only showcase of the merchant dashboard.</span>
             </div>
-            <Link href="/register" className="bg-white text-indigo-700 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-50 transition-colors shrink-0">
-              {t.adminCreateYourStore}
-            </Link>
+            <a href={CONTACT_MAILTO} className="bg-white text-indigo-700 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-50 transition-colors shrink-0">
+              Contact Us
+            </a>
           </div>
         </div>
       )}
